@@ -1,16 +1,16 @@
-package kr.co.exhibitionThreeAdmin.member.vo;
+package kr.co.exhibitionThreeAdmin.member.domain;
 
 import java.sql.Date;
 
-public class MemberVO {
+public class MemberDomain {
 	public String userid, password, name, tel, zipcode, address1, address2, isdeleted;
 	public Date subscribe_date;
 	
 	
-	public MemberVO() {
+	public MemberDomain() {
 	}
 	
-	public MemberVO(String userid, String password, String name, String tel, String zipcode, String address1,
+	public MemberDomain(String userid, String password, String name, String tel, String zipcode, String address1,
 			String address2, String isdeleted, Date subscribe_date) {
 		this.userid = userid;
 		this.password = password;
@@ -85,5 +85,4 @@ public class MemberVO {
 				+ isdeleted + ", subscribe_date=" + subscribe_date + "]";
 	}
 	
-	
-}//class
+}

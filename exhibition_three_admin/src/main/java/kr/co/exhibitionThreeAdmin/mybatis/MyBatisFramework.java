@@ -32,7 +32,7 @@ public class MyBatisFramework {
 					Reader reader = null; 
 					try {
 						//1.�������� ����
-						reader = Resources.getResourceAsReader("kr/co/sist/dao/mybatis/SqlMapConfig.xml");
+						reader = Resources.getResourceAsReader("kr/co/exhibitionThreeAdmin/mybatis/SqlMapConfig.xml");
 						//2. MyBatis Framework ����
 						ssf = new SqlSessionFactoryBuilder().build(reader);
 					}finally {
