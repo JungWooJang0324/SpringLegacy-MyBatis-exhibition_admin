@@ -1,4 +1,4 @@
-package kr.co.exhibition.mybatis;
+package kr.co.exhibitionThreeAdmin.mybatis;
 
 import java.io.IOException;
 import java.io.Reader;

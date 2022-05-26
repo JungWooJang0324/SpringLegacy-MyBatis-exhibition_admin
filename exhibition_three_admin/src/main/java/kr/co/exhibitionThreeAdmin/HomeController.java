@@ -1,4 +1,4 @@
-package kr.co.exhibition;
+package kr.co.exhibitionThreeAdmin;
 
 import java.text.DateFormat;
 import java.util.Date;
