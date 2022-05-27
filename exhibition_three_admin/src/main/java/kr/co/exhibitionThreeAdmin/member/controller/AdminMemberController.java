@@ -42,6 +42,7 @@ public class AdminMemberController {
 		model.addAttribute("startPage",startPage);
 		model.addAttribute("pageCnt",pageCnt);
 		model.addAttribute("endPage",endPage);
+		model.addAttribute("totalCnt",totalCnt);
 		
 		return "member/admin_member";
 	}//moveMember

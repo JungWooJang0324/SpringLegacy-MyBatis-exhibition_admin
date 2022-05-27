@@ -34,8 +34,9 @@ public class AdminMemberService implements SearchService {
 
 	@Override
 	public int pageCnt(int totalCnt, int pageScale) {
-		int pageCnt = totalCnt/pageScale;
+		int pageCnt = 0;
 		pageCnt = (int)Math.ceil((double)totalCnt/pageScale);
+		System.out.println(totalCnt+"/ "+pageCnt);
 //		if(totalCnt%pageScale!=0) {
 //			pageCnt++;
 //		}//end if

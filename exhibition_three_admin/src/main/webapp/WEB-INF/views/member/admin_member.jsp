@@ -5,6 +5,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% String field=request.getParameter("field"); %>
+<% String keyword=request.getParameter("keyword"); %>
+<% String pageScale=request.getParameter("pageScale"); %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,6 +35,7 @@
       #member_tab{ text-align:center;}
       .memberTitle{font-weight:bold}
 </style>
+
 <script type="text/javascript">
 $(function(){
      $("#searchBtn").click(function(){
@@ -41,8 +45,11 @@ $(function(){
     	if(e.which==13){
     		chkNull();
     	}//end if
-    });//
-})
+    });//keydown
+    $("#pageScale").change(function(){
+    	location.href="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword+"&":""%>pageScale="+$('#pageScale').val();
+    })
+});//ready
 function chkNull(){
 	if($("#keyword").val()==""){
 		alert("검색어를 입력해주세요.");
@@ -52,7 +59,7 @@ function chkNull(){
 }//chkNull
 </script>
     </head>
-    
+    	
     <body class="sb-nav-fixed">
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -91,8 +98,8 @@ function chkNull(){
                         </ol>
                         <!-- 검색창 -->
 							<div id="searchDiv" >
-                            	<form action="http://<%=application.getInitParameter("domain") %>/admin/member.do" name="searchFrm" id="searchFrm"class="d-flex" >
-			                         <div class="input-group mb-3" style="width:300px;">
+                            	<form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(pageScale)&&pageScale!=null?"pageScale="+pageScale:""%>" name="searchFrm" id="searchFrm">
+			                         <div class="input-group mb-3" style="width:300px;float:left;">
 										 <select class="form-select" name="field" style="height:35px;">
 											  <option value="1" ${param.field eq'1'?"selected":"" }>이름</option>
 											  <option value="2" ${param.field eq '2'?"selected":"" }>아이디</option>
@@ -104,15 +111,18 @@ function chkNull(){
                                  			<i class="fa-solid fa-magnifying-glass"></i>
                                			  </button>
 									</div>
-								     <select class="form-select" name="pageScale" style="width:90px;height:35px;float:right">
+							      </form>
+                            	<%-- <form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword:""%>" name="rowNumFrm" id="rowNumFrm"> --%>
+								     <select class="form-select" name="pageScale" id="pageScale"style="width:85px;height:35px;float:right">
 									      <option value="5" selected>5개</option>
 									      <option value="10" ${param.pageScale eq "10"?"selected":"" }>10개</option>
 									      <option value="30" ${param.pageScale eq "30"?"selected":"" }>30개</option>
 									      <option value="50" ${param.pageScale eq "50"?"selected":"" }>50개</option>
 								      </select>
-							      </form>
+							      <!-- </form> -->
                         	</div> 
                         
+                            
                             <div class="card-body">
                              <!-- 테이블 정의 -->
                           <table class="table table-hover" id="member_tab">
@@ -120,22 +130,32 @@ function chkNull(){
 							   		<tr>
                                     	<th>ID</th>
                                     	<th>이름</th>
+                                    	<th>주소</th>
                                     	<th>가입일</th>
                                     </tr>
 						  	</thead> 
 						  	<tbody> 
+						  		<c:if test="${empty memberList}">
+						  		<tr>
+						  			<td colspan="4">조회 결과가 없습니다.</td>
+						  		</tr>
+						  		</c:if>
+						  		<c:if test="${not empty memberList }">
 	    						 		<c:forEach var="member" items="${memberList}">
                                     	<tr style="cursor:pointer">
-	    						 			<td><input type="hidden" name="userId" id="userId"  value="<c:out value="${member.userid }"/>"><c:out value="${member.userid }"/></td>
+	    						 			<td><c:out value="${member.userid }"/></td>
 	    						 			<td><c:out value="${member.name}"/></td>
+	    						 			<td><c:out value="${member.address1}"/></td>
 	    						 			<td><c:out value="${member.subscribe_date}"/></td>
 	    						 		</tr>
 	    						 		</c:forEach>
+	    						 </c:if>
 						  	</tbody> 
 						  </table> 
-						  <% String field=request.getParameter("field"); %>
-						  <% String keyword=request.getParameter("keyword"); %>
-						  <% String pageScale=request.getParameter("pageScale"); %>
+						  <div style="float:left;color:#333;">
+ 								전체 : <c:out value="${totalCnt }"/>건                           
+                            </div>
+		
                             </div>
                                 <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
@@ -147,12 +167,13 @@ function chkNull(){
 									<c:if test="${startPage gt pageBlock }">
 									<li>
 									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
-							href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale : ""%>">
+							href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&" : ""%><%=!"".equals(pageScale)&&pageScale != null?"pageScale="+pageScale : ""%>">
+							
 									이전
 									</a>
 									</li>
 									</c:if>
-									<c:forEach var="i" begin="${startPage}" end="${endPage-1}" step="1">
+									<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1">
 										<c:choose>
 										<c:when test="${i eq currentPage}">
 											<li>
@@ -164,7 +185,7 @@ function chkNull(){
 										<c:otherwise>
 											<li>
 											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" id="pNum" 
-											href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale : ""%>">
+											href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&" : ""%><%=!"".equals(pageScale)&&pageScale != null?"pageScale="+pageScale : ""%>">
 											<c:out value="${i}"/>
 											</a>
 											</li> 
