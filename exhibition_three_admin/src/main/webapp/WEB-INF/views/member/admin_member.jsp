@@ -14,7 +14,7 @@
         <meta name="author" content="" />
         <title>Member</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
+        <link href="http://localhost/exhibitionThreeAdmin/css/styles.css" rel="stylesheet" />
         <!-- jQeury CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
@@ -66,7 +66,7 @@ $(function(){
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-               <%--     <jsp:include page="nav.jsp"/> --%>
+              <jsp:include page="../commons/navigation.jsp"/>
                 </nav>
             </div>
             <div id="layoutSidenav_content">

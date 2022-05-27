@@ -28,7 +28,7 @@
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://exhibitionThreeAdmin/index.do">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
 <!--             Sidebar Toggle
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button> -->
             <!-- Navbar Search-->
@@ -51,6 +51,7 @@
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                	<jsp:include page="commons/navigation.jsp"/>
                 </nav>
             </div>
            <div id="layoutSidenav_content">
@@ -70,7 +71,7 @@
                                     	int cntToday = amd.countTodayMem(); */
                                     %>
                                     
-                                    <div class="card-body" onclick="location.href='admin_member.jsp'">
+                                    <div class="card-body" onclick="location.href='/admin/member.do'">
                                      <table class="table table-hover">
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
                                     		<th>총 회원수</th>

@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class AdminExhibitionController {
-	@RequestMapping(value="/exhibition.do",method=RequestMethod.GET)
+	@RequestMapping(value="/admin/exhibitions.do",method=RequestMethod.GET)
 	public String moveExhibition() {
-		return "admin_exhibition";
+		return "exhibitions/exhibitionSchedule";
 	}//moveExhibition
 }
