@@ -1,13 +1,19 @@
 package kr.co.exhibitionThreeAdmin.search.vo;
 
 public class SearchVO {
-	private String option,keyword; //검색항목, 검색어
+	private String field,keyword; //검색항목, 검색어
 	private int startNum, endNum, pageScale,currentPage; //시작번호,끝번호,한 페이지 당 데이터 수 ,현재 페이지
-	public String getOption() {
-		return option;
+	
+	public SearchVO() {
+		currentPage=1;
+		pageScale=5;
+	}//SearchVO
+	
+	public String getField() {
+		return field;
 	}
-	public void setOption(String option) {
-		this.option = option;
+	public void setField(String field) {
+		this.field = field;
 	}
 	public String getKeyword() {
 		return keyword;
@@ -42,8 +48,7 @@ public class SearchVO {
 	}
 	@Override
 	public String toString() {
-		return "SearchVO [option=" + option + ", keyword=" + keyword + ", startNum=" + startNum + ", endNum=" + endNum
+		return "SearchVO [field=" + field + ", keyword=" + keyword + ", startNum=" + startNum + ", endNum=" + endNum
 				+ ", pageScale=" + pageScale + "]";
 	}
-	
 }

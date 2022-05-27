@@ -16,16 +16,16 @@ public class AdminMemberController {
 	
 	@RequestMapping(value="/admin/member.do",method=RequestMethod.GET)
 	public String moveMember(Model model,SearchVO sVO) {
-		if(sVO.getPageScale()==0 ) {
-			sVO.setPageScale(10);
-		}//end if
-		if(sVO.getCurrentPage()==0) {
-			sVO.setCurrentPage(1);
-		}//end if
+	//		if(sVO.getPageScale()==0 ) {
+	//		sVO.setPageScale(10);
+	//	}//end if
+	//	if(sVO.getCurrentPage()==0) {
+	//		sVO.setCurrentPage(1);
+	//	}//end if
 		int pageScale = sVO.getPageScale();
-		int totalCnt = ams.searchTotalCount();
+		int totalCnt = ams.searchTotalCnt(sVO);
 		int pageCnt = ams.pageCnt(totalCnt, pageScale);
-		int startNum = ams.startNum(sVO);
+		int startNum = ams.startNum(sVO.getCurrentPage(),sVO.getPageScale());
 		int endNum = ams.endNum(startNum, pageScale);
 		int pageBlock = ams.pageBlock();
 		int startPage = ams.startPage(sVO.getCurrentPage(), pageBlock);
@@ -33,7 +33,7 @@ public class AdminMemberController {
 		sVO.setStartNum(startNum);
 		sVO.setEndNum(endNum);
 		
-		System.out.println(sVO);
+	//	System.out.println(sVO);
 		
 		model.addAttribute("memberList",ams.searchMember(sVO));
 		model.addAttribute("startNum",startNum);
