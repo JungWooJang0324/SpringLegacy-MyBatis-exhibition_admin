@@ -47,7 +47,7 @@ $(function(){
     	}//end if
     });//keydown
     $("#pageScale").change(function(){
-    	location.href="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword+"&":""%>pageScale="+$('#pageScale').val();
+    	$("#")
     })
 });//ready
 function chkNull(){
@@ -112,14 +112,14 @@ function chkNull(){
                                			  </button>
 									</div>
 							      </form>
-                            	<%-- <form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword:""%>" name="rowNumFrm" id="rowNumFrm"> --%>
+                             <form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword:""%>" name="rowNumFrm" id="rowNumFrm">
 								     <select class="form-select" name="pageScale" id="pageScale"style="width:85px;height:35px;float:right">
 									      <option value="5" selected>5개</option>
 									      <option value="10" ${param.pageScale eq "10"?"selected":"" }>10개</option>
 									      <option value="30" ${param.pageScale eq "30"?"selected":"" }>30개</option>
 									      <option value="50" ${param.pageScale eq "50"?"selected":"" }>50개</option>
 								      </select>
-							      <!-- </form> -->
+							       </form> 
                         	</div> 
                         
                             
