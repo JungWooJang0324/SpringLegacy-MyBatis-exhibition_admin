@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.co.exhibitionThreeAdmin.member">
+<mapper namespace="kr.co.exhibitionThreeAdmin.exhibition">
 	<select id="totalCnt" resultType="int" parameterType="sVO">
 		select count(*) from member
 		<where>
@@ -11,19 +11,20 @@
 		</if>
 		</where>
 	</select>
-	<select id="selectMember" resultType="kr.co.exhibitionThreeAdmin.member.domain.MemberDomain" parameterType="sVO">
+	<select id="selectEx" resultType="kr.co.exhibitionThreeAdmin.exhibition.domain.ExhibitionDomain" parameterType="sVO">
 		select *
 			from(
-				select row_number() over(order by subscribe_date desc) rnum,userid,password,name,
-				tel,zipcode,address1,address2,subscribe_date,isdeleted
-				from member
+				select row_number() over(order by input_date desc) rnum, ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster, add_img, 
+				ex_num,adult,teen, child, ex_hall_num, cat_num,
+				exhibit_date,deadline, input_date
+				from exhibition
 			<where>
 				<if test="keyword != null and keyword != ''">
 				${field} like '%'||#{keyword}||'%'
 				</if>
 			</where> 
 			)
-				where isdeleted='n' and (rnum between #{startNum} and #{endNum})
+				where ex_status='y' or  ex_status='p'
 	</select>
 
 </mapper>

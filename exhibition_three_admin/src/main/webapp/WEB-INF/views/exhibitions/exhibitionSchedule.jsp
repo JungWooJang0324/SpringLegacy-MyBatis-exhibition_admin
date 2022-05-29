@@ -73,7 +73,7 @@
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
                         <div class="card-body">
-                              <%--  <form class="d-flex" style="float:right" action="http://<%=application.getInitParameter("domain") %>/main/ex_schedule.jsp" name="dataSearchFrm">
+                             <form class="d-flex" style="float:right" action="http://<%=application.getInitParameter("domain") %>/main/ex_schedule.jsp" name="dataSearchFrm">
 			                         <div class="input-group mb-3" style="width:350px;">
 											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;" name="dataSearchItem" >
 											  <option ${(param.dataSearchItem=="ex_name")?"selected":""} value="ex_name">전시명</option>
@@ -85,9 +85,9 @@
                                  			<i class="fa-solid fa-magnifying-glass"></i>
                                  			</button>
 									</div>
-							      </form> --%>
+							      </form> 
                             <!-- 테이블 정의 -->
-                                <%-- <table class="table table-hover" id="memberTab" >
+                               <table class="table table-hover" id="memberTab" >
                             	<thead> 
 								   <tr>
 	                                    <th>전시번호</th>
@@ -96,30 +96,22 @@
 	                               </tr>
 						  		</thead> 
 						  		<tbody> 
-						  		  <%
-						  		 
-						  		 if(count > 0 ){
-	    						 	
-	    						 		request.setAttribute("dataList",list);
-	    						 		%>
-	    						 		<c:forEach var="list" items="${dataList }">
+						  			<c:if test="${not empty exhibitionList }">
+	    						 		<c:forEach var="exhibition" items="${exhibitionList }">
                                     	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${list.exNum }">
- 											<td><c:out value="${list.exNum }"/></td>
- 											<td><c:out value="${list.exName }"/></td>
- 											<td><c:out value="${list.inputDate }"/></td>
+ 											<td><c:out value="${exhibition.ex_num }"/></td>
+ 											<td><c:out value="${exhibition.ex_name }"/></td>
+ 											<td><c:out value="${exhibition.input_date }"/></td>
                                     	</tr>
 	    						 		</c:forEach>
-                                   <%
-                                   }else{
-	                                %>
+						  			</c:if>
+						  			<c:if test="${empty exhibitionList }">
 	                                 <tr>
 	                                 	<td colspan="3" style="text-align:center">조회된 데이터가 없습니다.</td>
 	                                 </tr>
-	                                <%    
-	                                }//end else
-                                    %>
+						  			</c:if>
 						  	</tbody> 
-						  </table> --%>
+						  </table> 
 						  <div>
 						  <button type="button" class="btn btn-dark" style="float:right;" data-bs-target="#addModal" data-bs-toggle="modal">전시 추가</button>
 						  </div>

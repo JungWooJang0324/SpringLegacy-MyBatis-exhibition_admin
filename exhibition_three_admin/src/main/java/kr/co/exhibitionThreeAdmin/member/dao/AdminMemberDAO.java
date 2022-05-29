@@ -18,6 +18,7 @@ public class AdminMemberDAO {
 		int totalCnt = 0;
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
 		totalCnt = ss.selectOne("kr.co.exhibitionThreeAdmin.member.totalCnt",sVO);
+		if(ss != null) {ss.close();}//end if
 		return totalCnt;
 	}//selectTotalCount
 	
@@ -26,8 +27,9 @@ public class AdminMemberDAO {
 		//핸들러 얻기
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
 		//쿼리문 수행
+	
 		list = ss.selectList("kr.co.exhibitionThreeAdmin.member.selectMember",sVO);
-		
+		if(ss != null) {ss.close();}//end if
 		return list;
 	}//selectMember
 }//class

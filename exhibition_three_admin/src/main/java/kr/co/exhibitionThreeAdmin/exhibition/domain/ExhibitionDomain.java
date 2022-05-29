@@ -1,8 +1,8 @@
-package kr.co.exhibitionThreeAdmin.exhibition.vo;
+package kr.co.exhibitionThreeAdmin.exhibition.domain;
 
 import java.sql.Date;
 
-public class ExhibitionVO {
+public class ExhibitionDomain {
 	private String  ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster, add_img; 
 	private int ex_num,adult,teen, child, ex_hall_num, cat_num;
 	private Date exhibit_date,deadline, input_date;

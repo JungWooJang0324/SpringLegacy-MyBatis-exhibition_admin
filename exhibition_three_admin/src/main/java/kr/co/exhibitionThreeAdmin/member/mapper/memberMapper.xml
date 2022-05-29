@@ -12,8 +12,7 @@
 		</where>
 	</select>
 	<select id="selectMember" resultType="kr.co.exhibitionThreeAdmin.member.domain.MemberDomain" parameterType="sVO">
-		select rnum,userid,password,name,
-			tel,zipcode,address1,address2,subscribe_date
+		select *
 			from(
 				select row_number() over(order by subscribe_date desc) rnum,userid,password,name,
 				tel,zipcode,address1,address2,subscribe_date,isdeleted

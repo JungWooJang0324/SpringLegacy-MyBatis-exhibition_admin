@@ -20,5 +20,6 @@
   </environments>
   <mappers>
     <mapper resource="kr/co/exhibitionThreeAdmin/member/mapper/memberMapper.xml"/>
+    <mapper resource="kr/co/exhibitionThreeAdmin/exhibition/mapper/exhibitionMapper.xml"/>
   </mappers>
 </configuration>

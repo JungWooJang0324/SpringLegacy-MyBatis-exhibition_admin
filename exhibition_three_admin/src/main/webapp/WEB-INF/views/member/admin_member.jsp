@@ -5,6 +5,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <% String field=request.getParameter("field"); %>
 <% String keyword=request.getParameter("keyword"); %>
 <% String pageScale=request.getParameter("pageScale"); %>
@@ -47,7 +48,7 @@ $(function(){
     	}//end if
     });//keydown
     $("#pageScale").change(function(){
-    	$("#")
+    	$("#searchFrm").submit();
     })
 });//ready
 function chkNull(){
@@ -98,12 +99,12 @@ function chkNull(){
                         </ol>
                         <!-- 검색창 -->
 							<div id="searchDiv" >
-                            	<form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(pageScale)&&pageScale!=null?"pageScale="+pageScale:""%>" name="searchFrm" id="searchFrm">
+                            	<form action="http://<%=application.getInitParameter("domain") %>/admin/member.do" name="searchFrm" id="searchFrm">
 			                         <div class="input-group mb-3" style="width:300px;float:left;">
 										 <select class="form-select" name="field" style="height:35px;">
 											  <option value="1" ${param.field eq'1'?"selected":"" }>이름</option>
 											  <option value="2" ${param.field eq '2'?"selected":"" }>아이디</option>
-											  <option value="3" ${param.field eq '3'?"selected":"" }>가입일</option>
+											  <option value="3" ${param.field eq '3'?"selected":"" }>주소</option>
 										  </select>
 										  <input type="text" class="form-control" value="${param.keyword}" name="keyword" id="keyword"style="width:100px;height:35px; margin-right:10px;">
 										  <input type="text" style="display:none"/><!-- 엔터 submit 방지용 -->
@@ -111,8 +112,6 @@ function chkNull(){
                                  			<i class="fa-solid fa-magnifying-glass"></i>
                                			  </button>
 									</div>
-							      </form>
-                             <form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword:""%>" name="rowNumFrm" id="rowNumFrm">
 								     <select class="form-select" name="pageScale" id="pageScale"style="width:85px;height:35px;float:right">
 									      <option value="5" selected>5개</option>
 									      <option value="10" ${param.pageScale eq "10"?"selected":"" }>10개</option>
@@ -146,14 +145,14 @@ function chkNull(){
 	    						 			<td><c:out value="${member.userid }"/></td>
 	    						 			<td><c:out value="${member.name}"/></td>
 	    						 			<td><c:out value="${member.address1}"/></td>
-	    						 			<td><c:out value="${member.subscribe_date}"/></td>
+	    						 			<td><fmt:formatDate pattern="yyyy-MM-dd" value="${member.subscribe_date}"/></td>
 	    						 		</tr>
 	    						 		</c:forEach>
 	    						 </c:if>
 						  	</tbody> 
 						  </table> 
 						  <div style="float:left;color:#333;">
- 								전체 : <c:out value="${totalCnt }"/>건                           
+ 								전체 : <c:out value="${totalCnt }"/>건                    
                             </div>
 		
                             </div>
@@ -167,8 +166,7 @@ function chkNull(){
 									<c:if test="${startPage gt pageBlock }">
 									<li>
 									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
-							href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&" : ""%><%=!"".equals(pageScale)&&pageScale != null?"pageScale="+pageScale : ""%>">
-							
+							href="member.do?currentPage=${startPage-5}<%=!"".equals(pageScale)&&pageScale != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
 									이전
 									</a>
 									</li>
@@ -185,7 +183,7 @@ function chkNull(){
 										<c:otherwise>
 											<li>
 											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" id="pNum" 
-											href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&" : ""%><%=!"".equals(pageScale)&&pageScale != null?"pageScale="+pageScale : ""%>">
+											href="member.do?currentPage=${i}<%=!"".equals(pageScale)&&pageScale != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale : ""%>">
 											<c:out value="${i}"/>
 											</a>
 											</li> 
@@ -194,7 +192,8 @@ function chkNull(){
 									</c:forEach>
 									<c:if test="${endPage lt pageCnt }">
 									<li>
-										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="member.do?field=${param.field}&keyword=${param.keyword}&pageScale=${param.pageScale}">
+										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" 
+										href="member.do?currentPage=${startPage+5}<%=!"".equals(pageScale)&&pageScale != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
 										다음
 										</a>
 										</li> 

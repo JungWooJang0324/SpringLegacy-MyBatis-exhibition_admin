@@ -15,7 +15,7 @@ public class AdminMemberController {
 	private AdminMemberService ams;
 	
 	@RequestMapping(value="/admin/member.do",method=RequestMethod.GET)
-	public String moveMember(Model model,SearchVO sVO) {
+	public String memberMain(Model model,SearchVO sVO) {
 	//		if(sVO.getPageScale()==0 ) {
 	//		sVO.setPageScale(10);
 	//	}//end if
@@ -43,6 +43,7 @@ public class AdminMemberController {
 		model.addAttribute("pageCnt",pageCnt);
 		model.addAttribute("endPage",endPage);
 		model.addAttribute("totalCnt",totalCnt);
+		model.addAttribute("pageBlock",pageBlock);
 		
 		return "member/admin_member";
 	}//moveMember

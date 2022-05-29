@@ -1,6 +1,5 @@
 package kr.co.exhibitionThreeAdmin.member.service;
 
-import java.lang.reflect.Member;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -30,13 +29,11 @@ public class AdminMemberService implements SearchService {
 		return cnt;
 	}
 
-
-
 	@Override
 	public int pageCnt(int totalCnt, int pageScale) {
 		int pageCnt = 0;
 		pageCnt = (int)Math.ceil((double)totalCnt/pageScale);
-		System.out.println(totalCnt+"/ "+pageCnt);
+	//	System.out.println(totalCnt+"/ "+pageCnt);
 //		if(totalCnt%pageScale!=0) {
 //			pageCnt++;
 //		}//end if
@@ -95,7 +92,7 @@ public class AdminMemberService implements SearchService {
 	 */
 	private void setField(SearchVO sVO) {
 		
-		String field="subscribe_date";
+		String field="address1";
 		String fieldNum = sVO.getField();
 		if(!"".equals(fieldNum)) {
 			if("1".equals(fieldNum) || "name".equals(fieldNum)) {
