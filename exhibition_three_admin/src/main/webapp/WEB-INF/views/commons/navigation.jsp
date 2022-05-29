@@ -30,7 +30,7 @@
                                 전시장 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">RESERVATIONS</div>
-                            <a class="nav-link" href="http://localhost/exhibitionThreeAdmin/admin/reservation.jsp" id="nav_booking">
+                            <a class="nav-link" href="http://localhost/exhibitionThreeAdmin/admin/reservation.do" id="nav_booking">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 예약 관리
                             </a>

@@ -13,10 +13,11 @@ import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 @Component
 public class AdminMemberDAO {
 	
-	public int selectTotalCount()throws PersistenceException{
+	
+	public int selectTotalCnt(SearchVO sVO)throws PersistenceException{
 		int totalCnt = 0;
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
-		totalCnt = ss.selectOne("kr.co.exhibitionThreeAdmin.member.totalCnt");
+		totalCnt = ss.selectOne("kr.co.exhibitionThreeAdmin.member.totalCnt",sVO);
 		return totalCnt;
 	}//selectTotalCount
 	

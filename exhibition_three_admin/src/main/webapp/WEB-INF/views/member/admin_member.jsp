@@ -5,6 +5,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% String field=request.getParameter("field"); %>
+<% String keyword=request.getParameter("keyword"); %>
+<% String pageScale=request.getParameter("pageScale"); %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,7 +17,7 @@
         <meta name="author" content="" />
         <title>Member</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://localhost/exhibitionThreeAdmin/css/styles.css" rel="stylesheet" />
+        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" />
         <!-- jQeury CDN -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
@@ -32,15 +35,31 @@
       #member_tab{ text-align:center;}
       .memberTitle{font-weight:bold}
 </style>
+
 <script type="text/javascript">
 $(function(){
      $("#searchBtn").click(function(){
-    	$("#searchFrm").submit();     
+        chkNull();
     })
-})
+    $("#keyword").keydown(function(e){
+    	if(e.which==13){
+    		chkNull();
+    	}//end if
+    });//keydown
+    $("#pageScale").change(function(){
+    	$("#")
+    })
+});//ready
+function chkNull(){
+	if($("#keyword").val()==""){
+		alert("검색어를 입력해주세요.");
+		return;
+	}//end if
+	$("#searchFrm").submit(); 
+}//chkNull
 </script>
     </head>
-    
+    	
     <body class="sb-nav-fixed">
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -66,7 +85,7 @@ $(function(){
         <div id="layoutSidenav">
             <div id="layoutSidenav_nav">
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-              <jsp:include page="../commons/navigation.jsp"/>
+                <jsp:include page="../commons/navigation.jsp"/>
                 </nav>
             </div>
             <div id="layoutSidenav_content">
@@ -79,51 +98,64 @@ $(function(){
                         </ol>
                         <!-- 검색창 -->
 							<div id="searchDiv" >
-                            	<form action="http://<%=application.getInitParameter("domain") %>/admin/member.do" name="searchFrm" id="searchFrm"class="d-flex" >
-			                        <div style="float:left">
-			                         <div class="input-group mb-3" style="width:300px;">
-										 <select class="form-select" name="option" style="height:35px;">
-											  <option value="name" ${param.option eq'name'?"selected":"" }>이름</option>
-											  <option value="userid" ${param.option eq 'userid'?"selected":"" }>아이디</option>
-											  <option value="subscribe_date" ${param.option eq 'subscribe_date'?"selected":"" }>가입일</option>
+                            	<form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(pageScale)&&pageScale!=null?"pageScale="+pageScale:""%>" name="searchFrm" id="searchFrm">
+			                         <div class="input-group mb-3" style="width:300px;float:left;">
+										 <select class="form-select" name="field" style="height:35px;">
+											  <option value="1" ${param.field eq'1'?"selected":"" }>이름</option>
+											  <option value="2" ${param.field eq '2'?"selected":"" }>아이디</option>
+											  <option value="3" ${param.field eq '3'?"selected":"" }>가입일</option>
 										  </select>
-										  <input type="text" class="form-control" value="${param.keyword}" name="keyword"style="width:100px;height:35px; margin-right:10px;">
+										  <input type="text" class="form-control" value="${param.keyword}" name="keyword" id="keyword"style="width:100px;height:35px; margin-right:10px;">
+										  <input type="text" style="display:none"/><!-- 엔터 submit 방지용 -->
 										  <button type="button" class="btn btn-outline-dark btn-sm" id="searchBtn" style="height: 35px;">
                                  			<i class="fa-solid fa-magnifying-glass"></i>
                                			  </button>
 									</div>
-			                        </div>
-								     <select class="form-select" name="pageScale" style="width:90px;height:35px;float:right">
-									      <option value="10" selected>10개</option>
-									      <option value="30" ${param.pageScale eq '30'?"selected":"" }>30개</option>
-									      <option value="50" ${param.pageScale eq '50'?"selected":"" }>50개</option>
-									      <option value="100" ${param.pageScale eq '100'?"selected":"" }>100개</option>
-								      </select>
 							      </form>
+                             <form action="http://<%=application.getInitParameter("domain") %>/admin/member.do?<%=!"".equals(keyword)&&keyword!=null?"field="+field+"&keyword="+keyword:""%>" name="rowNumFrm" id="rowNumFrm">
+								     <select class="form-select" name="pageScale" id="pageScale"style="width:85px;height:35px;float:right">
+									      <option value="5" selected>5개</option>
+									      <option value="10" ${param.pageScale eq "10"?"selected":"" }>10개</option>
+									      <option value="30" ${param.pageScale eq "30"?"selected":"" }>30개</option>
+									      <option value="50" ${param.pageScale eq "50"?"selected":"" }>50개</option>
+								      </select>
+							       </form> 
                         	</div> 
                         
+                            
                             <div class="card-body">
                              <!-- 테이블 정의 -->
-                                <table class="table table-hover" id="member_tab">
+                          <table class="table table-hover" id="member_tab">
                             	<thead> 
-							   <tr>
+							   		<tr>
                                     	<th>ID</th>
                                     	<th>이름</th>
+                                    	<th>주소</th>
                                     	<th>가입일</th>
                                     </tr>
 						  	</thead> 
 						  	<tbody> 
+						  		<c:if test="${empty memberList}">
+						  		<tr>
+						  			<td colspan="4">조회 결과가 없습니다.</td>
+						  		</tr>
+						  		</c:if>
+						  		<c:if test="${not empty memberList }">
 	    						 		<c:forEach var="member" items="${memberList}">
-                                    	<tr style="cursor:pointer" 
-                                    	onclick="detailMember('${member.userid}','${member.name }','${member.subscribe_date}','${member.address1}','${member.address2}','${member.zipcode}','${member.tel}')">
-	    						 			<td><input type="hidden" name="userId" id="userId"  value="<c:out value="${member.userid }"/>"><c:out value="${member.userid }"/></td>
+                                    	<tr style="cursor:pointer">
+	    						 			<td><c:out value="${member.userid }"/></td>
 	    						 			<td><c:out value="${member.name}"/></td>
+	    						 			<td><c:out value="${member.address1}"/></td>
 	    						 			<td><c:out value="${member.subscribe_date}"/></td>
 	    						 		</tr>
 	    						 		</c:forEach>
+	    						 </c:if>
 						  	</tbody> 
 						  </table> 
-						  
+						  <div style="float:left;color:#333;">
+ 								전체 : <c:out value="${totalCnt }"/>건                           
+                            </div>
+		
                             </div>
                                 <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
@@ -134,12 +166,14 @@ $(function(){
 									
 									<c:if test="${startPage gt pageBlock }">
 									<li>
-									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="admin/member.do?option=${param.option}&keyword=${param.keyword}&pageScale=${param.pageScale}">
+									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
+							href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&" : ""%><%=!"".equals(pageScale)&&pageScale != null?"pageScale="+pageScale : ""%>">
+							
 									이전
 									</a>
 									</li>
 									</c:if>
-									<c:forEach var="i" begin="${startPage}" end="${endPage-1}" step="1">
+									<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1">
 										<c:choose>
 										<c:when test="${i eq currentPage}">
 											<li>
@@ -150,7 +184,8 @@ $(function(){
 										</c:when>
 										<c:otherwise>
 											<li>
-											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" id="pNum"href="member.do?option=${param.option}&keyword=${param.keyword}&pageScale=${param.pageScale}">
+											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" id="pNum" 
+											href="member.do?currentPage=${i}<%=!"".equals(keyword)&&keyword != null?"&field="+field+"&keyword="+keyword+"&" : ""%><%=!"".equals(pageScale)&&pageScale != null?"pageScale="+pageScale : ""%>">
 											<c:out value="${i}"/>
 											</a>
 											</li> 
@@ -159,7 +194,7 @@ $(function(){
 									</c:forEach>
 									<c:if test="${endPage lt pageCnt }">
 									<li>
-										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="member.do?option=${param.option}&keyword=${param.keyword}&pageScale=${param.pageScale}">
+										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="member.do?field=${param.field}&keyword=${param.keyword}&pageScale=${param.pageScale}">
 										다음
 										</a>
 										</li> 
