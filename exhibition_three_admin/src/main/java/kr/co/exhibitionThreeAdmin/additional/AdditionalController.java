@@ -1,4 +1,4 @@
-package kr.co.exhibitionThreeAdmin;
+package kr.co.exhibitionThreeAdmin.additional;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -12,15 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Handles requests for the application home page.
+ * 추가적인 페이지
  */
 @Controller
-public class HomeController {
+public class AdditionalController {
 	
 	@RequestMapping(value = "/admin/index.do", method = RequestMethod.GET)
-	public String home(Model model) {
-		
+	public String index(Model model) {
 		return "index";
 	}
+	
+	@RequestMapping(value = "/admin/settings.do", method = RequestMethod.GET)
+	public String settings(Model model) {
+		return "commons/settings";
+	}
+	
+	
 	
 }

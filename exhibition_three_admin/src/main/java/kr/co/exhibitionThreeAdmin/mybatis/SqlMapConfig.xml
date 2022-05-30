@@ -23,5 +23,6 @@
     <mapper resource="kr/co/exhibitionThreeAdmin/exhibition/mapper/exhibitionMapper.xml"/>
     <mapper resource="kr/co/exhibitionThreeAdmin/exHall/mapper/exHallMapper.xml"/>
     <mapper resource="kr/co/exhibitionThreeAdmin/board/mapper/boardMapper.xml"/>
+    <mapper resource="kr/co/exhibitionThreeAdmin/reservations/mapper/reservationMapper.xml"/>
   </mappers>
 </configuration>
