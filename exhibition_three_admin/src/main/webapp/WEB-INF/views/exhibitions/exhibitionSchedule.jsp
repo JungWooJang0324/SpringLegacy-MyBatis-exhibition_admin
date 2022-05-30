@@ -5,6 +5,9 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% String field=request.getParameter("field"); %>
+<% String keyword=request.getParameter("keyword"); %>
+<% String pageScale=request.getParameter("pageScale"); %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -31,7 +34,26 @@
 	     	#memberTab{text-align:center;}
         </style>
 	<script type="text/javascript">
-		  
+	$(function(){
+	     $("#searchBtn").click(function(){
+	        chkNull();
+	    })
+	    $("#keyword").keydown(function(e){
+	    	if(e.which==13){
+	    		chkNull();
+	    	}//end if
+	    });//keydown
+	    $("#pageScale").change(function(){
+	    	$("#searchFrm").submit();
+	    })
+	});//ready
+	function chkNull(){
+		if($("#keyword").val()==""){
+			alert("검색어를 입력해주세요.");
+			return;
+		}//end if
+		$("#searchFrm").submit(); 
+	}//chkNull
 	</script>  
     </head>
     <body class="sb-nav-fixed">
@@ -72,20 +94,29 @@
                             <li class="breadcrumb-item active"><a href="index.jsp" class="breadcrumb-item active" style="text-decoration:none">Dashboard</a></li>
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
-                        <div class="card-body">
-                             <form class="d-flex" style="float:right" action="http://<%=application.getInitParameter("domain") %>/main/ex_schedule.jsp" name="dataSearchFrm">
-			                         <div class="input-group mb-3" style="width:350px;">
-											 <select class="form-select" aria-label=".form-select-sm example" style="height:35px;" name="dataSearchItem" >
-											  <option ${(param.dataSearchItem=="ex_name")?"selected":""} value="ex_name">전시명</option>
-											  <option ${(param.dataSearchItem=="ex_num")?"selected":""} value="ex_num">전시번호</option>
-											  <option ${(param.dataSearchItem=="input_date")?"selected":""} value="input_date">입력일</option>
+                        <!-- 검색창 -->
+                        <div id="serachDiv">
+                             <form class="d-flex" action="http://<%=application.getInitParameter("domain") %>/admin/exhibitions.do" id="searchFrm"name="searchFrm">
+			                         <div class="input-group mb-3" style="width:350px;float:left;">
+											 <select class="form-select" style="height:35px;" name="field" >
+											  <option ${(param.dataSearchItem=="1")?"selected":""} value="1">전시명</option>
+											  <option ${(param.dataSearchItem=="2")?"selected":""} value="2">전시번호</option>
+											  <option ${(param.dataSearchItem=="3")?"selected":""} value="3">입력일</option>
 											</select>
-										  <input type="text" class="form-control" aria-label="전시 검색" value="${param.dataSearchText}" name="dataSearchText" style="width:100px;height:35px; margin-right:10px;" >
+										  <input type="text" class="form-control" value="${param.keyword}" name="keyword" id="keyword" style="width:100px;height:35px; margin-right:10px;" >
+										  <input type="text" style="display:none"/>
 										      <button type="button" class="btn btn-outline-dark btn-sm" style="height: 35px;" id="searchBtn">
                                  			<i class="fa-solid fa-magnifying-glass"></i>
                                  			</button>
 									</div>
+									 <select class="form-select" name="pageScale" id="pageScale"style="width:85px;height:35px;float:right">
+									      <option value="5" selected>5개</option>
+									      <option value="10" ${param.pageScale eq "10"?"selected":"" }>10개</option>
+									      <option value="30" ${param.pageScale eq "30"?"selected":"" }>30개</option>
+									      <option value="50" ${param.pageScale eq "50"?"selected":"" }>50개</option>
+								      </select>
 							      </form> 
+						<div class="card-body">
                             <!-- 테이블 정의 -->
                                <table class="table table-hover" id="memberTab" >
                             	<thead> 
@@ -116,65 +147,58 @@
 						  <button type="button" class="btn btn-dark" style="float:right;" data-bs-target="#addModal" data-bs-toggle="modal">전시 추가</button>
 						  </div>
 						  <!-- 페이지 -->
-						    <div> 
-									<%-- <ul class="pagination justify-content-center"> 
-								<%
-								if(count > 0){
-									int pageCount = count/pageSize + (count%pageSize == 0 ? 0 : 1); //레코드 수에 따른 페이지 수 구하기
+						    <div style="float:left;color:#333;">
+ 								전체 : <c:out value="${totalCnt }"/>건                    
+                            </div>
+		
+                            </div>
+                                <div id="pageNavigation">
+								<ul class="pagination justify-content-center"> 
+								<c:if test="${not empty exhibitionList}">
+									<c:if test="${endPage gt pageCnt }">
+										<c:set var="endPage" value="${pageCnt}"/>
+									</c:if>
 									
-									int pageBlock=10; // 한번에 보여질 페이지 번호의 갯수
-									
-									int startPage = ((currentPage-1)/pageBlock)*pageBlock+1;//첫페이지 번호
-									
-									int endPage = startPage + pageBlock - 1;//마지막 페이지 번호
-
-									if(endPage > pageCount){
-										endPage = pageCount;
-									}
-									
-									if(startPage > pageBlock){ // 11,21,31...페이지 이상 넘어갔을 경우 이전 버튼이 보인다
-										%>  
+									<c:if test="${startPage gt pageBlock }">
 									<li>
-					<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="ex_schedul.jsp?pageNum=<%=startPage-5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
+									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
+							href="exhibitions.do?currentPage=${startPage-5}<%=!"".equals(pageScale)&&pageScale != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
 									이전
 									</a>
-									</li> <% 
-										}//end if
-										 for(int i = startPage; i <= endPage; i++){ 
-											 if(i == currentPage){ //현재 페이지인 경우 링크 생략
-										 	%>
+									</li>
+									</c:if>
+									<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1">
+										<c:choose>
+										<c:when test="${i eq currentPage}">
 											<li>
-											<a style="margin-right:10px;"class="text-secondary" href="">
-											<%=i %>
+											<a style="margin-right:10px;"class="text-secondary" href="#void">
+												<c:out value="${i}"/>
 											</a>
 											</li> 
-											<%  
-											 }else{
-											%>
+										</c:when>
+										<c:otherwise>
 											<li>
-											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" 
-											href="ex_schedule.jsp?pageNum=<%=i%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
-											<%=i %>
+											<a style="margin-right:10px;text-decoration:none;"class="text-secondary" id="pNum" 
+											href="exhibitions.do?currentPage=${i}<%=!"".equals(pageScale)&&pageScale != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale : ""%>">
+											<c:out value="${i}"/>
 											</a>
 											</li> 
-											<% 	 
-											 }
-											 %>
-										<%
-										 }//end for
-											if(endPage < pageCount){//전체 페이지 수가 현재 블록 페이지 수보다 클 경우 다음 버튼
-										%>
-										<li>
-										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="ex_schedule.jsp?pageNum=<%=startPage+5%>&dataSearchItem=${param.dataSearchItem}&dataSearchText=${param.dataSearchText}">
+										</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									<c:if test="${endPage lt pageCnt }">
+									<li>
+										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" 
+										href="exhibitions.do?currentPage=${startPage+5}<%=!"".equals(pageScale)&&pageScale != null?"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
 										다음
 										</a>
 										</li> 
-										 <% 
-											}//end if
-								}//end if
-								%>
-								</ul>  --%>
-						  </div>
+									
+									</c:if>
+								</c:if>
+								</ul> 
+							</div>
+                        </div>
 						  <!-- 페이지 끝 -->
                             </div>
                     </div>

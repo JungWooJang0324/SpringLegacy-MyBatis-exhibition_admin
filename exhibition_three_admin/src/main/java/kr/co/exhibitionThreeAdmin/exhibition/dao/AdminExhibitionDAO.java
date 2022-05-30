@@ -18,4 +18,18 @@ public class AdminExhibitionDAO {
 		if(ss != null) {ss.close();}//end if
 		return list;
 	}//selectExhibition
+	
+	public int totalCount(SearchVO sVO)throws PersistenceException{
+		int totalCnt = 0;
+		//MyBatis Handler 얻기
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		//쿼리문 수행
+		totalCnt = ss.selectOne("kr.co.exhibitionThreeAdmin.exhibition.totalCnt",sVO);
+		
+		//MyBatis Handler 끊기
+		if(ss != null) {ss.close();}//end if
+		
+		return totalCnt;
+	}//totalCount
+	
 }//class

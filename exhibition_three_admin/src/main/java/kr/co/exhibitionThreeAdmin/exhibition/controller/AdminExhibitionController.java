@@ -20,10 +20,30 @@ public class AdminExhibitionController {
 	
 	@RequestMapping(value="/admin/exhibitions.do",method=RequestMethod.GET)
 	public String exhibitionMain(Model model,SearchVO sVO) {
-		List<ExhibitionDomain> list = null;
-		list= as.searchExhibition(sVO);
+		int pageScale = sVO.getPageScale();
+		int totalCnt = as.searchTotalCnt(sVO);
+		int pageCnt = as.pageCnt(totalCnt, pageScale);
+		int currentPage = sVO.getCurrentPage();
+		int startNum = as.startNum(currentPage,sVO.getPageScale());
+		int endNum = as.endNum(startNum, pageScale);
+		int pageBlock = as.pageBlock();
+		int startPage = as.startPage(currentPage, pageBlock);
+		int endPage = as.endPage(startPage, pageBlock);
+		sVO.setStartNum(startNum);
+		sVO.setEndNum(endNum);
 		
-		model.addAttribute("exhibitionList",list);
+		
+		model.addAttribute("exhibitionList", as.searchExhibition(sVO));
+		model.addAttribute("startNum",startNum);
+		model.addAttribute("endNum",endNum);
+		model.addAttribute("startNum",startNum);
+		model.addAttribute("startPage",startPage);
+		model.addAttribute("pageCnt",pageCnt);
+		model.addAttribute("endPage",endPage);
+		model.addAttribute("totalCnt",totalCnt);
+		model.addAttribute("pageBlock",pageBlock);
+		model.addAttribute("currentPage",currentPage);
+		
 		return "exhibitions/exhibitionSchedule";
 	}//moveExhibition
 }
