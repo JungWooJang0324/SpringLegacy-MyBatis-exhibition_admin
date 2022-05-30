@@ -35,7 +35,7 @@
                                 예약 관리
                             </a>
                             <div class="sb-sidenav-menu-heading">BOARD</div>
-                            <a class="nav-link" href="http://localhost/exhibitionThreeAdmin/admin/board.jsp" id="nav_board">
+                            <a class="nav-link" href="http://localhost/exhibitionThreeAdmin/admin/board.do" id="nav_board">
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
