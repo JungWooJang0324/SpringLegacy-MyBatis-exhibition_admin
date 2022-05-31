@@ -3,6 +3,7 @@ package kr.co.exhibitionThreeAdmin.reservations.domain;
 import java.sql.Date;
 
 public class ReservationDomain {
+	
 	private int rez_num,rez_count,ex_num, price;
 	private Date visit_date,rez_date;
 	private String name,ex_name;

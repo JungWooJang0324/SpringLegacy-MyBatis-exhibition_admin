@@ -23,6 +23,29 @@ public class ReservationDAO {
 
 		return list;
 	}//rezMainList
+
+	public ReservationDomain selectRezDetail(int rezNum) throws PersistenceException{
+		ReservationDomain rd= null;
+		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		rd = ss.selectOne("kr.co.exhibitionThreeAdmin.reservation.rezDetail", rezNum);
+		if(ss != null) {ss.close();}//end if
+		
+		return rd;
+	}//rezMainList
+	
+	public int updateRez(ReservationVO rVO) throws PersistenceException{
+		int cnt = 0;
+		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.update("kr.co.exhibitionThreeAdmin.reservation.rezModify", rVO);
+		
+		if(cnt==1) ss.commit();
+		
+		if(ss != null) {ss.close();}//end if
+		
+		return cnt;
+	}//rezMainList
 		
 
 	

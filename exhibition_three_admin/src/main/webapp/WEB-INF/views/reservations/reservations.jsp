@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
@@ -37,7 +37,78 @@
 
 <script type="text/javascript">
 $(function(){
-});
+	 $("#findNamesBtn").click(function() {
+	    	document.dataSearchFrm.submit();
+		});//findNamesBtn
+		
+ 	$("#rezDetail").on("show.bs.modal", function(e) {		
+	   	var num= $(e.relatedTarget).data('num');
+	 	$.ajax({
+			url:"http://localhost/exhibitionThreeAdmin/admin/rezDetail.do",
+			data: {"rezNum":num},
+			async:false,
+			type: "get",
+			dataType:"json",
+			error:function(xhr){
+				console.log("rezDetail"+xhr.status+", "+xhr.statusText);
+			},
+			success:function(jsonObj){
+				$("#exName").val(jsonObj.exName);				
+				$("#exNum").val(jsonObj.exNum);				
+				$("#resNum").val(num);				
+				$("#userName").val(jsonObj.name);				
+				$("#rezCount").val(jsonObj.rezCount);				
+				$("#rezDate").val(jsonObj.rezDate);				
+				$("#userId").val(jsonObj.userId);				
+				$("#visitDate").val(jsonObj.visitDate);				
+				$("#price").val(jsonObj.price);	
+			}
+		});//ajax		
+ 	});//rezDetail
+ 	
+ 	$("#confirmModify").click(function() {
+		$("#confirmModal").modal('show');
+	});
+});//ready
+
+function confirmModify() {
+	var num= $("#resNum").val();
+	var rezCount=$("#rezCount").val();
+	var visitDate=$("#visitDate").val();
+		
+	var now= new Date();
+	
+	if(rezCount<1){
+		alert("인원은 1명 이상이어야합니다.")
+		return;
+	}
+	
+	if(now > new Date(visitDate)){
+		alert("예약할 수 없는 날짜입니다.");
+		return;
+			
+	}
+	if(rezCount=="" || visitDate==""){
+		alert("예약인원과 방문날짜는 비어있을 수 없습니다.");
+		return;
+	}
+	 $.ajax({
+		url:"http://localhost/exhibitionThreeAdmin/admin/rezModify.do",
+		data: {"rez_count":rezCount, "visit_date":visitDate, "rez_num":num},
+		async:false,
+		type: "get",
+		dataType:"json",
+		error:function(xhr){
+			console.log("confirmModify : "+xhr.status+", "+xhr.statusText);
+		},
+		success:function(jObj){
+			if(jObj.msg=="성공"){
+				alert("수정되었습니다.");
+				location.href="http://localhost/exhibitionThreeAdmin/admin/reservation.do";
+			}
+		}
+	}); //ajax
+} //confirmModify
 </script>
     </head>
    <body class="sb-nav-fixed">
@@ -75,13 +146,13 @@ $(function(){
                     <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">예약 관리</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.jsp" style="text-decoration:none; color:#333;">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="http://localhost/exhibitionThreeAdmin/admin/index.do" style="text-decoration:none; color:#333;">Dashboard</a></li>
                             <li class="breadcrumb-item active">예약 관리</li>
                         </ol>
                         <!-- 검색창 -->
 						<div id="searchDiv">
-                            <form class="d-flex" action="#" name="dataSearchFrm">
-                            <%-- 	<div class="input-group mb-3" style="width:300px; height:40px; margin-top:10px;" >
+                            <form class="d-flex" action="http://localhost/exhibitionThreeAdmin/admin/reservation.do" name="dataSearchFrm">
+                            	<div class="input-group mb-3" style="width:300px; height:40px; margin-top:10px;" >
 								  <span class="input-group-text" id="addon-wrapping">방문날짜</span>
 					      		  <input type="date" name="vDate" class="form-control" placeholder="방문 일자" style="width:200px;" id="vDate" value="${param.vDate}">
 								</div>
@@ -93,7 +164,7 @@ $(function(){
 									</select>
 								  <input type="text" class="form-control" style="width:100px" name="findCatName" id="findCatName" value="${param.findCatName}">
 								  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" id="findNamesBtn">검색</button>
-								</div> --%>
+								</div> 
 						      </form>
                         	</div>
                         	
@@ -259,7 +330,7 @@ $(function(){
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-outline-info" onclick="cancelRez(<%-- ${res.rezNum} --%>)">Ok</button>
+				        <button type="button" class="btn btn-outline-info" onclick="cancelRez(${res.rezNum})">Ok</button>
 				      </div>
 				    </div>
 				  </div>
@@ -276,7 +347,7 @@ $(function(){
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-outline-info" onclick="rezConfirm(<%-- ${res.rezNum} --%>)">Ok</button>
+				        <button type="button" class="btn btn-outline-info" onclick="rezConfirm(${res.rezNum})">Ok</button>
 				      </div>
 				    </div>
 				  </div>
@@ -293,7 +364,7 @@ $(function(){
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-outline-info" onclick="confirmModify(<%-- ${res.rezNum} --%>)">Ok</button>
+				        <button type="button" class="btn btn-outline-info" onclick="confirmModify(${res.rezNum})">Ok</button>
 				      </div>
 				    </div>
 				  </div>
