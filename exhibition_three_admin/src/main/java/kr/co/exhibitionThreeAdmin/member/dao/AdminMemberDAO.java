@@ -32,4 +32,15 @@ public class AdminMemberDAO {
 		if(ss != null) {ss.close();}//end if
 		return list;
 	}//selectMember
+	
+	public MemberDomain selectDetail(SearchVO sVO) throws PersistenceException {
+		MemberDomain md = null;
+		//핸들러 얻기
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		//쿼리문 수행
+		
+		md = ss.selectOne("kr.co.exhibitionThreeAdmin.member.selectMember",sVO);
+		if(ss != null) {ss.close();}//end if
+		return md;
+	}//selectMember
 }//class

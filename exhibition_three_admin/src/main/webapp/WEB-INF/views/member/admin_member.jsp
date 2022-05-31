@@ -25,10 +25,7 @@
         <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="js/scripts.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
         <script src="assets/demo/chart-bar-demo.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script src="js/datatables-simple-demo.js"></script>
      	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
@@ -50,6 +47,41 @@ $(function(){
     $("#pageScale").change(function(){
     	$("#searchFrm").submit();
     })
+    
+ $("#memberDetail").on('show.bs.modal',function(e){
+	 var userid = $(e.relatedTarget).data('id');
+	$.ajax({
+		url:"detailMember.do",
+		data:{
+			userid: userid
+		},
+		dataType:"json",
+		type:"get",
+		contentType:"application/json",
+		async:false,
+		success:function(jsonObj){
+			var id = jsonObj.userid.split('@');
+	  		$("#id").val(id[0]);
+	  		$("#server").val(id[1]);
+	  		$("#userName").val(jsonObj.name);
+	  		$("#tel").val(jsonObj.tel);
+	  		$("#zipcode").val(jsonObj.zipcode);
+	  		$("#address1").val(jsonObj.address1);
+	  		$("#address2").val(jsonObj.address2);
+	  		/* $("#subDate").val(jsonObj.subscribe_date); */
+		},
+		error:function(request, status, error){
+			alert("code : "+request.status+"\n"+"message : "+request.responseText+"\n"+"error:"+error);
+		}
+	});
+  })//detailMember
+	$(".exit").click(function(){
+  		$("#confirmExit").modal('show');
+  	});
+		$("#exitOk").click(function(){
+  		$("#confirmExit").modal('hide');
+			$("#memberDetail").modal('hide');
+		}); 
 });//ready
 function chkNull(){
 	if($("#keyword").val()==""){
@@ -58,6 +90,8 @@ function chkNull(){
 	}//end if
 	$("#searchFrm").submit(); 
 }//chkNull
+
+
 </script>
     </head>
     	
@@ -140,8 +174,8 @@ function chkNull(){
 						  		</tr>
 						  		</c:if>
 						  		<c:if test="${not empty memberList }">
-	    						 		<c:forEach var="member" items="${memberList}">
-                                    	<tr style="cursor:pointer">
+	    						 		<c:forEach var="member" items="${memberList}" >
+                                    	<tr style="cursor:pointer"data-bs-target="#memberDetail" data-bs-toggle="modal"data-id='${member.userid}')>
 	    						 			<td><c:out value="${member.userid }"/></td>
 	    						 			<td><c:out value="${member.name}"/></td>
 	    						 			<td><c:out value="${member.address1}"/></td>

@@ -3,6 +3,7 @@ package kr.co.exhibitionThreeAdmin.member.service;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -116,6 +117,26 @@ public class AdminMemberService implements SearchService {
 		return list;
 	}//searchMember
 	
-	
+	public String searchDetail(String userid) {
+		SearchVO sVO  = new SearchVO();
+		MemberDomain md = null;
+		JSONObject jsonObj = new JSONObject();
+		sVO.setField("userid");
+		sVO.setKeyword(userid);
+		try {
+			md = aDAO.selectDetail(sVO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		jsonObj.put("userid", md.getUserid());
+		jsonObj.put("name", md.getName());
+		jsonObj.put("address1", md.getAddress1());
+		jsonObj.put("address2", md.getAddress2());
+		jsonObj.put("tel", md.getTel());
+		jsonObj.put("zipcode", md.getZipcode());
+		
+		return jsonObj.toJSONString();
+	}
 	
 }//class

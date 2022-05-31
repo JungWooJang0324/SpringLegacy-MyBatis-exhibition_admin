@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -100,4 +101,34 @@ public class AdminExhibitionService implements SearchService{
 		}//end catch
 		return list;
 	}//searchExhibition
+	
+	public String searchExDetail(String ex_num) {
+		SearchVO sVO = new SearchVO();
+		sVO.setField("ex_num");
+		sVO.setKeyword(ex_num);
+		ExhibitionDomain ed=null;
+		try {
+		ed = aDAO.selectExDetail(sVO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("exName", ed.getEx_name());
+		jsonObj.put("teen", ed.getTeen());
+		jsonObj.put("adult",ed.getAdult() );
+		jsonObj.put("child",ed.getChild() );
+		jsonObj.put("totalCount",ed.getTotal_count() );
+		jsonObj.put("watchCount",ed.getWatch_count() );
+		jsonObj.put("exInfo",ed.getEx_info());
+		jsonObj.put("exIntro",ed.getEx_info() );
+		jsonObj.put("addImg",ed.getAdd_img() );
+		jsonObj.put("exPoster",ed.getExhibition_poster() );
+		jsonObj.put("exStatus",ed.getEx_status());
+		
+		
+		
+		return jsonObj.toJSONString();
+	}//searchExDetail
+	
 }//class

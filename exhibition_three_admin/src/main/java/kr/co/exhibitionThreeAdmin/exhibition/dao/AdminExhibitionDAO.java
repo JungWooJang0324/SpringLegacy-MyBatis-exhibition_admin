@@ -32,4 +32,14 @@ public class AdminExhibitionDAO {
 		return totalCnt;
 	}//totalCount
 	
+	public ExhibitionDomain selectExDetail(SearchVO sVO)throws PersistenceException{
+		ExhibitionDomain ed = null;
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		ed=ss.selectOne("kr.co.exhibitionThreeAdmin.exhibition.selectEx",sVO);
+		
+		if(ss != null) {ss.close();}//end if
+		
+		return ed;
+	}//selectExhibitionDetail
+	
 }//class

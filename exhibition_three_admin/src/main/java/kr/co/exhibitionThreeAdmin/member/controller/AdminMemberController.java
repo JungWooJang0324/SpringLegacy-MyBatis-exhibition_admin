@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.exhibitionThreeAdmin.member.service.AdminMemberService;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
@@ -14,7 +17,7 @@ public class AdminMemberController {
 	@Autowired(required = false)
 	private AdminMemberService ams;
 	
-	@RequestMapping(value="/admin/member.do",method=RequestMethod.GET)
+	@RequestMapping(value="/admin/member.do",method=GET)
 	public String memberMain(Model model,SearchVO sVO) {
 	//		if(sVO.getPageScale()==0 ) {
 	//		sVO.setPageScale(10);
@@ -48,5 +51,11 @@ public class AdminMemberController {
 		return "member/admin_member";
 	}//moveMember
 	
+	@ResponseBody
+	@RequestMapping(value="/admin/detailMember.do",method=GET,produces = "application/json;charset=UTF-8")
+	public String detailMember(String userid) {
+		
+		return ams.searchDetail(userid);
+	}//detailMember
 	
 }//class

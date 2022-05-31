@@ -46,6 +46,48 @@
 	    $("#pageScale").change(function(){
 	    	$("#searchFrm").submit();
 	    })
+	    $("#modifyModal").on('show.bs.modal',function(e){
+	    	 var ex_num = $(e.relatedTarget).data('num');
+	    	 $.ajax({
+	    		 data:{"ex_num":ex_num},
+	    		 url:"exDetail.do",
+	    		 dataType:"json",
+	    		 type:"post",
+	    		 async:false,
+	    		 success:function(jsonObj){
+	    			 $("#exNum").val(ex_num);
+					 	//$("#startDate").val(jsonObj.exhibitDate);
+						//$("#endDate").val(jsonObj.deadline); 
+						$("#exIntro").val(jsonObj.exIntro);
+						$("#exName").val(jsonObj.exName);
+						$("#exInfo").val(jsonObj.exInfo);
+						$("#totalCount").val(jsonObj.totalCount);
+						$("#watchCount").val(jsonObj.watchCount); 
+						$("#adult").val(jsonObj.adult); 
+						$("#teen").val(jsonObj.teen); 
+						$("#child").val(jsonObj.child); 
+						//$("#exHall").val(jsonObj.exHallNum);
+						$("#hidPoster").val(jsonObj.exPoster);
+						$("#hidAddImg").val(jsonObj.addImg);
+						/* $("#posterImg").attr("src","../images/"+jsonObj.exPoster);//포스터 보이기
+						$("#addImage").attr("src","../images/"+jsonObj.addImg);//추가이미지 보이기 */
+						$("#exStatus").val(jsonObj.exStatus);
+	    		 },
+	    		 error:function(request, status, error){
+	    				alert("code : "+request.status+"\n"+"message : "+request.responseText+"\n"+"error:"+error);
+	    			}
+	    		 
+	    	 });//end ajax
+	    	 
+	    });//end modifyModal
+	    $(".exit").click(function(){
+			$("#confirmExit").modal('show');
+		});
+		$("#exitOk").click(function(){
+			$("#confirmExit").modal('hide');
+			$("#modifyModal").modal('hide');
+			$("#addModal").modal('hide');
+		})
 	});//ready
 	function chkNull(){
 		if($("#keyword").val()==""){
@@ -54,6 +96,8 @@
 		}//end if
 		$("#searchFrm").submit(); 
 	}//chkNull
+	
+	
 	</script>  
     </head>
     <body class="sb-nav-fixed">
@@ -96,7 +140,7 @@
                         </ol>
                         <!-- 검색창 -->
                         <div id="serachDiv">
-                             <form class="d-flex" action="http://<%=application.getInitParameter("domain") %>/admin/exhibitions.do" id="searchFrm"name="searchFrm">
+                             <form action="http://<%=application.getInitParameter("domain") %>/admin/exhibitions.do" id="searchFrm"name="searchFrm">
 			                         <div class="input-group mb-3" style="width:350px;float:left;">
 											 <select class="form-select" style="height:35px;" name="field" >
 											  <option ${(param.dataSearchItem=="1")?"selected":""} value="1">전시명</option>
@@ -129,7 +173,7 @@
 						  		<tbody> 
 						  			<c:if test="${not empty exhibitionList }">
 	    						 		<c:forEach var="exhibition" items="${exhibitionList }">
-                                    	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${list.exNum }">
+                                    	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${ exhibition.ex_num}">
  											<td><c:out value="${exhibition.ex_num }"/></td>
  											<td><c:out value="${exhibition.ex_name }"/></td>
  											<td><c:out value="${exhibition.input_date }"/></td>

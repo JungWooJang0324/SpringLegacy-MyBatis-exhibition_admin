@@ -24,7 +24,12 @@
 				</if>
 			</where> 
 			)
-				where ex_status in('y','p') and (rnum between #{startNum} and #{endNum})
+				<where>
+				ex_status in('y','p') 
+				<if test="startNum != 0 or endNum != 0">
+				and (rnum between #{startNum} and #{endNum})
+				</if>
+				</where>
 	</select>
 
 </mapper>

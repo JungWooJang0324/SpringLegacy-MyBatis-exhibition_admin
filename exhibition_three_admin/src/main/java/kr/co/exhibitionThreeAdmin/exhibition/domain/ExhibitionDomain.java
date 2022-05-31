@@ -3,8 +3,8 @@ package kr.co.exhibitionThreeAdmin.exhibition.domain;
 import java.sql.Date;
 
 public class ExhibitionDomain {
-	private String  ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster, add_img; 
-	private int ex_num,adult,teen, child, ex_hall_num, cat_num;
+	private String  ex_name, ex_info, ex_intro,    ex_status, exhibition_poster, add_img; 
+	private int ex_num,adult,teen, child, ex_hall_num, cat_num,total_count,watch_count;
 	private Date exhibit_date,deadline, input_date;
 	public String getEx_name() {
 		return ex_name;
@@ -23,12 +23,6 @@ public class ExhibitionDomain {
 	}
 	public void setEx_intro(String ex_intro) {
 		this.ex_intro = ex_intro;
-	}
-	public String getTotal_count() {
-		return total_count;
-	}
-	public void setTotal_count(String total_count) {
-		this.total_count = total_count;
 	}
 	public String getEx_status() {
 		return ex_status;
@@ -84,6 +78,18 @@ public class ExhibitionDomain {
 	public void setCat_num(int cat_num) {
 		this.cat_num = cat_num;
 	}
+	public int getTotal_count() {
+		return total_count;
+	}
+	public void setTotal_count(int total_count) {
+		this.total_count = total_count;
+	}
+	public int getWatch_count() {
+		return watch_count;
+	}
+	public void setWatch_count(int watch_count) {
+		this.watch_count = watch_count;
+	}
 	public Date getExhibit_date() {
 		return exhibit_date;
 	}
@@ -104,13 +110,12 @@ public class ExhibitionDomain {
 	}
 	@Override
 	public String toString() {
-		return "ExhibitionDomain [ex_name=" + ex_name + ", ex_info=" + ex_info + ", ex_intro=" + ex_intro + ", total_count="
-				+ total_count + ", ex_status=" + ex_status + ", exhibition_poster=" + exhibition_poster + ", add_img="
-				+ add_img + ", ex_num=" + ex_num + ", adult=" + adult + ", teen=" + teen + ", child=" + child
-				+ ", ex_hall_num=" + ex_hall_num + ", cat_num=" + cat_num + ", exhibit_date=" + exhibit_date
-				+ ", deadline=" + deadline + ", input_date=" + input_date + "]";
+		return "ExhibitionDomain [ex_name=" + ex_name + ", ex_info=" + ex_info + ", ex_intro=" + ex_intro
+				+ ", ex_status=" + ex_status + ", exhibition_poster=" + exhibition_poster + ", add_img=" + add_img
+				+ ", ex_num=" + ex_num + ", adult=" + adult + ", teen=" + teen + ", child=" + child + ", ex_hall_num="
+				+ ex_hall_num + ", cat_num=" + cat_num + ", total_count=" + total_count + ", watch_count=" + watch_count
+				+ ", exhibit_date=" + exhibit_date + ", deadline=" + deadline + ", input_date=" + input_date + "]";
 	}
-	
 	
 	
 }//class
