@@ -6,6 +6,8 @@
     info="게시판"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!-- /exhibitionThreeAdmin/admin/
+	/admin/admin/	 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +33,7 @@
         <style>
         	hr {width:200px; margin: 0px auto; margin-top:10px;}
         	#searchDiv{ margin-bottom: 30px; text-align: right}
-        	
+       		#buttonDiv{height: 50px; }
         </style>
         
 <script type="text/javascript">
@@ -45,7 +47,7 @@ $(function(){
 	
 	//글쓰기버튼 클릭
 	$("#btnAdd").click(function(){
-		location.href="http://localhost/admin/admin/addBoard.do";
+		location.href="http://localhost/exhibitionThreeAdmin/admin/addBoard.do";
 	});
 	
 	//게시글 상세보기 
@@ -214,12 +216,12 @@ function chkByte(obj, maxByte){
                         </ol>
                         <!-- 검색 div -->
                         <div class="card-body" style="width: 400px; float: right;">
-                            <form class="d-flex" id = "searchFrm" class="d-flex" name="searchFrm" action="http://<%=application.getInitParameter("domain") %>/main/board.jsp">
-	                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"   >
-									  <option ${param.option =="title"? "selected":""} value="title">제목 </option>
-									  <option ${param.option =="userid"? "selected":""} value="userid">작성자</option>
-									  <option ${param.option =="input_date"? "selected":""} value="input_date">작성일</option>
-									  <option ${param.option =="cat_name"? "selected":""} value="cat_name">카테고리</option>
+                            <form class="d-flex" id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/exhibitionThreeAdmin/admin/board.do">
+	                        	 <select name = "optNum" id="optNum" class="form-select" aria-label=".form-select-sm example"   >
+									  <option ${param.optNum =="0"? "selected":""} value="0">제목 </option>
+									  <option ${param.optNum =="1"? "selected":""} value="1">작성자</option>
+									  <option ${param.optNum =="2"? "selected":""} value="2">작성일</option>
+									  <option ${param.optNum =="3"? "selected":""} value="3">카테고리</option>
 								</select>
 	                        	<input type="text" id="search"  name="keyword" value="${param.keyword}" class="form-control" style="margin-right: 10px">
 	                        	<button type="button" id="searchBtn" class="btn btn-outline-dark btn-sm" style="height: 35px;">
@@ -244,8 +246,11 @@ function chkByte(obj, maxByte){
                                     </thead>
                                     <tbody>
                                   	<c:forEach var="bDomain" items="${boardList}">
+                                  	<!-- 검색했을 때 6번 나오는 거 해결필요 -->
+                                  	<c:set var="i" value='${i+1 }'/>
+									<c:set var="cnt" value='${totalCnt-(currentPage-1)*pageScale-i+1 }'/>
                                          <tr class="trDetail" style="cursor:pointer">
-                                            <td><c:out value="${bDomain.title}"/></td>
+                                            <td><c:out value="${cnt}"/></td>
                                             <td><c:out value="${bDomain.title}"/></td>                                          	
                                             <td>
                                             	<c:choose>
@@ -259,11 +264,11 @@ function chkByte(obj, maxByte){
                                            	</td>
                                             <td><fmt:formatDate pattern="yyyy-MM-dd" value="${bDomain.input_date}"/></td>
                                             <td><c:out value="${bDomain.cat_name}"/></td>
-                                            <td><c:out value="${bDomain.cat_name}"/></td>
-                                   	 		<%-- <td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost(${bVO.bdid})">삭제</button></td>
+                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost(${bVO.bdid})">삭제</button></td>
 	                                   	 	<td id="hiddenTd" style="padding: 0px;">
                                         		<input id="bdId" class="bdId" name="bdId" type="hidden" value="${bVO.bdid}"/>
-                                        	</td> --%>
+                                        	</td> 
+		                                   	 <c:set var="cnt" value="${cnt-1}"></c:set>
 	                                   	 </tr>
                                    	</c:forEach>
                                    	<c:if test="${empty boardList}">
@@ -275,14 +280,38 @@ function chkByte(obj, maxByte){
                                    </table>
                                  </div>
                                 <!-- 글쓰기 버튼 -->
-                                <div>
+                                <div id="buttonDiv">
 						  			<button type="button" class="btn btn-dark" style="float:right;" id="btnAdd" data-bs-target="#addModal" data-bs-toggle="modal">글쓰기</button>
 						  		</div>
                                </div>
+                              </div>
                		 <!-- 페이지 이동 -->
                    	 <div id="pageNavigation">
 							<ul class="pagination justify-content-center"> 
+							<%
+								String optNum = request.getParameter("optNum");
+								String keyword = request.getParameter("keyword");
+							%>
+							<c:if test="${prev }">
+								 	<li><a href="http://localhost/exhibitionThreeAdmin/admin/board.do?currentPage=${prevNum}<%=!"".equals(keyword) && keyword!=null?"&optNum="+optNum+"&keyword="+keyword:""%>" 
+												style="margin-right:10px;text-decoration:none;"class="text-secondary">
+											<c:out value="이전"/>
+									</a></li>
+							 	</c:if>
+								<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1" >
+									<li><a href="http://localhost/exhibitionThreeAdmin/admin/board.do?currentPage=${i}<%=!"".equals(keyword) && keyword!=null?"&optNum="+optNum+"&keyword="+keyword:""%>" 
+											style="margin-right:10px;text-decoration:none;"class="text-secondary">
+										<c:out value="${i}"/>
+									</a></li>
+								</c:forEach>
+								<c:if test="${next }">
+								 	<li><a href="http://localhost/exhibitionThreeAdmin/admin/board.do?currentPage=${nextNum}<%=!"".equals(keyword) && keyword!=null?"&optNum="+optNum+"&keyword="+keyword:""%>" 
+												style="margin-right:10px;text-decoration:none;"class="text-secondary">
+											<c:out value="다음"/>
+									</a></li>
+							 	</c:if>
 							</ul>
+						</div>
                		</div>
                 </main>
                 	<%-- <jsp:include page="admin_footer.html"/> --%>

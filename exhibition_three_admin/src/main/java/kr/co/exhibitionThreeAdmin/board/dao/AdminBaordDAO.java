@@ -10,25 +10,26 @@ import kr.co.exhibitionThreeAdmin.board.domain.AdminBoardDomain;
 import kr.co.exhibitionThreeAdmin.board.vo.AdminBoardVO;
 import kr.co.exhibitionThreeAdmin.exHall.vo.AdminExHallVO;
 import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
-import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
+import kr.co.exhibitionThreeAdmin.search.vo.BHSearchVO;
 
 @Component
 public class AdminBaordDAO {
 	
 	//전체 글 수
-	public int getTotalRows(AdminBoardVO adVO) {
+	public int getTotalRows(BHSearchVO sVO) {
 		int cntRows =0;
-		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cntRows = ss.selectOne("kr.co.exhbitionThreeAdmin.board.totalRows", sVO); 	
+		if(ss!=null) {ss.close();}
 		return cntRows;
 	}
 	
 	//전시장 조회
-	public List<AdminBoardDomain> selectBoard(SearchVO sVO) throws PersistenceException{
+	public List<AdminBoardDomain> selectBoard(BHSearchVO sVO) throws PersistenceException{
 		List<AdminBoardDomain> list = null;
 			
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
-		list = ss.selectList("kr.co.exhbition.board.selectBoard", sVO); 	
-		System.out.println(list);
+		list = ss.selectList("kr.co.exhbitionThreeAdmin.board.selectBoard", sVO); 	
 		if(ss!=null) {ss.close();}
 		
 		return list;

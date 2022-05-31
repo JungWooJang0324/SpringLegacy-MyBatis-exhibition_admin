@@ -33,6 +33,7 @@
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
  	hr {width:200px; margin: 0px auto; margin-top:10px;}
+ 	#buttonDiv{height: 50px; }
 </style>
 <script  type="text/javascript">
 $(function(){
@@ -359,7 +360,7 @@ function chkByte(obj, maxByte){
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
+            	<main>
                     <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">전시장 관리</h1>
                         <ol class="breadcrumb mb-4">
@@ -368,10 +369,10 @@ function chkByte(obj, maxByte){
                         </ol>
                         <!-- 검색 div -->
                          <div  style="width: 400px; float: right; margin-bottom: 10px">
-                            <form id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/admin/admin/hall.do">
+                            <form id = "searchFrm" class="d-flex" name="searchFrm" action="http://localhost/exhibitionThreeAdmin/admin/hall.do">
 		                        	 <select name = "option" id="option" class="form-select" aria-label=".form-select-sm example"  >
-										  <option ${param.option =="0"? "selected":""} value="ex_hall_name">전시장명</option>
-										  <option ${param.option =="1"? "selected":""} value="ex_loc">전시 위치</option>
+										  <option ${param.option =="0"? "selected":""} value="0">전시장명</option>
+										  <option ${param.option =="1"? "selected":""} value="1">전시 위치</option>
 									</select>
 		                        	<input type="text" name="keyword" class="form-control" style="margin-right: 10px">
 		                        	<button type="button" id="searchBtn" class="btn btn-outline-dark btn-sm" style="height: 35px;">
@@ -398,7 +399,7 @@ function chkByte(obj, maxByte){
                                             <td><c:out value="${exHallVO.ex_hall_name}"/></td>                                          	
                                             <td><c:out value="${exHallVO.ex_loc}"/></td>
                                             <td id="hiddenTd" style="padding: 0px;">
-                                        		<input id="exHallName" class="exHallName" name="exHallName" type="hidden" value="${exVO.exHallNum}"/>
+                                        		<input id="exHallName" class="exHallName" name="exHallName" type="hidden" value="${exHallVO.ex_hall_name}"/>
                                         	</td>
                                         </tr>
                                      </c:forEach>
@@ -412,18 +413,43 @@ function chkByte(obj, maxByte){
                                   </form>
                                 </div>
                               	<!-- 버튼 Div -->
-                              	<div>
+                              	<div id="buttonDiv">
 						  			<input type="button" id="btnAdd" class="btn btn-dark" style="float:right;" value="전시장 추가"/>
 						  		</div>
                             </div>
+                             </div>
                             <!-- 페이지 이동 -->    
                             <div id="pageNavigation">
-								<ul class="pagination justify-content-center"> 
-							</ul>
+							 	<ul class="pagination justify-content-center">
+							 	<%
+									String option = request.getParameter("option");
+									String keyword = request.getParameter("keyword");
+								%>
+							 	<c:choose>
+							 	<c:when test="${prev }">
+									<li><a href="http://localhost/exhibitionThreeAdmin/admin/hall.do?currentPage=${prevNum}<%=!"".equals(keyword) && keyword!=null?"&option="+option+"&keyword="+keyword:""%>" 
+												style="margin-right:10px;text-decoration:none;"class="text-secondary">
+										<c:out value="이전"/>
+									</a></li>
+								</c:when>
+							 	</c:choose>
+								<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1" >
+									<li><a href="http://localhost/exhibitionThreeAdmin/admin/hall.do?currentPage=${i}<%=!"".equals(keyword) && keyword!=null?"&option="+option+"&keyword="+keyword:""%>"
+											style="margin-right:10px;text-decoration:none;"class="text-secondary">
+										<c:out value="${i}"/>
+									</a></li>
+								</c:forEach>
+								<c:if test="${next }">
+								 	<li><a href="http://localhost/exhibitionThreeAdmin/admin/hall.do?currentPage=${nextNum}<%=!"".equals(keyword) && keyword!=null?"&option="+option+"&keyword="+keyword:""%>" 
+												style="margin-right:10px;text-decoration:none;"class="text-secondary">
+											<c:out value="다음"/>
+									</a></li>
+							 	</c:if>
+								</ul> 
 							</div>
-                   	 </div>
-                </main>
-               <%-- 	<jsp:include page="admin_footer.html"/> --%>
+						</main>
+                <!-- footer -->
+               	<jsp:include page="../commons/admin_footer.html"/> 
 				<!-- 전시장 추가 Modal -->
 				<div class="modal fade" id="addHall" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
 				 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" >
@@ -682,6 +708,6 @@ function chkByte(obj, maxByte){
 				</div>
 				<!--  모달 끝 -->
 			</div>
-			</div>
-   		 </body>
+		</div>
+ 	</body>
 </html>
