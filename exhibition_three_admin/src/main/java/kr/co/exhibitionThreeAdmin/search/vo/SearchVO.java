@@ -1,7 +1,7 @@
 package kr.co.exhibitionThreeAdmin.search.vo;
 
 public class SearchVO {
-	private String field,keyword; //검색항목, 검색어
+	private String field,keyword, vDate; //검색항목, 검색어
 	private int startNum, endNum, pageScale,currentPage; //시작번호,끝번호,한 페이지 당 데이터 수 ,현재 페이지
 	
 	public SearchVO() {
@@ -46,9 +46,22 @@ public class SearchVO {
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
 	}
+
+	public String getvDate() {
+		return vDate;
+	}
+
+	public void setvDate(String vDate) {
+		this.vDate = vDate;
+	}
+
 	@Override
 	public String toString() {
-		return "SearchVO [field=" + field + ", keyword=" + keyword + ", startNum=" + startNum + ", endNum=" + endNum
-				+ ", pageScale=" + pageScale + "]";
+		return "SearchVO [field=" + field + ", keyword=" + keyword + ", vDate=" + vDate + ", startNum=" + startNum
+				+ ", endNum=" + endNum + ", pageScale=" + pageScale + ", currentPage=" + currentPage + "]";
 	}
+
+	
+	
+	
 }

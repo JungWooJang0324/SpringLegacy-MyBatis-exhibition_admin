@@ -3,11 +3,36 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.exhibitionThreeAdmin.reservation">
-	<select id="rezMainList" resultType="kr.co.exhibitionThreeAdmin.reservations.domain.ReservationDomain">
-		select rez.rez_num, ex.ex_name, m.name, rez.visit_date, rez.rez_status 	
-		from reservation rez,member m, exhibition ex	
-		where rez.userid=m.userid and rez.ex_num = ex.ex_num
+	<select id="totalCnt" resultType="int" parameterType="sVO">
+		select count(*) from
+		(select m.name ,rez.* from reservation rez, member m  
+			where  m.userid=rez.userid)
+		<where>
+		<if test="keyword != null and vDate != null">
+			${field} like '%'||#{keyword}||'%' and to_char(visit_date,  'yyyy-mm-dd') like '%'||#{vDate}||'%'
+		</if>
+		</where>
 	</select>
+	
+	<select id="rezMainList" resultType="kr.co.exhibitionThreeAdmin.reservations.domain.ReservationDomain" parameterType="sVO">
+		select * from
+		(SELECT row_number() over(order by rez_date desc) rnum,rez_num, ex_name,  name,  visit_date, rez_status 
+		FROM  (select rez.rez_date,rez.rez_num, ex.ex_name, m.name, rez.visit_date, rez.rez_status 	
+			from reservation rez,member m, exhibition ex	
+			where rez.userid=m.userid and rez.ex_num = ex.ex_num)
+		<where>
+		<if test="keyword != null and vDate != null">
+			${field}  like '%'||#{keyword}||'%' and to_char(visit_date,  'yyyy-mm-dd') like '%'||#{vDate}||'%'
+		</if>
+		</where>
+			)
+			<where>
+				<if test="startNum != 0 or endNum != 0">
+				 (rnum between #{startNum} and #{endNum})
+				</if>
+			</where>
+	</select>
+	
 	<select id="rezDetail" resultType="kr.co.exhibitionThreeAdmin.reservations.domain.ReservationDomain" parameterType="Integer">
 		SELECT ex.ex_name, ex.ex_num, ex.rez_num, ex.name, ex.rez_count, ex.rez_date,ex.userid, ex.visit_date, (p.adult * ex.rez_count) as price
 		FROM price p, (SELECT ex.ex_name, ex.ex_num, rez.rez_num, m.name, rez.rez_count, rez.rez_date,m.userid, rez.visit_date
@@ -15,10 +40,15 @@
 					WHERE rez.userid=m.userid and rez.ex_num =ex.ex_num) ex
 					WHERE ex.rez_num= #{ rezNum } and ex.ex_num=p.ex_num
 	</select>
+	
 	<update id="rezModify" parameterType="kr.co.exhibitionThreeAdmin.reservations.vo.ReservationVO">
 		UPDATE reservation SET visit_date=to_char(#{visit_date},'yyyy-mm-dd'),
 		rez_count=#{rez_count} WHERE rez_num=#{rez_num}
 	</update>
 	
-
+	<update id="rezCancel" parameterType="int">
+		UPDATE reservation SET rez_status='f' where rez_num=#{rez_num}
+	</update>
+	
+	
 </mapper>

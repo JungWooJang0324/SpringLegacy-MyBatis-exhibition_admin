@@ -69,6 +69,7 @@ $(function(){
  	$("#confirmModify").click(function() {
 		$("#confirmModal").modal('show');
 	});
+ 	
 });//ready
 
 function confirmModify() {
@@ -109,6 +110,46 @@ function confirmModify() {
 		}
 	}); //ajax
 } //confirmModify
+
+function cancelRez() {
+	var num= $("#resNum").val();
+	 $.ajax({
+			url:"http://localhost/exhibitionThreeAdmin/admin/rezCancel.do",
+			data: {"rezNum":num},
+			async:false,
+			type: "get",
+			dataType:"json",
+			error:function(xhr){
+				console.log("cancelAjax : "+xhr.status+", "+xhr.statusText);
+			},
+			success:function(jObj){
+				if(jObj.cnt == 1){
+					alert("예약이 취소되었습니다.")
+				}
+			}  
+		}); //ajax
+}//cancelRez
+
+//예약 확인
+function rezConfirm() {
+	var num= $("#mainRezNum").text();
+	 $.ajax({
+			url:"http://",
+			data: {"rezNum":num},
+			async:false,
+			type: "get",
+			dataType:"json",
+			error:function(xhr){
+				console.log("confirmAjax : "+xhr.status+", "+xhr.statusText);
+			},
+			success:function(jsonObj){
+				if(jsonObj.cnt > 0){
+					alert("예약이 확인되었습니다.")
+					location.href="booking.jsp";
+				}
+			}  
+		}); //ajax
+}
 </script>
     </head>
    <body class="sb-nav-fixed">
@@ -158,11 +199,11 @@ function confirmModify() {
 								</div>
 	                         <div class="input-group mb-3" style="width:500px;margin-top:10px; margin-left: 100px;">
 						  		<span class="input-group-text" id="addon-wrapping">항목검색</span>
-									 <select class="form-select" aria-label=".form-select-sm example" name="nameSelection" id="nameSel">
-									  <option value="findUserName" ${(param.nameSelection =="findUserName")?"selected":"" } >사용자 이름</option>
-									  <option value="findExName" ${(param.nameSelection =="findExName")?"selected":""} >전시 이름</option>
+									 <select class="form-select" aria-label=".form-select-sm example" name="field" id="field">
+									  <option value="name" ${(param.field =="name")?"selected":"" } >사용자 이름</option>
+									  <option value="ex_name" ${(param.field =="ex_name")?"selected":""} >전시 이름</option>
 									</select>
-								  <input type="text" class="form-control" style="width:100px" name="findCatName" id="findCatName" value="${param.findCatName}">
+								  <input type="text" class="form-control" style="width:100px" name="keyword" id="keyword" value="${param.keyword}">
 								  <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal" id="findNamesBtn">검색</button>
 								</div> 
 						      </form>
@@ -210,34 +251,59 @@ function confirmModify() {
 						  </table>
 						  
                             </div>
-                               <div id="pageNavigation">
+                         <% String field=request.getParameter("field"); %>
+						<% String keyword=request.getParameter("keyword"); %>
+						<% String vDate=request.getParameter("vDate"); %>
+						<% String pageScale=request.getParameter("pageScale"); %>
+								<!-- 페이지 -->
+                            <div id="pageNavigation">
 								<ul class="pagination justify-content-center"> 
+								<c:if test="${not empty rezList}">
+									<c:if test="${endPage gt pageCnt }">
+										<c:set var="endPage" value="${pageCnt}"/>
+									</c:if>
+									
+									<c:if test="${startPage gt pageBlock }">
 									<li>
-									<%--  
-									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" href="booking.jsp?pageNum=<%=startPage-5%>&vDate=${param.vDate}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
-									--%>
-									<a>
+									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
+							href="reservation.do?currentPage=${startPage-5}<%=!"".equals(pageScale)&&pageScale != null?"&vDate="+vDate+"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
 									이전
 									</a>
 									</li>
-									
+									</c:if>
+									<c:forEach var="i" begin="${startPage}" end="${endPage}" step="1">
+										<c:choose>
+										<c:when test="${i eq currentPage}">
 											<li>
-											<a style="margin-right:10px;"class="text-secondary" href="#">
-											<!-- <c:out value="${i}"/> -->
-											</a>
-											</li>
-											<li>
-											<a>
+											<a style="margin-right:10px;"class="text-secondary" href="#void">
+												<c:out value="${i}"/>
 											</a>
 											</li> 
-									
+										</c:when>
+										<c:otherwise>
+											<li>
+											<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
+													href="reservation.do?currentPage=${i}<%=!"".equals(pageScale)&&pageScale != null?"&vDate="+vDate+"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
+											<c:out value="${i}"/>
+											</a>
+											</li> 
+										</c:otherwise>
+										</c:choose>
+									</c:forEach>
+									<c:if test="${endPage lt pageCnt }">
 									<li>
-										<a style="margin-right:10px;text-decoration:none;"class="text-secondary" href="booking.jsp?pageNum=${startPage+5}pageNum=${i}&vDate=${param.vDate}&nameSelection=${param.nameSelection}&findCatName=${param.findCatName}">
-										다음
+									<a style="margin-right:10px;text-decoration:none;"class="text-secondary page-item" 
+										href="reservation.do?currentPage=${startPage+5}<%=!"".equals(pageScale)&&pageScale != null?"&vDate="+vDate+"&field="+field+"&keyword="+keyword+"&pageScale="+pageScale  : ""%>">
+											다음
 										</a>
 										</li> 
-								
+									
+									</c:if>
+								</c:if>
 								</ul> 
+							</div>
+                        </div>
+						  <!-- 페이지 끝 -->
 							</div>
                         </div>
                 </main>

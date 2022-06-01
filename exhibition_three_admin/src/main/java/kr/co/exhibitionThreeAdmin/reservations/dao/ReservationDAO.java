@@ -14,11 +14,11 @@ import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 @Component
 public class ReservationDAO {
 
-	public List<ReservationDomain> rezMainList() throws PersistenceException{
+	public List<ReservationDomain> rezMainList(SearchVO sVO) throws PersistenceException{
 		List<ReservationDomain> list = null;
 		
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
-		list = ss.selectList("kr.co.exhibitionThreeAdmin.reservation.rezMainList");
+		list = ss.selectList("kr.co.exhibitionThreeAdmin.reservation.rezMainList", sVO);
 		if(ss != null) {ss.close();}//end if
 
 		return list;
@@ -45,8 +45,29 @@ public class ReservationDAO {
 		if(ss != null) {ss.close();}//end if
 		
 		return cnt;
+	}//UpdateRez
+	
+	public int cancelRez(int rezNum) throws PersistenceException{
+		int cnt = 0;
+		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.update("kr.co.exhibitionThreeAdmin.reservation.rezCancel", rezNum);
+		
+		if(cnt==1) ss.commit();
+		
+		if(ss != null) {ss.close();}//end if
+		
+		return cnt;
 	}//rezMainList
 		
+	public int totalCnt(SearchVO sVO) throws PersistenceException{
+		int cnt = 0;
 
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.reservation.totalCnt", sVO);
+		if(ss != null) {ss.close();}//end if
+		
+		return cnt;
+	}//totalCnt
 	
 }
