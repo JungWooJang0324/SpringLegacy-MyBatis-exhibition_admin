@@ -1,5 +1,6 @@
 package kr.co.exhibitionThreeAdmin.member.service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -7,8 +8,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain;
 import kr.co.exhibitionThreeAdmin.member.dao.AdminMemberDAO;
 import kr.co.exhibitionThreeAdmin.member.domain.MemberDomain;
+import kr.co.exhibitionThreeAdmin.member.vo.MemberVO;
 import kr.co.exhibitionThreeAdmin.search.service.SearchService;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 
@@ -135,8 +138,22 @@ public class AdminMemberService implements SearchService {
 		jsonObj.put("address2", md.getAddress2());
 		jsonObj.put("tel", md.getTel());
 		jsonObj.put("zipcode", md.getZipcode());
+		jsonObj.put("subscribe_date",new SimpleDateFormat("yyyy-MM-dd").format(md.getSubscribe_date()));
 		
 		return jsonObj.toJSONString();
 	}
 	
+	public String modifyMember(MemberVO mVO) {
+		JSONObject jsonObj = new JSONObject();
+		int cnt = 0;
+		try {
+			cnt=aDAO.updateMember(mVO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		jsonObj.put("updateCnt", cnt);
+		return jsonObj.toJSONString();
+	}//modifyMember
+	
+
 }//class

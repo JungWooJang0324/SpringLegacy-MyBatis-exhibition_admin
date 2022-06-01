@@ -51,7 +51,7 @@ $(function(){
  $("#memberDetail").on('show.bs.modal',function(e){
 	 var userid = $(e.relatedTarget).data('id');
 	$.ajax({
-		url:"detailMember.do",
+		url:"http://<%=application.getInitParameter("domain") %>/admin/detailMember.do",
 		data:{
 			userid: userid
 		},
@@ -61,6 +61,7 @@ $(function(){
 		async:false,
 		success:function(jsonObj){
 			var id = jsonObj.userid.split('@');
+			$("#userid").val(jsonObj.userid);
 	  		$("#id").val(id[0]);
 	  		$("#server").val(id[1]);
 	  		$("#userName").val(jsonObj.name);
@@ -68,7 +69,7 @@ $(function(){
 	  		$("#zipcode").val(jsonObj.zipcode);
 	  		$("#address1").val(jsonObj.address1);
 	  		$("#address2").val(jsonObj.address2);
-	  		/* $("#subDate").val(jsonObj.subscribe_date); */
+	  		$("#subDate").val(jsonObj.subscribe_date);
 		},
 		error:function(request, status, error){
 			alert("code : "+request.status+"\n"+"message : "+request.responseText+"\n"+"error:"+error);
@@ -82,6 +83,51 @@ $(function(){
   		$("#confirmExit").modal('hide');
 			$("#memberDetail").modal('hide');
 		}); 
+	$("#confirmDelete").on('show.bs.modal',function(e){
+		var userid = $(e.relatedTarget).data('id');
+		$("#confirmDeleteMsg").text(userid+"님을 삭제하시겠습니까?");
+		$("#confirmDeleteHid").val(userid);
+	 })//end modal
+	$("#confirmUpdate").on('show.bs.modal',function(e){
+		var userid = $(e.relatedTarget).data('id');
+		$("#confirmUpdateHid").val(userid);
+	})//end modal
+$("#modifyBtn").click(function(){
+	if($("#tel").val()==''){
+		alert("전화번호를 입력하세요");
+		$("#tel").focus();
+		return;
+	}//end if
+	if($("#zipcode").val()==''){
+		alert("우편번호를 입력하세요");
+		$("#zipcode").focus();
+		return;
+	}//end if
+	if($("#address1").val()==''){
+		alert("주소를 입력하세요");
+		$("#address1").focus();
+		return;
+	}//end if
+	if($("#address2").val()==''){
+		alert("상세주소를 입력하세요");
+		$("#address2").focus();
+		return;
+	}//end if	
+	 $("#confirmUpdate").on('show.bs.modal',function(){
+	  var userid=$("#userid").val();
+	  $("#confirmUpdateMsg").text(userid+"님을 수정하시겠습니까?");
+	 }
+	 ).modal("show");
+});//click
+$("#searchZipcode").click(function(){
+	new daum.Postcode({
+		oncomplete: function(data) {
+			// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+		$('#zipcode').val(data.zonecode);      // 우편번호(5자리)
+		$('#address1').val(data.address);       // 기본주소 
+		}
+	}).open();
+});//click
 });//ready
 function chkNull(){
 	if($("#keyword").val()==""){
@@ -90,8 +136,61 @@ function chkNull(){
 	}//end if
 	$("#searchFrm").submit(); 
 }//chkNull
+ 
 
+function deleteMember(){
+	var userid = $("#confirmDeleteHid").val();
+	$.ajax({
+			url:"http://<%=application.getInitParameter("domain") %>/admin/updateMember.do",
+			data:{
+				userid: userid,
+				isdeleted:'y'
+			},
+			dataType:"json",
+			type:"post",
+			async:false,
+			success:function(jsonObj){
+				if(jsonObj.updateCnt > 0){
+					alert("삭제를 완료했습니다.");
+					location.reload();
+				}else{
+					alert("삭제를 실패하였습니다.");
+				}//end else
+			},
+			error:function(request, status, error){
+				alert("code : "+request.status+"\n"+"message : "+request.responseText+"\n"+"error:"+error);
+			}
+		});
+	
+}//deleteMember
 
+function updateMember(){
+	
+	$.ajax({
+			url:"http://<%=application.getInitParameter("domain") %>/admin/updateMember.do",
+			data:{
+				userid: $("#userid").val(),
+				tel:$("#tel").val(),
+				zipcode:$("#zipcode").val(),
+				address1:$("#address1").val(),
+				address2:$("#address2").val()
+			},
+			dataType:"json",
+			type:"post",
+			async:false,
+			success:function(jsonObj){
+				if(jsonObj.updateCnt > 0){
+					alert("수정을 완료했습니다.");
+					location.reload();
+				}else{
+					alert("수정 실패하였습니다.");
+				}//end else
+			},
+			error:function(request, status, error){
+				alert("code : "+request.status+"\n"+"message : "+request.responseText+"\n"+"error:"+error);
+			}
+		});//end ajax
+}//deleteMember 
 </script>
     </head>
     	
@@ -165,6 +264,7 @@ function chkNull(){
                                     	<th>이름</th>
                                     	<th>주소</th>
                                     	<th>가입일</th>
+                                    	<th>관리</th>
                                     </tr>
 						  	</thead> 
 						  	<tbody> 
@@ -175,11 +275,12 @@ function chkNull(){
 						  		</c:if>
 						  		<c:if test="${not empty memberList }">
 	    						 		<c:forEach var="member" items="${memberList}" >
-                                    	<tr style="cursor:pointer"data-bs-target="#memberDetail" data-bs-toggle="modal"data-id='${member.userid}')>
+                                    	<tr style="cursor:pointer"data-bs-target="#memberDetail" data-bs-toggle="modal"data-id='${member.userid}'>
 	    						 			<td><c:out value="${member.userid }"/></td>
 	    						 			<td><c:out value="${member.name}"/></td>
 	    						 			<td><c:out value="${member.address1}"/></td>
 	    						 			<td><fmt:formatDate pattern="yyyy-MM-dd" value="${member.subscribe_date}"/></td>
+	    						 			<td><button type="button" class="btn btn-secondary btn-sm" data-bs-target="#confirmDelete" data-bs-toggle="modal"data-id='${member.userid}'>삭제</button></td>
 	    						 		</tr>
 	    						 		</c:forEach>
 	    						 </c:if>
@@ -250,6 +351,7 @@ function chkNull(){
 					      <div class="modal-body">
 					      	<div class="memberTitle">ID(Email)</div>
 					      	<div class="input-group input-group-sm mb-3" style="width:450px">
+					      	  <input type="hidden" id="userid"/>
 							  <input type="text" class="form-control" id="id" placeholder="Username" readonly/>
 							  <span class="input-group-text">@</span>
 							  <input type="text" class="form-control" id="server" placeholder="Server" readonly/>
@@ -287,8 +389,7 @@ function chkNull(){
 					      </div>
 					      <div class="modal-footer">
 							        <button type="button" class="btn btn-outline-dark exit">돌아가기</button>
-							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">회원 삭제</button>
-							        <button type="button" class="btn btn-outline-info" id="modifyBtn">회원 수정</button>
+							        <button type="button" class="btn btn-outline-info" id="modifyBtn" >회원 수정</button>
 					      </div>
 					    </div>
 					  </div>
@@ -297,19 +398,38 @@ function chkNull(){
             </div>
         </div>
 				<!-- 확인 modal -->
-		 		<div class="modal fade" id="confirm" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+		 		<div class="modal fade" id="confirmUpdate" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">
 				    <div class="modal-content">
 				      <div class="modal-header">
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-				        <span id="confirmMsg"></span>
-				        <input type="hidden" id="confirmHid" value=""/>
+				        <span id="confirmUpdateMsg">수정하시겠습니까?</span>
+				        <input type="hidden" id="confirmUpdateHid" value=""/>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-				        <button type="button" class="btn btn-primary" id="modifyOkBtn" onclick="modifyMember()">Ok</button>
+				        <button type="button" class="btn btn-primary" id="modifyOkBtn" onclick="updateMember()">Ok</button>
+				      </div>
+				    </div>
+				  </div>
+				</div> 
+				<!--  -->
+				<!-- 확인 modal -->
+		 		<div class="modal fade" id="confirmDelete" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				        <span id="confirmDeleteMsg"></span>
+				        <input type="hidden" id="confirmDeleteHid" value=""/>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				        <button type="button" class="btn btn-primary" id="modifyOkBtn" onclick="deleteMember()">Ok</button>
 				      </div>
 				    </div>
 				  </div>

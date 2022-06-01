@@ -6,8 +6,9 @@
 	<select id="totalCnt" resultType="int" parameterType="sVO">
 		select count(*) from exhibition
 		<where>
+				ex_status in('y','p') 
 		<if test="keyword != null and keyword != ''">
-			${field} like '%'||#{keyword}||'%'
+			and	${field} like '%'||#{keyword}||'%'
 		</if>
 		</where>
 	</select>
@@ -19,17 +20,31 @@
 				exhibit_date,deadline, input_date
 				from exhibition
 			<where>
+				ex_status in('y','p') 
 				<if test="keyword != null and keyword != ''">
-				${field} like '%'||#{keyword}||'%'
+				and ${field} like '%'||#{keyword}||'%'
 				</if>
 			</where> 
 			)
 				<where>
-				ex_status in('y','p') 
 				<if test="startNum != 0 or endNum != 0">
-				and (rnum between #{startNum} and #{endNum})
+				 (rnum between #{startNum} and #{endNum})
 				</if>
 				</where>
 	</select>
-
+	<select id="selectExHall" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain">
+		select *
+		from exhibition_hall
+	</select>
+	<update id="updateEx" parameterType="kr.co.exhibitionThreeAdmin.exhibition.vo.ExhibitionVO">
+		update exhibition
+		<set>
+		<choose>
+			<when test="ex_status != null and ex_status != ''">
+				ex_status=#{ex_status}
+			</when>
+		</choose>
+		</set>
+		where ex_num=#{ex_num}
+	</update>
 </mapper>

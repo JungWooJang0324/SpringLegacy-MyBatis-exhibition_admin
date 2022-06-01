@@ -6,8 +6,9 @@
 	<select id="totalCnt" resultType="int" parameterType="sVO">
 		select count(*) from member
 		<where>
+		isdeleted='n'
 		<if test="keyword != null and keyword != ''">
-			${field} like '%'||#{keyword}||'%'
+			and ${field} like '%'||#{keyword}||'%'
 		</if>
 		</where>
 	</select>
@@ -18,16 +19,30 @@
 				tel,zipcode,address1,address2,subscribe_date,isdeleted
 				from member
 			<where>
+				 isdeleted='n' 
 				<if test="keyword != null and keyword != ''">
-				${field} like '%'||#{keyword}||'%'
+				and ${field} like '%'||#{keyword}||'%'
 				</if>
 			</where> 
 			)
 				<where>
-				 isdeleted='n' 
 				 <if test="startNum != 0 or endNum != 0">
-				 and (rnum between #{startNum} and #{endNum})
+				 (rnum between #{startNum} and #{endNum})
 				 </if>
 				</where>
 	</select>
+	<update id="updateMember" parameterType="kr.co.exhibitionThreeAdmin.member.vo.MemberVO">
+	update member
+	<set>
+	<choose>
+		<when test="isdeleted != null and isdeleted != ''">
+			ISDELETED=#{isdeleted},
+		</when>
+		<otherwise>
+			tel=#{tel},address1=#{address1},address2=#{address2},zipcode=#{zipcode},
+		</otherwise>
+	</choose>
+	</set>
+	where userid=#{userid}
+	</update>
 </mapper>

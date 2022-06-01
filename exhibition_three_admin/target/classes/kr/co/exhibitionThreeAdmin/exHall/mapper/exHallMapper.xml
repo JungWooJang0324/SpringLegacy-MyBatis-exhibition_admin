@@ -4,20 +4,32 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.exhbitionThreeAdmin.exHall">
 
+<!-- 전체 전시장 수 -->
+<select id="totalRows" resultType="int" parameterType="bhsVO">
+	select count(*) 
+	from exhibition_hall
+	<where>
+		hall_deleted ='n'
+		<if test="keyword !=null and keyword!=''"> 
+		and ${option} like '%'||#{keyword}||'%'
+		</if>
+	</where>	
+</select>
+
 <!-- 전시장 조회 !!exloc 연결필요-->
-<select id="selectExHall" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain" parameterType="sVO">
+<select id="selectExHall" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain" parameterType="bhsVO">
 		select *
 		from (select rownum as rnum, ex_hall_name, ex_loc, ex_hall_num
 			  from( select * from EXHIBITION_HALL
 			  		<where>
 			  		HALL_DELETED='n'
 			  		<if test="keyword !=null and keyword!=''">
-						and ${option} like '%'||${keyword}||'%'
+						and ${option} like '%'||#{keyword}||'%'
 					</if>
 					</where>
-			  		order by ex_hall_num desc) 
-	<![CDATA[ where rownum <=10 ]]>)
-		where rnum >= 0
+			  		order by ex_hall_num) 
+	<![CDATA[ where rownum <= ${endNum} ]]>)
+		where rnum >= ${startNum}
 		order by rnum
 </select>
 </mapper>

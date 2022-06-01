@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.exhibitionThreeAdmin.member.service.AdminMemberService;
+import kr.co.exhibitionThreeAdmin.member.vo.MemberVO;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 
 @Controller
@@ -58,4 +59,9 @@ public class AdminMemberController {
 		return ams.searchDetail(userid);
 	}//detailMember
 	
+	@ResponseBody
+	@RequestMapping(value="/admin/updateMember.do",method=POST, produces="application/json;charset=UTF-8")
+	public String modifyMember(MemberVO mVO) {
+		return ams.modifyMember(mVO);
+	}//modifyMember
 }//class

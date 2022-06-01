@@ -28,11 +28,15 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-     	<style>
-	     	hr {width:200px; margin: 0px auto; margin-top:10px;}
-	     	.exTitle{font-weight:bold}
-	     	#memberTab{text-align:center;}
-        </style>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/coin-slider/1.0.0/coin-slider.js"></script> 
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/coin-slider/1.0.0/coin-slider-styles.css" type="text/css" />
+<style>
+	hr {width:200px; margin: 0px auto; margin-top:10px;}
+	.exTitle{font-weight:bold}
+	#memberTab{text-align:center;}
+	
+	
+</style>
 	<script type="text/javascript">
 	$(function(){
 	     $("#searchBtn").click(function(){
@@ -56,8 +60,8 @@
 	    		 async:false,
 	    		 success:function(jsonObj){
 	    			 $("#exNum").val(ex_num);
-					 	//$("#startDate").val(jsonObj.exhibitDate);
-						//$("#endDate").val(jsonObj.deadline); 
+					 	$("#startDate").val(jsonObj.exhibitDate);
+						$("#endDate").val(jsonObj.deadline); 
 						$("#exIntro").val(jsonObj.exIntro);
 						$("#exName").val(jsonObj.exName);
 						$("#exInfo").val(jsonObj.exInfo);
@@ -66,11 +70,11 @@
 						$("#adult").val(jsonObj.adult); 
 						$("#teen").val(jsonObj.teen); 
 						$("#child").val(jsonObj.child); 
-						//$("#exHall").val(jsonObj.exHallNum);
+						$("#exHall").val(jsonObj.exHallNum);
 						$("#hidPoster").val(jsonObj.exPoster);
 						$("#hidAddImg").val(jsonObj.addImg);
-						/* $("#posterImg").attr("src","../images/"+jsonObj.exPoster);//포스터 보이기
-						$("#addImage").attr("src","../images/"+jsonObj.addImg);//추가이미지 보이기 */
+						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);//포스터 보이기
+						$("#addImage").attr("src","http://localhost/exhibitionThreeAdmin/images/"+jsonObj.addImg);//추가이미지 보이기 
 						$("#exStatus").val(jsonObj.exStatus);
 	    		 },
 	    		 error:function(request, status, error){
@@ -88,6 +92,16 @@
 			$("#modifyModal").modal('hide');
 			$("#addModal").modal('hide');
 		})
+		$("#statusBtn").click(function(){
+			if($("#exStatus").val()=="y"){
+				alert("이미 사용자 페이지에 업데이트 된 전시입니다.");
+				return;
+			}//end if
+			$("#confirmRelease").modal('show');
+		});//click
+		$("#deleteBtn").click(function(){
+			$("#confirmDelete").modal('show');
+		});//click
 	});//ready
 	function chkNull(){
 		if($("#keyword").val()==""){
@@ -96,7 +110,62 @@
 		}//end if
 		$("#searchFrm").submit(); 
 	}//chkNull
+	function releaseExhibition(){
+		var exNum = $("#exNum").val();
+		
+		$.ajax({
+			url:"exUpdate.do",
+			data:{
+				"ex_num":exNum,
+				"ex_status":'y'	
+			},
+			type:"post",
+			dataType:"json",
+			async:false,
+			error:function(xhr){
+				alert(xhr.status+" / "+xhr.statusText);
+			},//error
+			success:function(jsonObj){
+				if(jsonObj.cnt > 0){
+					alert("사용자 페이지에 업데이트 되었습니다.");
+					/* $("#confirmRelease").modal('hide');
+					$("#modifyModal").modal('hide'); */
+					location.reload();
+				}else{
+					alert("사용자 페이지 업데이트 실패하였습니다.");
+				}//end else				
+			}//success
+		});//end ajax 
+	}//releaseExhibition
 	
+	function deleteExhibition(){
+		var num= $("#exNum").val();
+	/* 	var poster=$("#hidPoster").val();
+		var addImg=$("#hidAddImg").val(); */
+		 $.ajax({
+				url:"exUpdate.do",
+				data: {
+					"ex_num":num,
+					"ex_status":'n'
+				},
+				type: "post",
+				dataType:"json",
+				async:false,
+				error:function(xhr){
+					alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
+				//	location.href="401.html";
+				},
+				success:function(jsonObj){
+					if(jsonObj.cnt > 0){
+						alert("전시가 삭제되었습니다.");
+						location.reload();
+					}else{
+						alert("전시 삭제 실패하였습니다.");
+					}//end else
+					
+				}//success  
+			}); //ajax
+	}//deleteExhibition
 	
 	</script>  
     </head>
@@ -168,6 +237,7 @@
 	                                    <th>전시번호</th>
 	                                    <th>전시명</th>
 	                                    <th>입력일</th>
+	                                    <th>관리</th>
 	                               </tr>
 						  		</thead> 
 						  		<tbody> 
@@ -176,6 +246,7 @@
                                     	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${ exhibition.ex_num}">
  											<td><c:out value="${exhibition.ex_num }"/></td>
  											<td><c:out value="${exhibition.ex_name }"/></td>
+ 											<td><c:out value="${exhibition.input_date }"/></td>
  											<td><c:out value="${exhibition.input_date }"/></td>
                                     	</tr>
 	    						 		</c:forEach>
@@ -266,21 +337,12 @@
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
-							    <%--   	<select class="form-select" id="addExHall" name="addExHall"aria-label=".form-select-sm example" style="width:400px">
-									  <option value="" selected>전시장 / 담당자를 선택해주세요</option>
-									  <%
-									  	try{
-									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
-									  	for(ExHallVO eVO : exNameList){
-									  %>
-									   <option value='<%=eVO.getExHallNum()%>'><%=eVO.getExName()%> / 담당자 : <%=eVO.getMgrName() %></option>
-									   <%
-									  	}//end for
-									  	}catch(SQLException e){
-									  		e.printStackTrace();
-									  	}
-									   %>
-									</select> --%>
+							  	<select class="form-select" id="addExHall" name="addExHall" style="width:400px">
+									  <option selected>전시장 / 담당자를 선택해주세요</option>
+										 <c:forEach var="exHall" items="${exHallList}">
+											<option value="${exHall.ex_hall_num}"><c:out value="${exHall.ex_hall_name }"/> </option>
+										</c:forEach> 
+									</select> 
 								</div>
 					      	<div class="mb-3">
 					      	<div class="row">
@@ -369,8 +431,8 @@
 					  </div>
 					</div>
 				<!-- modal -->
-                 <!-- 전시 수정&상세 modal  -->
-	                <div class="modal fade" tabindex="-1" id="modifyModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" >
+               <!-- 전시 수정&상세 modal  -->
+	               <div class="modal fade" tabindex="-1" id="modifyModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
 					    <div class="modal-content">
 					      <div class="modal-header">
@@ -395,20 +457,11 @@
 								</div>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
-							      	<%--  	<select class="form-select" id="exHall" name="exHall"aria-label=".form-select-sm example" style="width:400px">
-									  <%
-									  	try{
-									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
-									  	for(ExHallVO eVO : exNameList){
-									  %>
-									   <option value='<%=eVO.getExHallNum()%>'><%=eVO.getExName()%> / 담당자 : <%=eVO.getMgrName() %></option>
-									   <%
-									  	}//end for
-									  	}catch(SQLException e){
-									  		e.printStackTrace();
-									  	}
-									   %>
-									</select> --%>
+							      	 	<select class="form-select" id="exHall" name="exHall" style="width:400px">
+								 		<c:forEach var="exHall" items="${exHallList}">
+											<option value="${exHall.ex_hall_num}"><c:out value="${exHall.ex_hall_name }"/></option>
+										</c:forEach>
+									</select>
 								</div>
 					      	<div class="mb-3">
 					      	<div class="row">
@@ -492,7 +545,139 @@
 					      </div>
 					    </div>
 					  </div>
-					</div>
+					</div> 
+           <%--  <!-- 전시 상세 modal  -->
+	                <div class="modal fade" tabindex="-1" id="modifyModal" data-bs-backdrop="static" data-bs-keyboard="false"aria-hidden="true" >
+					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title">전시 조회</h5>
+					        <button type="button" class="btn-close exit" aria-label="Close"></button>
+					      </div>
+					      <div class="modal-body" style="text-align:center;">
+					      <form id="modifyExhibition"action="http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
+								  <h2>
+						      	<span id="exName" name="exName" >
+								</span>
+								  </h2>
+								  <h5>
+								  <span id="exIntro"></span>
+								  </h5>
+							<div>
+								<div class="">
+							  <img src='http://localhost/exhibitionThreeAdmin/images/%EA%B0%80%EB%A9%B4%EB%AC%B4%EB%8F%84%ED%9A%8C.jpg' >        
+								</div>
+								<div>
+							  <img src='http://localhost/exhibitionThreeAdmin/images/%EA%B0%80%EB%A9%B4%EB%AC%B4%EB%8F%84%ED%9A%8C.jpg' >        
+								</div>
+							</div>
+					      <div class="row">
+						      <div class="col-6">
+							      <label class="exTitle">전시 번호 </label>
+								  <input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
+						      </div>
+						      <div class="col-6">
+							      <label class="exTitle">전시 노출 여부 </label>
+								  <input type="text" id="exStatus" name="exStatus" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
+						      </div>
+					      </div>
+						      	<div class="mb-3">
+								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
+							      	 	<select class="form-select" id="exHall" name="exHall"aria-label=".form-select-sm example" style="width:400px">
+									  <%
+									  	try{
+									 	List<ExHallVO> exNameList = aeDAO.selectExhibitionHall();
+									  	for(ExHallVO eVO : exNameList){
+									  %>
+									   <option value='<%=eVO.getExHallNum()%>'><%=eVO.getExName()%> / 담당자 : <%=eVO.getMgrName() %></option>
+									   <%
+									  	}//end for
+									  	}catch(SQLException e){
+									  		e.printStackTrace();
+									  	}
+									   %>
+									</select>
+								</div>
+					      	<div class="mb-3">
+					      	<div class="row">
+					      	<div class="col-6">
+					      	<label class="exTitle">시작일</label>
+					      	<input type="date" id="startDate" name="startDate" class="form-control" placeholder="시작 일자"  style="width:200px">
+					      	</div>
+					      	<div class="col-6">
+					      	<label class="exTitle">마감일</label>
+					      	<input type="date" id="endDate"name="endDate" class="form-control" placeholder="마감 일자" style="width:200px">
+					      	</div>
+					      	</div>
+					      	</div>
+					      	<div class="mb-3" >
+						      	<label class="exTitle">전시 포스터</label>
+						      	<div class="input-group mb-3" style="width:500px">
+						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster">
+						      	 <input type="hidden" id="hidPoster" name ="hidPoster"/>
+								</div>
+								  <img id="posterImg"/>
+					      	</div>
+						   
+						    <div class="mb-3">
+								<label for="exampleFormControlInput1" class="exTitle">추가 이미지</label>
+						      	<div class="input-group mb-3" style="width:500px">
+						      	<input type="file" class="form-control" id="modifyAddImg" name="modifyAddImg">
+						      	<input type="hidden" id="hidAddImg" name="hidAddImg"/>
+								</div>
+								  <img id="addImage"/>
+							</div>
+						      	<div class="mb-3">
+								  <label for="exampleFormControlTextarea1" class="exTitle">전시 내용</label>
+								  <textarea class="form-control" id="exInfo"name="exInfo" rows="10"></textarea>
+								</div>
+					      	<div class="row">
+						      	<div class="mb-3 col-6">
+								  <label for="exampleFormControlTextarea1" class="exTitle">허용인원</label>
+								<input type="text" class="form-control" id="totalCount"name="totalCount" placeholder="100"  style="width:100px">
+								</div>
+						      	<div class="mb-3 col-6">
+								  <label for="exampleFormControlTextarea1" class="exTitle">관람인원</label>
+								<input type="text" class="form-control" id="watchCount"name="watchCount" placeholder="0"  style="width:100px">
+								</div>
+					      	</div>
+							
+							<div class="row">
+							<label class="exTitle">전시 가격</label>
+						    <div class="mb-3 col-4">
+						    	<label class="exTitle">성인</label>
+								<div class="input-group" style="width:150px">
+								  <input type="text" class="form-control" id="adult" name="adult">
+								  <span class="input-group-text">원</span>
+								</div>
+							</div>
+						    <div class="mb-3 col-4">
+						    	<label class="exTitle">청소년</label>
+								<div class="input-group" style="width:150px">
+								  <input type="text" class="form-control" id="teen" name="teen">
+								  <span class="input-group-text">원</span>
+								</div>
+							</div>
+						    <div class="mb-3 col-4">
+						    	<label class="exTitle">유아/65세 이상</label>
+								<div class="input-group" style="width:150px">
+								  <input type="text" class="form-control"id="child" name="child">
+								  <span class="input-group-text">원</span>
+								</div>
+							</div>
+							</div>
+								
+					      </form>
+					      </div>
+					      <div class="modal-footer">
+					      			<button type="button" class="btn btn-outline-dark exit">돌아가기</button>
+							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">전시 삭제</button>
+							        <button type="button" class="btn btn-outline-info" id="modifyBtn">전시 수정</button>
+							        <button type="button" class="btn btn-outline-success" id="statusBtn">전시 노출</button>
+					      </div>
+					    </div>
+					  </div>
+					</div> --%>
 				<!-- 전시 수정 확인 modal -->
 				<div class="modal fade" id="confirmModify" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"aria-labelledby="exampleModalLabel" aria-hidden="true">
 				  <div class="modal-dialog">

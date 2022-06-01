@@ -6,7 +6,9 @@ import org.apache.ibatis.exceptions.PersistenceException;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Component;
 
+import kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain;
 import kr.co.exhibitionThreeAdmin.member.domain.MemberDomain;
+import kr.co.exhibitionThreeAdmin.member.vo.MemberVO;
 import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 
@@ -43,4 +45,15 @@ public class AdminMemberDAO {
 		if(ss != null) {ss.close();}//end if
 		return md;
 	}//selectMember
+	
+	public int updateMember(MemberVO mVO)throws PersistenceException{
+		int cnt = 0;
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.update("updateMember", mVO);
+		if(cnt>0) {ss.commit();}//end if
+		if(ss != null) {ss.close();}//end if
+		
+		return cnt;
+	}//updateMember
+	
 }//class

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.co.exhibitionThreeAdmin.exhibition.service.AdminExhibitionService;
+import kr.co.exhibitionThreeAdmin.exhibition.vo.ExhibitionVO;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 @Component
 @Controller
@@ -45,15 +46,22 @@ public class AdminExhibitionController {
 		model.addAttribute("totalCnt",totalCnt);
 		model.addAttribute("pageBlock",pageBlock);
 		model.addAttribute("currentPage",currentPage);
+		model.addAttribute("exHallList",as.searchExHall());
 		
 		return "exhibitions/exhibitionSchedule";
 	}//moveExhibition
 	
 	@ResponseBody
-	@RequestMapping(value="/admin/exDetail.do",method=POST, produces = "aplicataion/json;charset=UTF-8")
+	@RequestMapping(value="/admin/exDetail.do",method=POST, produces="aplicataion/json;charset=UTF-8")
 	public String exDetail(String ex_num) {
-		
-		
+	
 		return as.searchExDetail(ex_num);
 	}//exDetail
-}
+	
+	@ResponseBody
+	@RequestMapping(value="/admin/exUpdate.do",method=POST)
+	public String updateExhibition(ExhibitionVO eVO) {
+		return as.modifyExhibition(eVO);
+	}//updateExhibition
+	
+}//class

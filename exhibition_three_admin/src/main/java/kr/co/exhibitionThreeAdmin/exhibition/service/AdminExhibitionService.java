@@ -1,5 +1,6 @@
 package kr.co.exhibitionThreeAdmin.exhibition.service;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.ibatis.exceptions.PersistenceException;
@@ -8,8 +9,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain;
 import kr.co.exhibitionThreeAdmin.exhibition.dao.AdminExhibitionDAO;
 import kr.co.exhibitionThreeAdmin.exhibition.domain.ExhibitionDomain;
+import kr.co.exhibitionThreeAdmin.exhibition.vo.ExhibitionVO;
 import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
 import kr.co.exhibitionThreeAdmin.search.service.SearchService;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
@@ -121,14 +124,37 @@ public class AdminExhibitionService implements SearchService{
 		jsonObj.put("totalCount",ed.getTotal_count() );
 		jsonObj.put("watchCount",ed.getWatch_count() );
 		jsonObj.put("exInfo",ed.getEx_info());
-		jsonObj.put("exIntro",ed.getEx_info() );
+		jsonObj.put("exIntro",ed.getEx_intro() );
+		jsonObj.put("exHallNum",ed.getEx_hall_num() );
 		jsonObj.put("addImg",ed.getAdd_img() );
 		jsonObj.put("exPoster",ed.getExhibition_poster() );
 		jsonObj.put("exStatus",ed.getEx_status());
-		
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		jsonObj.put("exhibitDate", sdf.format(ed.getExhibit_date()));
+		jsonObj.put("deadline", sdf.format(ed.getDeadline()));
 		
 		return jsonObj.toJSONString();
 	}//searchExDetail
 	
+	public List<AdminExHallDomain> searchExHall(){
+		List<AdminExHallDomain> list = null;
+		try {
+			list = aDAO.selectExHall();
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		return list;
+	}//searchExHall
+	
+	public String modifyExhibition(ExhibitionVO eVO) {
+		int cnt=0;
+		JSONObject jsonObj = new JSONObject();
+		try {
+			cnt = aDAO.updateExhibition(eVO);
+			jsonObj.put("cnt", cnt);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		return jsonObj.toJSONString();
+	}//modifyExhibition
 }//class
