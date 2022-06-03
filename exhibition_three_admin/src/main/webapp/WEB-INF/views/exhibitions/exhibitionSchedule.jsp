@@ -73,8 +73,8 @@
 						$("#exHall").val(jsonObj.exHallNum);
 						$("#hidPoster").val(jsonObj.exPoster);
 						$("#hidAddImg").val(jsonObj.addImg);
-						$("#posterImg").attr("src","../images/"+jsonObj.exPoster);//포스터 보이기
-						$("#addImage").attr("src","http://localhost/exhibitionThreeAdmin/images/"+jsonObj.addImg);//추가이미지 보이기 
+						$("#posterImg").attr("src",jsonObj.exPosterUrl).width(400);//포스터 보이기
+						$("#addImage").attr("src",jsonObj.addImgUrl).width(400);//추가이미지 보이기 
 						$("#exStatus").val(jsonObj.exStatus);
 	    		 },
 	    		 error:function(request, status, error){
@@ -102,6 +102,8 @@
 		$("#deleteBtn").click(function(){
 			$("#confirmDelete").modal('show');
 		});//click
+
+		
 	});//ready
 	function chkNull(){
 		if($("#keyword").val()==""){
@@ -167,6 +169,59 @@
 			}); //ajax
 	}//deleteExhibition
 	
+	function setThumbnail(event,id,inputId){
+	    let file = event.target.files[0];
+	    if (!file.type.match("image.*")) {
+	        alert("이미지 파일만 업로드 가능합니다.");
+	        $(inputId).val("");
+	        return;
+	    }//end if
+		if(file){
+			var reader = new FileReader();
+			reader.onload = function(event){
+				$(id).attr("src",event.target.result).width(400);//포스터 보이기
+			}//onload
+			reader.readAsDataURL(file);
+		}//end if
+	}//setThumbnail
+	function addEx(){
+		var formData = new FormData();
+		formData.append("mulPoster",$("#addExPoster").get(0).files[0]);
+		formData.append("mulAdd",$("#addAddImg").get(0).files[0]);
+		formData.append("ex_name",$("#addExName").val());
+		formData.append("ex_hall_num",$("#addExHall").val());
+		formData.append("ex_info",$("#addInfo").val());
+		formData.append("ex_intro",$("#addIntro").val());
+		formData.append("exhibit_date",$("#addStartDate").val());
+		formData.append("deadline",$("#addEndDate").val());
+		formData.append("total_count",$("#addTotalNum").val());
+		formData.append("adult",$("#addAdult").val());
+		formData.append("teen",$("#addTeen").val());
+		formData.append("child",$("#addChild").val());
+		formData.append("watch_count",$("#addWatchNum").val());
+		
+		$.ajax({
+			url:"exAdd.do",
+			type: "post",
+			processData:false,
+			contentType: false,
+			data: formData,
+			dataType:"text",
+			error:function(xhr){
+				alert("addAjax : "+xhr.status+", "+xhr.statusText);
+			//	location.href="401.html";
+			},
+			success:function(data){
+				if(data > 0){
+					alert("전시가 등록되었습니다.");
+					location.reload();
+				}else{
+					alert("전시 등록 실패하였습니다.");
+				}//end else
+			}//success  
+			
+		});//ajax
+	}//addEx
 	</script>  
     </head>
     <body class="sb-nav-fixed">
@@ -330,7 +385,6 @@
 					        <button type="button" class="btn-close exit"  aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					     <form id="addFrm" method="post"action="http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_add.jsp" enctype="multipart/form-data" target='blankifr'>
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="exTitle">전시명</label>
 								  <input type="email" class="form-control" id="addExName" name="addExName" placeholder="전시명"  style="width:200px">
@@ -359,14 +413,14 @@
 					      	<div class="mb-3" >
 						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-						      	
-								  <input type="file" class="form-control" id="addExPoster" name="addExPoster">
-						    	
+								  <input type="file" class="form-control" id="addExPoster" name="addExPoster" accept="image/jpeg, image/png" onchange="setThumbnail(event,'#posterThumnail','#addExPoster')">
 								</div>
+						    		<img id="posterThumnail" src="" style="margin-top:10px;margin-bottom:10px;"/><br>
 								<label class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addAddImg" name="addAddImg">
+								  <input type="file" class="form-control" id="addAddImg" name="addAddImg" accept="image/*"  onchange="setThumbnail(event,'#addImgThumnail','#addAddImg')">
 								</div>
+						    		<img id="addImgThumnail" src=""/>
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="exTitle">전시 간단 소개</label>
@@ -412,7 +466,6 @@
 								</div>
 							</div>
 							</div>
-							</form>
 					      </div>
 					      <!-- modal body end -->
 					      <div class="modal-footer">
@@ -422,7 +475,7 @@
 					        <a type="button" class="btn btn-outline-dark exit">돌아가기</a>
 					      	</div>
 					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-info" id="addExBtn">전시 추가</button>
+					        <button type="button" class="btn btn-outline-info" id="addExBtn" onclick="addEx()">전시 추가</button>
 					      	</div>
 					      </div>
 					      </div>
@@ -478,7 +531,7 @@
 					      	<div class="mb-3" >
 						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster">
+						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster"  accept="image/*" onchange="setThumbnail(event,'#posterImg','#modifyExPoster');">
 						      	 <input type="hidden" id="hidPoster" name ="hidPoster"/>
 								</div>
 								  <img id="posterImg"/>
@@ -490,7 +543,7 @@
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-						      	<input type="file" class="form-control" id="modifyAddImg" name="modifyAddImg">
+						      	<input type="file" class="form-control" id="modifyAddImg" accept="image/*" name="modifyAddImg"onchange="setThumbnail(event,'#addImage','#modifyAddImg')">
 						      	<input type="hidden" id="hidAddImg" name="hidAddImg"/>
 								</div>
 								  <img id="addImage"/>

@@ -15,8 +15,8 @@
 	<select id="selectEx" resultType="kr.co.exhibitionThreeAdmin.exhibition.domain.ExhibitionDomain" parameterType="sVO">
 		select *
 			from(
-				select row_number() over(order by input_date desc) rnum, ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster, add_img, 
-				ex_num,adult,teen, child, ex_hall_num, cat_num,
+				select row_number() over(order by input_date desc) rnum, ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster_url, add_img_url, 
+				ex_num,adult,teen, child, ex_hall_num, cat_num,watch_count,
 				exhibit_date,deadline, input_date
 				from exhibition
 			<where>
@@ -47,4 +47,14 @@
 		</set>
 		where ex_num=#{ex_num}
 	</update>
+	<insert id="insertEx" parameterType="kr.co.exhibitionThreeAdmin.exhibition.vo.ExhibitionVO">
+		insert into exhibition
+		
+		values(
+		ex_num_seq.nextval,#{ex_name},#{ex_info},#{ex_intro},
+		#{exhibit_date},#{deadline},#{total_count},sysdate,'y',#{exhibition_poster},#{add_img},
+		#{adult},#{teen},#{child},#{ex_hall_num},10,#{watch_count},#{exhibition_poster_url},#{add_img_url}
+		)	
+		
+	</insert>
 </mapper>

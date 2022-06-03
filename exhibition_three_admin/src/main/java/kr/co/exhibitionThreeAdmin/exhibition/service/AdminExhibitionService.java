@@ -126,8 +126,8 @@ public class AdminExhibitionService implements SearchService{
 		jsonObj.put("exInfo",ed.getEx_info());
 		jsonObj.put("exIntro",ed.getEx_intro() );
 		jsonObj.put("exHallNum",ed.getEx_hall_num() );
-		jsonObj.put("addImg",ed.getAdd_img() );
-		jsonObj.put("exPoster",ed.getExhibition_poster() );
+		jsonObj.put("addImgUrl",ed.getAdd_img_url() );
+		jsonObj.put("exPosterUrl",ed.getExhibition_poster_url() );
 		jsonObj.put("exStatus",ed.getEx_status());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		jsonObj.put("exhibitDate", sdf.format(ed.getExhibit_date()));
@@ -157,4 +157,15 @@ public class AdminExhibitionService implements SearchService{
 		}//end catch
 		return jsonObj.toJSONString();
 	}//modifyExhibition
+	
+	public int addExhibition(ExhibitionVO eVO) {
+		int cnt = 0;
+		try {
+			cnt = aDAO.insertExhibition(eVO);
+		}catch(PersistenceException pe) {
+			pe.printStackTrace();
+		}//end catch
+		
+		return cnt;
+	}//addExhibition
 }//class

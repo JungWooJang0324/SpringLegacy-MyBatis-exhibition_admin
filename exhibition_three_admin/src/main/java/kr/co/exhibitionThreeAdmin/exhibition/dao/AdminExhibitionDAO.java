@@ -78,4 +78,17 @@ public class AdminExhibitionDAO {
 		return cnt;
 	}//updateExhibition
 	
+	public int insertExhibition(ExhibitionVO eVO)throws PersistenceException{
+		int cnt=0;
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.insert("kr.co.exhibitionThreeAdmin.exhibition.insertEx",eVO);
+		
+		if(cnt > 0) {
+			ss.commit();
+		}//end if
+		
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}//inserExhibition
+	
 }//class
