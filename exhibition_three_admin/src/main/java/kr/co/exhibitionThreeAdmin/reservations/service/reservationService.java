@@ -65,10 +65,10 @@ public class reservationService implements SearchService {
 		return cnt;
 	}
 
-	public int cancelRez(int rezNum){
+	public int cancelOrConfirmRez(ReservationVO rVO){
 		int cnt = 0;
 		try {
-			cnt = rDao.cancelRez(rezNum);
+			cnt = rDao.cancelOrConfirmRez(rVO);
 		}catch(PersistenceException e) {
 			e.printStackTrace();
 		}

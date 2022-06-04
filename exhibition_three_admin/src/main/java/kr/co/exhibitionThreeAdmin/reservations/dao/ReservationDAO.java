@@ -47,11 +47,10 @@ public class ReservationDAO {
 		return cnt;
 	}//UpdateRez
 	
-	public int cancelRez(int rezNum) throws PersistenceException{
+	public int cancelOrConfirmRez(ReservationVO rVO) throws PersistenceException{
 		int cnt = 0;
-		
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
-		cnt = ss.update("kr.co.exhibitionThreeAdmin.reservation.rezCancel", rezNum);
+		cnt = ss.update("kr.co.exhibitionThreeAdmin.reservation.rezCancelorConfirm", rVO);
 		
 		if(cnt==1) ss.commit();
 		

@@ -46,8 +46,13 @@
 		rez_count=#{rez_count} WHERE rez_num=#{rez_num}
 	</update>
 	
-	<update id="rezCancel" parameterType="int">
+	<update id="rezCancelorConfirm" parameterType="kr.co.exhibitionThreeAdmin.reservations.vo.ReservationVO">
+		<if test="rez_status == 'f'">
+			UPDATE reservation SET rez_status='t' where rez_num=#{rez_num}
+		</if>
+		<if test="rez_status == 't'">
 		UPDATE reservation SET rez_status='f' where rez_num=#{rez_num}
+		</if>
 	</update>
 	
 	

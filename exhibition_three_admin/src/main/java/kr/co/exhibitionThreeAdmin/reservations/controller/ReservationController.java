@@ -85,16 +85,31 @@ public class ReservationController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value="/admin/rezCancel.do", method=GET ,produces = "applicataion/json;charset=UTF-8")
-	public String cancelRez(Model model, int rezNum) {
-		int cnt = rs.cancelRez(rezNum);
+	@RequestMapping(value="/admin/rezCancelorConfirm.do", method=GET ,produces = "applicataion/json;charset=UTF-8")
+	public String cancelorConfirm(Model model, String rezNum, String rezStatus) {
+		ReservationVO rVO = new ReservationVO();
+		rVO.setRez_num(Integer.parseInt(rezNum));
+		rVO.setRez_status(rezStatus.charAt(0));
+		
+		int cnt = rs.cancelOrConfirmRez(rVO);
 		
 		JSONObject jObj=new JSONObject();
-		
 		jObj.put("cnt", cnt);
 		
 		return jObj.toJSONString();
 	}
+//	
+//	@ResponseBody
+//	@RequestMapping(value="/admin/rezConfirm.do", method=GET ,produces = "applicataion/json;charset=UTF-8")
+//	public String confirmRez(Model model, int rezNum) {
+//		int cnt = rs.confirmRez(rezNum);
+//		
+//		JSONObject jObj=new JSONObject();
+//		
+//		jObj.put("cnt", cnt);
+//		
+//		return jObj.toJSONString();
+//	}
 	
 	
 	

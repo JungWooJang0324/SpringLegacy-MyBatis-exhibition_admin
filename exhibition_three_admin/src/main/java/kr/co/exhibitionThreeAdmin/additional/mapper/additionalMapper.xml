@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.exhibitionThreeAdmin.additional">
+	<!-- 로그인  -->
+	<select id="loginChk" resultType="String" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
+		SELECT to_char(created_date) FROM admin 
+		WHERE admin_id=#{admin_id} and password=#{password}
+	</select>
+	
+	<!-- 메인 -->
+	<select id="countMember" resultType="int">
+		SELECT COUNT(userid) FROM member WHERE ISDELETED='n' 
+	</select>
+	<select id="cntTodayMember" resultType="int">
+		SELECT COUNT(userid) FROM member 
+		WHERE to_char(to_date(subscribe_date, 'yyyy-MM-dd'))=to_char(to_date(sysdate, 'yyyy-MM-dd'))
+	</select>
+
+	<select id="cntShownRez" resultType="int">
+		SELECT COUNT(userid) FROM reservation
+		WHERE rez_status='t'
+	</select>
+	<select id="cntAllRez" resultType="int">
+		SELECT COUNT(userid) FROM reservation
+	</select>
+	
+	<select id="cntTodayRez" resultType="int">
+		SELECT COUNT(userid) FROM reservation
+		WHERE to_char(to_date(rez_date, 'yyyy-MM-dd'))=to_char(to_date(sysdate, 'yyyy-MM-dd'))
+	</select>
+	
+	
+	
+	
+</mapper>

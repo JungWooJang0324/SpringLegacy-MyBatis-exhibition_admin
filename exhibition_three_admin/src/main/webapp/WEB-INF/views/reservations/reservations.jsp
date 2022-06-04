@@ -24,10 +24,10 @@
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="http://localhost/exhibitionThreeAdmin/js/scripts.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-        <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script>
+        <script src="http://localhost/exhibitionThreeAdmin/assets/demo/chart-area-demo.js"></script>
+        <script src="http://localhost/exhibitionThreeAdmin/assets/demo/chart-bar-demo.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+        <script src="http://localhost/exhibitionThreeAdmin/js/datatables-simple-demo.js"></script>
      	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
       hr {width:200px; margin: 0px auto; margin-top:10px;}
@@ -112,51 +112,59 @@ function confirmModify() {
 } //confirmModify
 
 function cancelRez() {
-	var num= $("#resNum").val();
+	var num= $("#rezNum").text();
+	var rezStatus=$("#rezStatus").text();
+	if(rezStatus!='f'){
 	 $.ajax({
-			url:"http://localhost/exhibitionThreeAdmin/admin/rezCancel.do",
-			data: {"rezNum":num},
-			async:false,
+			url:"http://localhost/exhibitionThreeAdmin/admin/rezCancelorConfirm.do",
+			data: {"rezNum":num, "rezStatus":rezStatus},
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				console.log("cancelAjax : "+xhr.status+", "+xhr.statusText);
+				alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
 			},
 			success:function(jObj){
 				if(jObj.cnt == 1){
-					alert("예약이 취소되었습니다.")
-				}
+					alert("예약이 취소되었습니다.");
+				} 
 			}  
-		}); //ajax
+		}); //ajax */
+	}// if
+	else{ alert("이미 취소된 정보입니다.")}
+	location.href="reservation.do";
 }//cancelRez
 
 //예약 확인
 function rezConfirm() {
-	var num= $("#mainRezNum").text();
+	var num= $("#rezNum").text();
+	var rezStatus=$("#rezStatus").text();
+	if(rezStatus!='t'){
 	 $.ajax({
-			url:"http://",
-			data: {"rezNum":num},
-			async:false,
+			url:"http://localhost/exhibitionThreeAdmin/admin/rezCancelorConfirm.do",
+			data: {"rezNum":num, "rezStatus":rezStatus},
 			type: "get",
 			dataType:"json",
 			error:function(xhr){
-				console.log("confirmAjax : "+xhr.status+", "+xhr.statusText);
+				alert("cancelAjax : "+xhr.status+", "+xhr.statusText);
 			},
-			success:function(jsonObj){
-				if(jsonObj.cnt > 0){
-					alert("예약이 확인되었습니다.")
-					location.href="booking.jsp";
-				}
+			success:function(jObj){
+				if(jObj.cnt == 1){
+					alert("예약이 확인되었습니다.");
+				} 
 			}  
-		}); //ajax
-}
+		}); //ajax */
+	}// if
+	else alert("이미 예약된 정보입니다.");
+
+	location.href="reservation.do";
+}//rezConfirm
 </script>
     </head>
    <body class="sb-nav-fixed">
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
 <!--             Sidebar Toggle
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button> -->
             <!-- Navbar Search-->
@@ -235,7 +243,7 @@ function rezConfirm() {
 							<c:otherwise>
 							  	<c:forEach var="rezList" items="${rezList}">
 								<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#rezDetail" data-num="${rezList.rez_num}"  class="rezList">
-									<td><c:out value="${rezList.rez_num}"/></td>
+									<td id="rezNum"><c:out value="${rezList.rez_num}"/></td>
 									<td><c:out value="${rezList.ex_name}"/></td>
 									<td><c:out value="${rezList.name}"/></td>
 									<td><fmt:formatDate value="${rezList.visit_date}" pattern="yyyy-MM-dd"/></td>

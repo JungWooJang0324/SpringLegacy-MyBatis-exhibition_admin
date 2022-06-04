@@ -6,6 +6,7 @@
 <properties resource="properties/database.properties"/>
 <typeAliases>
 	<typeAlias type="kr.co.exhibitionThreeAdmin.search.vo.SearchVO" alias="sVO"/>
+	<typeAlias type="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO" alias="lVO"/>
 	<typeAlias type="kr.co.exhibitionThreeAdmin.search.vo.BHSearchVO" alias="bhsVO"/>
 </typeAliases>
   <environments default="development">
@@ -25,5 +26,6 @@
     <mapper resource="kr/co/exhibitionThreeAdmin/exHall/mapper/exHallMapper.xml"/>
     <mapper resource="kr/co/exhibitionThreeAdmin/board/mapper/boardMapper.xml"/>
     <mapper resource="kr/co/exhibitionThreeAdmin/reservations/mapper/reservationMapper.xml"/>
+    <mapper resource="kr/co/exhibitionThreeAdmin/additional/mapper/additionalMapper.xml"/>
   </mappers>
 </configuration>
