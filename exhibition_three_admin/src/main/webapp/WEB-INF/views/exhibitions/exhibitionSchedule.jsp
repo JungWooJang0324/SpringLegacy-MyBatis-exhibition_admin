@@ -5,6 +5,7 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <% String field=request.getParameter("field"); %>
 <% String keyword=request.getParameter("keyword"); %>
 <% String pageScale=request.getParameter("pageScale"); %>
@@ -34,8 +35,6 @@
 	hr {width:200px; margin: 0px auto; margin-top:10px;}
 	.exTitle{font-weight:bold}
 	#memberTab{text-align:center;}
-	
-	
 </style>
 	<script type="text/javascript">
 	$(function(){
@@ -71,19 +70,43 @@
 						$("#teen").val(jsonObj.teen); 
 						$("#child").val(jsonObj.child); 
 						$("#exHall").val(jsonObj.exHallNum);
-						$("#hidPoster").val(jsonObj.exPoster);
-						$("#hidAddImg").val(jsonObj.addImg);
 						$("#posterImg").attr("src",jsonObj.exPosterUrl).width(400);//포스터 보이기
 						$("#addImage").attr("src",jsonObj.addImgUrl).width(400);//추가이미지 보이기 
 						$("#exStatus").val(jsonObj.exStatus);
+						$("#hidPoster").val(jsonObj.exPoster);
+						$("#hidAddImg").val(jsonObj.addImg);
 	    		 },
 	    		 error:function(request, status, error){
 	    				alert("code : "+request.status+"\n"+"message : "+request.responseText+"\n"+"error:"+error);
-	    			}
-	    		 
+	    		 }//error
 	    	 });//end ajax
-	    	 
 	    });//end modifyModal
+	    $("#updateExhibition").click(function(){
+	    	var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","가격","가격","가격"];
+			var value=[$("#exName"),$("#startDate"),$("#endDate"),$("#exIntro"),$("#exInfo"),$("#adult"),$("#teen"),$("#child")];
+			for(var i = 0; i < title.length; i++){
+				if(value[i].val().trim()==""){
+					alert(title+"을 입력해 주세요");
+					value[i].focus();
+					return;
+				}//end if
+			}//end for
+		    
+			var nowDate = new Date();
+			var endDate = new Date($("#endDate").val());
+			if(endDate.getTime() < nowDate.getTime()){
+				alert("마감일을 현재날짜 이후로 설정해주세요");
+				$("#endDate").focus();
+				return;
+			}//end if
+		
+			if(startDate > endDate){
+				alert("마감일은 시작일 이후로 설정해주세요");
+				$("#endDate").focus();
+				return;
+			}//end if 
+	    	$("#confirmModify").modal('show');
+	    })
 	    $(".exit").click(function(){
 			$("#confirmExit").modal('show');
 		});
@@ -92,18 +115,73 @@
 			$("#modifyModal").modal('hide');
 			$("#addModal").modal('hide');
 		})
-		$("#statusBtn").click(function(){
-			if($("#exStatus").val()=="y"){
-				alert("이미 사용자 페이지에 업데이트 된 전시입니다.");
+		$("#confirmRelease").on('show.bs.modal',function(e){
+			$("#exhibitionNameId").text($(e.relatedTarget).data('name'));
+			$("#exhibitionNumHid").val($(e.relatedTarget).data('num'));
+			$("#exStatusHid").val($(e.relatedTarget).data('status'));
+		});//on
+		$("#confirmDelete").on('show.bs.modal',function(e){ 
+			$("#deleteExhibitionName").text($(e.relatedTarget).data('name'));
+			$("#hidDeleteExNum").val($(e.relatedTarget).data('num'));
+			$("#hidDeleteAdd").val($(e.relatedTarget).data('add'));
+			$("#hidDeletePoster").val($(e.relatedTarget).data('poster'));
+		});//on
+		$("#addExBtn").click(function(){
+			var title =["전시명","전시시작일","전시마감일","전시간단소개","전시소개","허용인원","가격","가격","가격"];
+			var value=[$("#addExName"),$("#addStartDate"),$("#addEndDate"),$("#addIntro"),$("#addInfo"),$("#addTotalNum"),$("#addAdult"),$("#addTeen"),$("#addChild")];
+			for(var i = 0; i < title.length; i++){
+				if(value[i].val().trim()==""){
+					alert(title[i]+"을 입력해 주세요");
+					value[i].focus();
+					return;
+				}//end if
+			}//end for
+			if($("#addExHall").val()==""){
+				alert("전시장을 입력해주세요");
+				$("#addExHall").focus();
+				return;
+			}
+			var poster=$("#addExPoster").val();
+			if(poster.trim()==""){
+				alert("포스터를 입력해주세요");
+				$("#addExPoster").focus();
+				return;
+			}
+			var addImg = $("#addAddImg").val();
+			if(addImg.trim()==""){
+				alert("추가 이미지를 입력해주세요");
+				$("#addAddImg").focus();
+				return;
+			}
+			var nowDate = new Date();
+			var startDate = new Date($("#addStartDate").val());
+			var endDate = new Date($("#addEndDate").val());
+			
+			if(startDate.getTime() < nowDate.getTime()){
+				alert("시작일을 현재날짜 이후로 설정해주세요");
+				$("#addStartDate").focus();
 				return;
 			}//end if
-			$("#confirmRelease").modal('show');
-		});//click
-		$("#deleteBtn").click(function(){
-			$("#confirmDelete").modal('show');
-		});//click
-
+			if(startDate > endDate){
+				alert("마감일은 시작일 이후로 설정해주세요");
+				$("#addEndDate").focus();
+				return;
+			}//end if 
 		
+			var pattern_num= /^[0-9]+$/;
+			
+			if(!pattern_num.test(value[5].val())){
+				alert("허용인원은 숫자로 입력해주세요");
+				value[5].focus();
+				return;
+			}//end if
+			if(!pattern_num.test(value[6].val())||!pattern_num.test(value[7].val())||!pattern_num.test(value[8].val())){
+				alert("가격은 숫자로 입력해주세요");
+				value[7].focus();
+				return;
+			}//end if
+			$("#confirmAdd").modal('show');
+		});//click
 	});//ready
 	function chkNull(){
 		if($("#keyword").val()==""){
@@ -112,14 +190,20 @@
 		}//end if
 		$("#searchFrm").submit(); 
 	}//chkNull
+	
 	function releaseExhibition(){
-		var exNum = $("#exNum").val();
-		
+		var exNum = $("#exhibitionNumHid").val();
+		var status =$("#exStatusHid").val();
+		if(status == 'p'){
+			alert("이미 사용자 페이지에 노출된 전시입니다.");
+			$("#confirmRelease").modal('hide');
+			return;
+		}//end if
 		$.ajax({
 			url:"exUpdate.do",
 			data:{
 				"ex_num":exNum,
-				"ex_status":'y'	
+				"ex_status":'p'
 			},
 			type:"post",
 			dataType:"json",
@@ -130,8 +214,6 @@
 			success:function(jsonObj){
 				if(jsonObj.cnt > 0){
 					alert("사용자 페이지에 업데이트 되었습니다.");
-					/* $("#confirmRelease").modal('hide');
-					$("#modifyModal").modal('hide'); */
 					location.reload();
 				}else{
 					alert("사용자 페이지 업데이트 실패하였습니다.");
@@ -142,13 +224,15 @@
 	
 	function deleteExhibition(){
 		var num= $("#exNum").val();
-	/* 	var poster=$("#hidPoster").val();
-		var addImg=$("#hidAddImg").val(); */
+	 	var poster=$("#hidDeletePoster").val();
+		var addImg=$("#hidDeleteAdd").val();
 		 $.ajax({
 				url:"exUpdate.do",
 				data: {
 					"ex_num":num,
-					"ex_status":'n'
+					"ex_status":'n',
+					"add_img":addImg,
+					"exhibition_poster":poster
 				},
 				type: "post",
 				dataType:"json",
@@ -164,12 +248,11 @@
 					}else{
 						alert("전시 삭제 실패하였습니다.");
 					}//end else
-					
 				}//success  
 			}); //ajax
 	}//deleteExhibition
 	
-	function setThumbnail(event,id,inputId){
+	function setThumbnail(event,id,inputId){//미리보기
 	    let file = event.target.files[0];
 	    if (!file.type.match("image.*")) {
 	        alert("이미지 파일만 업로드 가능합니다.");
@@ -184,7 +267,8 @@
 			reader.readAsDataURL(file);
 		}//end if
 	}//setThumbnail
-	function addEx(){
+	
+	function addExhibition(){
 		var formData = new FormData();
 		formData.append("mulPoster",$("#addExPoster").get(0).files[0]);
 		formData.append("mulAdd",$("#addAddImg").get(0).files[0]);
@@ -198,7 +282,7 @@
 		formData.append("adult",$("#addAdult").val());
 		formData.append("teen",$("#addTeen").val());
 		formData.append("child",$("#addChild").val());
-		formData.append("watch_count",$("#addWatchNum").val());
+		/* formData.append("watch_count",$("#addWatchNum").val()); */
 		
 		$.ajax({
 			url:"exAdd.do",
@@ -209,7 +293,6 @@
 			dataType:"text",
 			error:function(xhr){
 				alert("addAjax : "+xhr.status+", "+xhr.statusText);
-			//	location.href="401.html";
 			},
 			success:function(data){
 				if(data > 0){
@@ -222,10 +305,51 @@
 			
 		});//ajax
 	}//addEx
+	
+	function updateExhibition(){
+		var formData = new FormData();
+		if($("#modifyExPoster").get(0).files[0]!=undefined){
+			formData.append("mulPoster",$("#modifyExPoster").get(0).files[0]);
+		}//end if
+		if($("#modifyAddImg").get(0).files[0] != undefined){
+			formData.append("mulAdd",$("#modifyAddImg").get(0).files[0]);
+		}//end if
+		formData.append("ex_name",$("#exName").val());
+		formData.append("ex_num",$("#exNum").val());
+		formData.append("ex_hall_num",$("#exHall").val());
+		formData.append("ex_info",$("#exInfo").val());
+		formData.append("ex_intro",$("#exIntro").val());
+		formData.append("exhibit_date",$("#startDate").val());
+		formData.append("deadline",$("#endDate").val());
+		formData.append("adult",$("#adult").val());
+		formData.append("teen",$("#teen").val());
+		formData.append("child",$("#child").val());
+		formData.append("add_img",$("#hidAddImg").val());
+		formData.append("exhibition_poster",$("#hidPoster").val());
+		
+		$.ajax({
+			url:"exUpdate.do",
+			type: "post",
+			processData:false,
+			contentType: false,
+			data: formData,
+			dataType:"json",
+			error:function(xhr){
+				alert("addAjax : "+xhr.status+", "+xhr.statusText);
+			},
+			success:function(jsonObj){
+				if(jsonObj.cnt > 0){
+					alert("전시가 수정되었습니다.");
+					location.reload();
+				}else{
+					alert("전시 수정 실패하였습니다.");
+				}//end else
+			}//success  
+		});//ajax
+	}//updateExhibition
 	</script>  
     </head>
     <body class="sb-nav-fixed">
-
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
@@ -300,9 +424,21 @@
 	    						 		<c:forEach var="exhibition" items="${exhibitionList }">
                                     	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${ exhibition.ex_num}">
  											<td><c:out value="${exhibition.ex_num }"/></td>
- 											<td><c:out value="${exhibition.ex_name }"/></td>
- 											<td><c:out value="${exhibition.input_date }"/></td>
- 											<td><c:out value="${exhibition.input_date }"/></td>
+ 											<td><c:out value="${exhibition.ex_name }"/>
+ 											<c:set var="today" value="<%=new java.util.Date()%>"/>
+ 											<fmt:formatDate var="now" type="date" value="${today}" pattern="yyyy-MM-dd"/>
+ 											<c:if test="${exhibition.input_date eq now}">
+ 											<img src="http://<%=application.getInitParameter("domain") %>/images/new_icno.png" style="width:25px;">
+ 											</c:if>
+ 											</td>
+ 											<td><fmt:formatDate pattern="yyyy-MM-dd" value="${exhibition.input_date }"/></td>
+ 											<td>
+ 											<button type="button" class="btn btn-secondary btn-sm" data-bs-target="#confirmDelete" data-bs-toggle="modal" 
+ 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-add="${exhibition.add_img}"data-poster="${exhibition.exhibition_poster}"
+ 											>삭제</button>
+ 											<button type="button" class="btn btn-primary btn-sm" data-bs-target="#confirmRelease" data-bs-toggle="modal" 
+ 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-status="${exhibition.ex_status }">노출</button>
+ 											</td>
                                     	</tr>
 	    						 		</c:forEach>
 						  			</c:if>
@@ -392,7 +528,7 @@
 						      	<div class="mb-3">
 								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
 							  	<select class="form-select" id="addExHall" name="addExHall" style="width:400px">
-									  <option selected>전시장 / 담당자를 선택해주세요</option>
+									  <option selected>전시장을 선택해주세요</option>
 										 <c:forEach var="exHall" items="${exHallList}">
 											<option value="${exHall.ex_hall_num}"><c:out value="${exHall.ex_hall_name }"/> </option>
 										</c:forEach> 
@@ -413,14 +549,14 @@
 					      	<div class="mb-3" >
 						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addExPoster" name="addExPoster" accept="image/jpeg, image/png" onchange="setThumbnail(event,'#posterThumnail','#addExPoster')">
+								  <input type="file" class="form-control" id="addExPoster" name="addExPoster" accept="image/*" onchange="setThumbnail(event,'#posterThumbnail','#addExPoster')">
 								</div>
-						    		<img id="posterThumnail" src="" style="margin-top:10px;margin-bottom:10px;"/><br>
+						    		<img id="posterThumbnail" src="" style="margin-top:10px;margin-bottom:10px;"/><br>
 								<label class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addAddImg" name="addAddImg" accept="image/*"  onchange="setThumbnail(event,'#addImgThumnail','#addAddImg')">
+								  <input type="file" class="form-control" id="addAddImg" name="addAddImg" accept="image/*"  onchange="setThumbnail(event,'#addImgThumbnail','#addAddImg')">
 								</div>
-						    		<img id="addImgThumnail" src=""/>
+						    		<img id="addImgThumbnail" src=""/>
 					      	</div>
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="exTitle">전시 간단 소개</label>
@@ -436,10 +572,10 @@
 								  <label for="exampleFormControlTextarea1" class="exTitle">허용인원</label>
 								<input type="text" class="form-control" id="addTotalNum" name="addTotalNum" placeholder="100"  style="width:100px">
 								</div>
-						      	<div class="mb-3 col-6">
+						      <!-- 	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="exTitle">관람인원</label>
 								<input type="text" class="form-control" id="addWatchNum" name="addWatchNum" placeholder="0"  style="width:100px">
-								</div>
+								</div> -->
 					      	</div>
 							
 							<div class="row">
@@ -475,7 +611,7 @@
 					        <a type="button" class="btn btn-outline-dark exit">돌아가기</a>
 					      	</div>
 					      	<div class="col-6 text-center">
-					        <button type="button" class="btn btn-outline-info" id="addExBtn" onclick="addEx()">전시 추가</button>
+					        <button type="button" class="btn btn-outline-info" id="addExBtn">전시 추가</button>
 					      	</div>
 					      </div>
 					      </div>
@@ -493,7 +629,6 @@
 					        <button type="button" class="btn-close exit" aria-label="Close"></button>
 					      </div>
 					      <div class="modal-body">
-					      <form id="modifyExhibition"action="http://<%=application.getInitParameter("domain") %>/main/ajax/exhibition_update.jsp" method="post" enctype="multipart/form-data" target='blankifr'>
 					      <div class="row">
 						      <div class="col-6">
 							      <label class="exTitle">전시 번호 </label>
@@ -509,7 +644,7 @@
 								  <input type="text" class="form-control" id="exName" name="exName" style="width:200px"/>
 								</div>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
+								  <label for="exampleFormControlInput1" class="exTitle">전시장</label>
 							      	 	<select class="form-select" id="exHall" name="exHall" style="width:400px">
 								 		<c:forEach var="exHall" items="${exHallList}">
 											<option value="${exHall.ex_hall_num}"><c:out value="${exHall.ex_hall_name }"/></option>
@@ -532,7 +667,7 @@
 						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster"  accept="image/*" onchange="setThumbnail(event,'#posterImg','#modifyExPoster');">
-						      	 <input type="hidden" id="hidPoster" name ="hidPoster"/>
+						      	 <input type="hidden" id="hidPoster"/>
 								</div>
 								  <img id="posterImg"/>
 					      	</div>
@@ -544,7 +679,7 @@
 								<label for="exampleFormControlInput1" class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
 						      	<input type="file" class="form-control" id="modifyAddImg" accept="image/*" name="modifyAddImg"onchange="setThumbnail(event,'#addImage','#modifyAddImg')">
-						      	<input type="hidden" id="hidAddImg" name="hidAddImg"/>
+						      	 <input type="hidden" id="hidAddImg"/>
 								</div>
 								  <img id="addImage"/>
 							</div>
@@ -552,7 +687,7 @@
 								  <label for="exampleFormControlTextarea1" class="exTitle">전시 내용</label>
 								  <textarea class="form-control" id="exInfo"name="exInfo" rows="10"></textarea>
 								</div>
-					      	<div class="row">
+					      	<!-- <div class="row">
 						      	<div class="mb-3 col-6">
 								  <label for="exampleFormControlTextarea1" class="exTitle">허용인원</label>
 								<input type="text" class="form-control" id="totalCount"name="totalCount" placeholder="100"  style="width:100px">
@@ -561,7 +696,7 @@
 								  <label for="exampleFormControlTextarea1" class="exTitle">관람인원</label>
 								<input type="text" class="form-control" id="watchCount"name="watchCount" placeholder="0"  style="width:100px">
 								</div>
-					      	</div>
+					      	</div> -->
 							
 							<div class="row">
 							<label class="exTitle">전시 가격</label>
@@ -587,14 +722,10 @@
 								</div>
 							</div>
 							</div>
-								
-					      </form>
 					      </div>
 					      <div class="modal-footer">
 					      			<button type="button" class="btn btn-outline-dark exit">돌아가기</button>
-							        <button type="button" class="btn btn-outline-danger" id="deleteBtn">전시 삭제</button>
-							        <button type="button" class="btn btn-outline-info" id="modifyBtn">전시 수정</button>
-							        <button type="button" class="btn btn-outline-success" id="statusBtn">전시 노출</button>
+							        <button type="button" class="btn btn-outline-info" id="updateExhibition">전시 수정</button>
 					      </div>
 					    </div>
 					  </div>
@@ -758,7 +889,10 @@
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-				        전시를 삭제하시겠습니까?
+				       <span id="deleteExhibitionName"></span> 전시를 삭제하시겠습니까?
+				       <input type="hidden" id="hidDeleteExNum"/>
+				       <input type="hidden" id="hidDeleteAdd"/>
+				       <input type="hidden" id="hidDeletePoster"/>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -795,7 +929,9 @@
 				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				      </div>
 				      <div class="modal-body">
-				        전시를 사용자에게 보여주겠습니까?
+				        "<span id="exhibitionNameId"></span>" 전시를 사용자에게 보여주겠습니까?
+				        <input type="hidden" id="exhibitionNumHid"/>
+				        <input type="hidden" id="exStatusHid"/>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

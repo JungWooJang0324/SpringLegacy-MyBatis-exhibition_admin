@@ -15,7 +15,7 @@
 	<select id="selectEx" resultType="kr.co.exhibitionThreeAdmin.exhibition.domain.ExhibitionDomain" parameterType="sVO">
 		select *
 			from(
-				select row_number() over(order by input_date desc) rnum, ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster_url, add_img_url, 
+				select row_number() over(order by input_date desc) rnum, ex_name, ex_info, ex_intro,  total_count,  ex_status, exhibition_poster, add_img, 
 				ex_num,adult,teen, child, ex_hall_num, cat_num,watch_count,
 				exhibit_date,deadline, input_date
 				from exhibition
@@ -43,6 +43,12 @@
 			<when test="ex_status != null and ex_status != ''">
 				ex_status=#{ex_status}
 			</when>
+			<otherwise>
+				ex_name=#{ex_name},ex_info=#{ex_info},ex_intro=#{ex_intro},
+				exhibit_date=#{exhibit_date},deadline=#{deadline},
+				exhibition_poster=#{exhibition_poster},add_img=#{add_img},
+				adult=#{adult},teen=#{teen},child=#{child},ex_hall_num=#{ex_hall_num}
+			</otherwise>
 		</choose>
 		</set>
 		where ex_num=#{ex_num}
@@ -53,7 +59,7 @@
 		values(
 		ex_num_seq.nextval,#{ex_name},#{ex_info},#{ex_intro},
 		#{exhibit_date},#{deadline},#{total_count},sysdate,'y',#{exhibition_poster},#{add_img},
-		#{adult},#{teen},#{child},#{ex_hall_num},10,#{watch_count},#{exhibition_poster_url},#{add_img_url}
+		#{adult},#{teen},#{child},#{ex_hall_num},10,0
 		)	
 		
 	</insert>

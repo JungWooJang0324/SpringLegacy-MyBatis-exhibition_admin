@@ -29,10 +29,11 @@ public class AdminMemberController {
 		int pageScale = sVO.getPageScale();
 		int totalCnt = ams.searchTotalCnt(sVO);
 		int pageCnt = ams.pageCnt(totalCnt, pageScale);
-		int startNum = ams.startNum(sVO.getCurrentPage(),sVO.getPageScale());
+		int currentPage = sVO.getCurrentPage();
+		int startNum = ams.startNum(currentPage,sVO.getPageScale());
 		int endNum = ams.endNum(startNum, pageScale);
 		int pageBlock = ams.pageBlock();
-		int startPage = ams.startPage(sVO.getCurrentPage(), pageBlock);
+		int startPage = ams.startPage(currentPage, pageBlock);
 		int endPage = ams.endPage(startPage, pageBlock);
 		sVO.setStartNum(startNum);
 		sVO.setEndNum(endNum);
@@ -48,6 +49,7 @@ public class AdminMemberController {
 		model.addAttribute("endPage",endPage);
 		model.addAttribute("totalCnt",totalCnt);
 		model.addAttribute("pageBlock",pageBlock);
+		model.addAttribute("currentPage",currentPage);
 		
 		return "member/admin_member";
 	}//moveMember

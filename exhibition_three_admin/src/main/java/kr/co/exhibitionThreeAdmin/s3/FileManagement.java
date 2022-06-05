@@ -14,14 +14,13 @@ public class FileManagement {
 	public String FileUploader(MultipartFile mf) throws IOException {
 		String FileNames ="";
 		S3Uploader.S3Uploaders();
-			    
 	    String originFileName = mf.getOriginalFilename(); // 원본 파일 명
 	    long fileSize = mf.getSize(); // 파일 사이즈
 
 //	    System.out.println("originFileName : " + originFileName);
 //	    System.out.println("fileSize : " + fileSize);
 	    S3Uploader.fileUpload("exhibition3",originFileName,mf);
-	    System.out.println(S3Uploader.getFileURL("exhibition3", originFileName));
+//	    System.out.println(S3Uploader.getFileURL("exhibition3", originFileName));
 	    String safeFile =System.currentTimeMillis() + originFileName;
 	            
 	    FileNames = FileNames+","+safeFile; 
@@ -37,7 +36,14 @@ public class FileManagement {
 	
 	public String getFileUrl(String fileName) {
 		String url =""; 
+		S3Uploader.S3Uploaders();
 		url= S3Uploader.getFileURL("exhibition3", fileName);
 		return url;
 	}//getFileUrl
+	
+	public void deleteFile(String fileName) {
+		S3Uploader.S3Uploaders();
+		S3Uploader.fileDelete("exhibition3", fileName);
+	}//deleteFile
+	
 }//class

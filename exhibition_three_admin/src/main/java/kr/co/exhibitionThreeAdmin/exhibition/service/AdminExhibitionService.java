@@ -1,5 +1,6 @@
 package kr.co.exhibitionThreeAdmin.exhibition.service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -14,12 +15,16 @@ import kr.co.exhibitionThreeAdmin.exhibition.dao.AdminExhibitionDAO;
 import kr.co.exhibitionThreeAdmin.exhibition.domain.ExhibitionDomain;
 import kr.co.exhibitionThreeAdmin.exhibition.vo.ExhibitionVO;
 import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
+import kr.co.exhibitionThreeAdmin.s3.FileManagement;
 import kr.co.exhibitionThreeAdmin.search.service.SearchService;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 @Component
 public class AdminExhibitionService implements SearchService{
 	@Autowired(required = false)
 	AdminExhibitionDAO aDAO;
+	
+	@Autowired
+	FileManagement fileManagement;
 	
 	@Override
 	public int searchTotalCnt(SearchVO sVO) {
@@ -115,7 +120,6 @@ public class AdminExhibitionService implements SearchService{
 		}catch(PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch
-		
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("exName", ed.getEx_name());
 		jsonObj.put("teen", ed.getTeen());
@@ -126,8 +130,10 @@ public class AdminExhibitionService implements SearchService{
 		jsonObj.put("exInfo",ed.getEx_info());
 		jsonObj.put("exIntro",ed.getEx_intro() );
 		jsonObj.put("exHallNum",ed.getEx_hall_num() );
-		jsonObj.put("addImgUrl",ed.getAdd_img_url() );
-		jsonObj.put("exPosterUrl",ed.getExhibition_poster_url() );
+		jsonObj.put("addImgUrl",fileManagement.getFileUrl(ed.getAdd_img()));
+		jsonObj.put("exPosterUrl",fileManagement.getFileUrl(ed.getExhibition_poster()) );
+		jsonObj.put("exPoster",ed.getExhibition_poster());
+		jsonObj.put("addImg",ed.getAdd_img());
 		jsonObj.put("exStatus",ed.getEx_status());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		jsonObj.put("exhibitDate", sdf.format(ed.getExhibit_date()));
@@ -146,26 +152,49 @@ public class AdminExhibitionService implements SearchService{
 		return list;
 	}//searchExHall
 	
-	public String modifyExhibition(ExhibitionVO eVO) {
+	public String modifyExStatus(ExhibitionVO eVO) {
 		int cnt=0;
 		JSONObject jsonObj = new JSONObject();
+		System.out.println("-------------------------------------------evo"+eVO);
 		try {
+			if("n".equals(eVO.getEx_status())) {//전시 삭제 시 스토리지 파일 삭제
+				deleteFile(eVO);
+			}else if(eVO.getMulAdd()!=null || eVO.getMulPoster()!=null){ // 전시 수정 시 파일 삭제 후 다시 등록
+				deleteFile(eVO);
+				uploadFile(eVO);
+			}//end if
 			cnt = aDAO.updateExhibition(eVO);
-			jsonObj.put("cnt", cnt);
+			System.out.println(cnt);
 		}catch(PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch
+		jsonObj.put("cnt", cnt);
 		return jsonObj.toJSONString();
 	}//modifyExhibition
 	
 	public int addExhibition(ExhibitionVO eVO) {
 		int cnt = 0;
 		try {
+			uploadFile(eVO);
 			cnt = aDAO.insertExhibition(eVO);
 		}catch(PersistenceException pe) {
 			pe.printStackTrace();
 		}//end catch
-		
 		return cnt;
 	}//addExhibition
+	
+	public void uploadFile(ExhibitionVO eVO) {
+		try {
+			eVO.setAdd_img(fileManagement.FileUploader(eVO.getMulAdd()));
+			eVO.setExhibition_poster(fileManagement.FileUploader(eVO.getMulPoster()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}//end catch
+	}//uploadFile
+	
+	public void deleteFile(ExhibitionVO eVO) {
+		fileManagement.deleteFile(eVO.getAdd_img());
+		fileManagement.deleteFile(eVO.getExhibition_poster());
+	}//deleteFile
+	
 }//class

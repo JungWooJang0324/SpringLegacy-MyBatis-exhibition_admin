@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,13 +28,17 @@ public class S3Uploader {
     public static String secretKey;
 	
 	
-	/*
-	 * @Value("${aws.secretKey}") public void setSecret(String value) { secretKey =
-	 * value; }
-	 * 
-	 * @Value("${aws.accessKey}") public void setClient(String value) { accessKey =
-	 * value; }
-	 */
+	
+	  @Value("${aws.secretKey}") 
+	  public void setSecret(String value) { 
+		  secretKey = value; 
+	  }
+	  
+	 @Value("${aws.accessKey}") 
+	 public void setClient(String value) { 
+		 accessKey =value; 
+     }
+	 
     
     
 	private AmazonS3 conn;
@@ -107,7 +113,7 @@ public class S3Uploader {
 	public void fileDelete(String bucketName, String fileName) {
 		String imgName = (fileName).replace(File.separatorChar, '/');
 		conn.deleteObject(bucketName, imgName);
-		System.out.println("삭제성공");
+//		System.out.println("삭제성공");
 	}
 
 	/**

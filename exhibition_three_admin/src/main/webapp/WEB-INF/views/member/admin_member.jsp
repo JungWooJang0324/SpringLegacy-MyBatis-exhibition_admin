@@ -277,10 +277,16 @@ function updateMember(){
 	    						 		<c:forEach var="member" items="${memberList}" >
                                     	<tr style="cursor:pointer"data-bs-target="#memberDetail" data-bs-toggle="modal"data-id='${member.userid}'>
 	    						 			<td><c:out value="${member.userid }"/></td>
-	    						 			<td><c:out value="${member.name}"/></td>
+	    						 			<td><c:out value="${member.name}"/>
+	    						 			<c:set var="today" value="<%=new java.util.Date()%>"/>
+ 											<fmt:formatDate var="now" type="date" value="${today}" pattern="yyyy-MM-dd"/>
+ 											<c:if test="${exhibition.subscribe_date eq now}">
+ 											<img src="http://<%=application.getInitParameter("domain") %>/images/new_icno.png" style="width:25px;">
+ 											</c:if>
+	    						 			</td>
 	    						 			<td><c:out value="${member.address1}"/></td>
 	    						 			<td><fmt:formatDate pattern="yyyy-MM-dd" value="${member.subscribe_date}"/></td>
-	    						 			<td><button type="button" class="btn btn-secondary btn-sm" data-bs-target="#confirmDelete" data-bs-toggle="modal"data-id='${member.userid}'>삭제</button></td>
+	    						 			<td><button type="button" class="btn btn-secondary btn-sm"data-id='${member.userid}'>삭제</button></td>
 	    						 		</tr>
 	    						 		</c:forEach>
 	    						 </c:if>
@@ -310,7 +316,7 @@ function updateMember(){
 										<c:choose>
 										<c:when test="${i eq currentPage}">
 											<li>
-											<a style="margin-right:10px;"class="text-secondary" href="#void">
+											<a style="margin-right:10px;color:#FF0000"class="text-secondary" href="#void">
 												<c:out value="${i}"/>
 											</a>
 											</li> 
