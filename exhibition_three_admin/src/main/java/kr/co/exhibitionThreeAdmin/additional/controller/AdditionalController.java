@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import kr.co.exhibitionThreeAdmin.additional.service.AdditionalService;
 import kr.co.exhibitionThreeAdmin.additional.service.LoginService;
 import kr.co.exhibitionThreeAdmin.additional.vo.LoginVO;
+import kr.co.exhibitionThreeAdmin.exhibition.service.AdminExhibitionService;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * 추가적인 페이지
@@ -26,23 +30,26 @@ public class AdditionalController {
 	@Autowired(required = false)
 	private AdditionalService as;
 	
-	@RequestMapping(value = "/admin/index.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/index.do", method = GET)
 	public String index(Model model) {
 		model.addAttribute("cntAllMembers", as.countAllMember());
 		model.addAttribute("cntTodayMember", as.cntTodayMember());
 		model.addAttribute("cntShownRez", as.cntShownRez());
 		model.addAttribute("cntAllRez", as.cntAllRez());
 		model.addAttribute("cntTodayRez", as.cntTodayRez());
-		
+		model.addAttribute("cntTodayBoard", as.cntTodayBoard());
+		model.addAttribute("cntAllEx", as.cntAllExhibition());
+		model.addAttribute("endedEx", as.endedExhibition());
+		model.addAttribute("endsTomorrow", as.endsTomorrow());
 		return "index";
 	}
 	
-	@RequestMapping(value = "/admin/settings.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/settings.do", method = GET)
 	public String settings(Model model) {
 		return "commons/settings";
 	}
 	
-	@RequestMapping(value="/admin/login.do", method=RequestMethod.POST)
+	@RequestMapping(value="/admin/login.do", method= {GET,POST})
 	public String login(Model model,LoginVO lVO, String loginChk) {
 		String createdDate = ls.loginChk(lVO);
 		String reLog="index";
@@ -53,6 +60,18 @@ public class AdditionalController {
 		}
 		return reLog;
 	}
+	
+	@RequestMapping(value="/admin/password.do", method= {GET, POST})
+	public String password() {
+		return "commons/passwordReset";
+	}
+	@RequestMapping(value="/admin/passwordReset.do", method=RequestMethod.POST)
+	public String passwordReset(String adminId) {
+		System.out.println(adminId);
+		return "commons/passwordReset";
+	}
+	
+	
 	
 	
 }

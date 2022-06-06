@@ -98,18 +98,6 @@ public class ReservationController {
 		
 		return jObj.toJSONString();
 	}
-//	
-//	@ResponseBody
-//	@RequestMapping(value="/admin/rezConfirm.do", method=GET ,produces = "applicataion/json;charset=UTF-8")
-//	public String confirmRez(Model model, int rezNum) {
-//		int cnt = rs.confirmRez(rezNum);
-//		
-//		JSONObject jObj=new JSONObject();
-//		
-//		jObj.put("cnt", cnt);
-//		
-//		return jObj.toJSONString();
-//	}
 	
 	
 	

@@ -58,4 +58,41 @@ public class AdditionalService {
 		}
 		return cnt;
 	}
+
+	public int cntTodayBoard() {
+		int cnt=0;
+		try {
+			cnt = aDao.cntTodaysBoard();
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return cnt;
+	}
+	public int cntAllExhibition() {
+		int cnt=0;
+		try {
+			cnt = aDao.cntAllExhibition();
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return cnt;
+	}
+	public int endedExhibition() {
+		int cnt=0;
+		try {
+			cnt = aDao.endedExhibition();
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return cnt;
+	}
+	public int endsTomorrow() {
+		int cnt=0;
+		try {
+			cnt = aDao.endsTomorrow();
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return cnt;
+	}
 }

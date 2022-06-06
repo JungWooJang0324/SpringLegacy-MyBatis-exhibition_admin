@@ -9,7 +9,10 @@
 		WHERE admin_id=#{admin_id} and password=#{password}
 	</select>
 	
-	<!-- 메인 -->
+	
+	
+	
+	<!-- 대시보드 -->
 	<select id="countMember" resultType="int">
 		SELECT COUNT(userid) FROM member WHERE ISDELETED='n' 
 	</select>
@@ -29,6 +32,23 @@
 	<select id="cntTodayRez" resultType="int">
 		SELECT COUNT(userid) FROM reservation
 		WHERE to_char(to_date(rez_date, 'yyyy-MM-dd'))=to_char(to_date(sysdate, 'yyyy-MM-dd'))
+	</select>
+	
+	<select id="cntTodayBoard" resultType="int">
+		SELECT COUNT(userid) FROM board
+		WHERE to_char(to_date(input_date, 'yyyy-MM-dd'))>to_char(to_date(sysdate-2, 'yyyy-MM-dd'))
+	</select>
+	<select id="cntAllExhibition" resultType="int">
+		SELECT COUNT(ex_num) FROM exhibition
+		WHERE ex_status='r'
+	</select>
+	<select id="endedExhibition" resultType="int">
+		SELECT count(*) from exhibition
+		WHERE (to_date(sysdate,'yyyy-MM-dd') - to_date(deadline, 'yyyy-MM-dd'))>0
+	</select>
+	<select id="endsTomorrow" resultType="int">
+		SELECT count(*) from exhibition
+		WHERE to_char(to_date(sysdate+1,'yyyy-MM-dd')) = to_char(to_date(deadline, 'yyyy-MM-dd'))
 	</select>
 	
 	

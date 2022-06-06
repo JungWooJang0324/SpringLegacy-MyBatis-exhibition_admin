@@ -98,8 +98,8 @@
                                     		<th>새 글수</th>
                                     	</tr>
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-<%--                                     		<td><%=cntNewContext %></td>
- --%>                                    	</tr>
+											<td><c:out value="${cntTodayBoard}"/></td>
+                                    	</tr>
                                     </table>
                                     <canvas id="myBarChart" width="100%" height="40"></canvas></div>
                                 </div>
@@ -112,12 +112,6 @@
                                        전시 관리
                                     </div>
                                     
-                                    <%
-     /*                                	AdminExhibitionDAO aed = new AdminExhibitionDAO();
-                                    	int allEx=aed.selectAllEx();
-                                    	int ended = aed.endedEx();
-                                    	int endTomorrow= aed.endsTomorrow(); */
-                                    %>
                                     <div class="card-body">
                                       <table class="table table-hover" >
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -126,10 +120,10 @@
                                     		<th>내일 마감 전시</th>
                                     	</tr>
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">
-                                    	<%--
-                                    	 	<td></td>
-                                    		<td><%=ended %>건</td>
-                                    		<td><%=endTomorrow %>건</td> --%>
+                                    	
+                                    	 	<td><c:out value="${cntAllEx}"/>건</td>
+                                    	 	<td><c:out value="${endedEx}"/>건</td>
+                                    	 	<td><c:out value="${endsTomorrow}"/>건</td>
                                     	</tr>
                                     </table>
                                     <canvas id="myBarChart" width="100%" height="40"></canvas></div>
@@ -141,11 +135,7 @@
                                         <i class="fas fa-chart-area me-1"></i>
                                         예약관리
                                     </div>
-                                    <%
-                                    	/* ReservationManagerDAO rmd=new ReservationManagerDAO();
-                                    	int cntReserve= rmd.countReservation();
-                                    	int cntTodayRez = rmd.countTodaysReservation(); */
-                                    %>
+                                  
                                     <div class="card-body">
                                      <table class="table table-hover" >
                                     	<tr style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#myModal">

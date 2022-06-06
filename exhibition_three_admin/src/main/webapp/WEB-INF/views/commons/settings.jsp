@@ -28,7 +28,6 @@
         </style>
         </head>
  <body class="sb-nav-fixed">
- <jsp:include page="navigation.jsp"/>
                <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
             <a class="navbar-brand ps-3" href="index.jsp">Exhibition Admin</a>
@@ -65,7 +64,7 @@
 											<th>
 											ID
 											</th>
-											<td><%=session.getAttribute("admin_id") %></td>
+											<!--  <td></td>-->
 										</tr>
 										
 										<tr>
@@ -73,7 +72,7 @@
 											PASSWORD
 											</th>
 											<td>
-											<a href="#">수정하기</a>
+											<a href="http://localhost/exhibitionThreeAdmin/admin/password.do">수정하기</a>
 											</td>
 										</tr>
 										<tr>

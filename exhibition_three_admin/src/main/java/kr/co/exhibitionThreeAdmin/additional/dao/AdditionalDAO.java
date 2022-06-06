@@ -43,6 +43,30 @@ public class AdditionalDAO {
 		if(ss != null) {ss.close();}//end if
 		return cnt;
 	}
+	public int cntTodaysBoard() throws PersistenceException{
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		int cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.additional.cntTodayBoard");
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}
+	public int cntAllExhibition() throws PersistenceException{
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		int cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.additional.cntAllExhibition");
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}
+	public int endedExhibition() throws PersistenceException{
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		int cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.additional.endedExhibition");
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}
+	public int endsTomorrow() throws PersistenceException{
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		int cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.additional.endsTomorrow");
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}
 	
 	
 	
