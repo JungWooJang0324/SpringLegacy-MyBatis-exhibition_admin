@@ -172,31 +172,78 @@ public class AdminExHallServie {
 		return list;
 	}
 	
-	//전시장 수정
-	public int modifyExHall(AdminExHallVO aehVO) {
+	
+	/**
+	 * 전시장 수정
+	 * @param aaehVO
+	 * @return
+	 */
+	public boolean modifyExHall(AdminExHallVO aehVO) {
 		int cnt = 0;
-		
-		return cnt;
+		boolean flag = false;
+		try {
+			cnt = aehDAO.updateExHall(aehVO);
+			if(cnt==1) {
+				flag = true;
+			}
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return flag;
 	}
 	
-	//전시장 삭제
-	public int removeExHall(int exHallNum) {
+	/**
+	 * 전시장 삭제
+	 * @param exHallNum
+	 * @return
+	 */
+	public boolean removeExHall(int exHallNum) {
 		int cnt = 0;
-		
-		return cnt;
+		boolean flag = false;
+		try {
+			cnt = aehDAO.deleteExHall(exHallNum);
+			if(cnt==1) {
+				flag = true;
+			}
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return flag;
 	}
 	
-	//전시장 추가
-	public int addExHall(AdminExHallVO aehVO) {
+	/**
+	 * 전시장 추가
+	 * @param aehVO
+	 * @return
+	 */
+	public boolean addExHall(AdminExHallVO aehVO) {
 		int cnt = 0;
+		boolean flag = false;
+		try {
+			cnt = aehDAO.insertExHall(aehVO);
+			if(cnt==1) {
+				flag = true;
+			}
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
 		
-		return cnt;
+		return flag;
 	}
 	
-	//전시장 상세
-	public AdminExHallVO exHallDetail(int exHallNum) {
-		AdminExHallVO aehVO = null;
-		
-		return aehVO;
+	/**
+	 * 전시장 상세
+	 * @param exHallNum
+	 * @return
+	 */
+	public AdminExHallDomain exHallDetail(int exHallNum) {
+		AdminExHallDomain aehDomain = null;
+		try {
+			aehDomain = aehDAO.selectExHallDetail(exHallNum);
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return aehDomain;
 	}
+	
 }

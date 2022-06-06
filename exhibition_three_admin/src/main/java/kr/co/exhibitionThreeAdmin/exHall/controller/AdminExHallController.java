@@ -3,13 +3,18 @@ package kr.co.exhibitionThreeAdmin.exHall.controller;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain;
 import kr.co.exhibitionThreeAdmin.exHall.service.AdminExHallServie;
+import kr.co.exhibitionThreeAdmin.exHall.vo.AdminExHallVO;
 import kr.co.exhibitionThreeAdmin.search.vo.BHSearchVO;
 
 @Controller
@@ -67,11 +72,114 @@ public class AdminExHallController {
 		return "exHall/hall";
 	}
 	
-	//전시장 추가 폼
+	//전시장 추가 
+	@RequestMapping(value = "/admin/hallAdd.do", method = GET, produces = "applicaion/text; charset=UTF-8")
 	@ResponseBody
-	@RequestMapping(value = "", method = {GET, POST})
-	public String formAddExHall() {
+	public String addExHall(AdminExHallVO aehVO, HttpServletRequest request) {
+		String flag="";
+		//전시장 추가
+		String ex_hall_name = request.getParameter("exName");
+		String exLoc = request.getParameter("exLoc");
+		String addr1 = request.getParameter("addr1");
+		String addr2 = request.getParameter("addr2");
+		String zipcode = request.getParameter("zipcode");
+		String lat = request.getParameter("lat");
+		String longi = request.getParameter("longi");
+		String mgrName = request.getParameter("mgrName");
+		String mgrTel = request.getParameter("mgrTel");
+		String exTel = request.getParameter("exTel");
+
+		//vo 넣기
+		try{
+			aehVO.setEx_hall_name(ex_hall_name);
+			aehVO.setEx_loc(exLoc);
+			aehVO.setAddress1(addr1);
+			aehVO.setAddress2(addr2);
+			aehVO.setZipcode(zipcode);
+			aehVO.setLongitude(Double.parseDouble(longi));
+			aehVO.setLatitude(Double.parseDouble(lat));
+			aehVO.setMgr_name(mgrName);
+			aehVO.setMgr_tel(mgrTel);
+			aehVO.setEx_tel(exTel);
+			
+			flag =String.valueOf(as.addExHall(aehVO));
+		}catch(NumberFormatException e){
+			e.printStackTrace();
+		}
+		return flag;
+	}
+	
+	//전시장 상세
+	@RequestMapping(value = "/admin/exHallDetail.do", method = GET, produces = "applicaion/json; charset=UTF-8")
+	@ResponseBody
+	public String addExHall(int exHallNum, HttpServletRequest request) {
 		
-		return "";
+		//클릭된 전시장 번호
+		exHallNum = Integer.parseInt(request.getParameter("exHallNum")) ;
+		//전시 상세 조회
+		AdminExHallDomain aehDomain = new AdminExHallDomain();
+		aehDomain = as.exHallDetail(exHallNum);
+		//전시 상세 jsonObj 
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("exName", aehDomain.getEx_hall_name());
+		jsonObj.put("exNum", aehDomain.getEx_hall_num());
+		jsonObj.put("zipcode", aehDomain.getZipcode());
+		jsonObj.put("latitude", aehDomain.getLatitude());
+		jsonObj.put("longitude", aehDomain.getLongitude());
+		jsonObj.put("mgrName", aehDomain.getMgr_name());
+		jsonObj.put("mgrTel", aehDomain.getMgr_tel());
+		jsonObj.put("exTel", aehDomain.getEx_tel());
+		jsonObj.put("addr1", aehDomain.getAddress1());
+		jsonObj.put("addr2", aehDomain.getAddress2());
+		return jsonObj.toJSONString();
+	}
+	
+	@RequestMapping(value = "/admin/hallRemove.do", method = GET, produces = "applicaion/text; charset=UTF-8")
+	@ResponseBody
+	public String removeExHall(int exHallNum, HttpServletRequest request) {
+		
+		String flag="";
+		//전시장 삭제
+		exHallNum = Integer.parseInt(request.getParameter("exHallNum")) ;
+		flag = String.valueOf(as.removeExHall(exHallNum));
+		return flag;
+	}
+	
+	@RequestMapping(value = "/admin/hallModify.do", method = GET, produces = "applicaion/text; charset=UTF-8")
+	@ResponseBody
+	public String modifyExHall(AdminExHallVO aehVO, HttpServletRequest request) {
+		
+		String flag="";
+		//전시장 수정
+		String hallNum = request.getParameter("hallNum");
+		String exName = request.getParameter("exName");
+		String addr1 = request.getParameter("addr1");
+		String addr2 = request.getParameter("addr2");
+		String zipcode = request.getParameter("zipcode");
+		String lat = request.getParameter("lat");
+		String longi = request.getParameter("lat");
+		String mgrName = request.getParameter("mgrName");
+		String mgrTel = request.getParameter("mgrTel");
+		String exTel = request.getParameter("exTel");
+
+		//vo 넣기
+		try{
+			aehVO.setEx_hall_num(Integer.parseInt(hallNum));
+			aehVO.setEx_hall_name(exName);
+			aehVO.setAddress1(addr1);
+			aehVO.setAddress2(addr2);
+			aehVO.setZipcode(zipcode);
+			aehVO.setLongitude(Double.parseDouble(longi));
+			aehVO.setLatitude(Double.parseDouble(lat));
+			aehVO.setMgr_name(mgrName);
+			aehVO.setMgr_tel(mgrTel);
+			aehVO.setEx_tel(exTel);
+			
+			flag = String.valueOf(as.modifyExHall(aehVO)); 
+			
+		}catch(NumberFormatException nfe){
+			nfe.printStackTrace();
+		} 
+		return flag;
 	}
 }

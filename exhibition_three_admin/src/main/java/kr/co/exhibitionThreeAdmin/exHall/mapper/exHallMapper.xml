@@ -32,4 +32,33 @@
 		where rnum >= ${startNum}
 		order by rnum
 </select>
+
+<!-- 전시장 추가 -->
+<insert id="insertExhall" parameterType="aehVO">
+	insert into exhibition_hall(ex_hall_num, hall_deleted, ex_hall_name, ex_loc, zipcode, latitude,
+			longitude, mgr_name, mgr_tel, ex_tel, address1, address2)
+	values(ex_hall_num_seq.nextval, 'n', #{ex_hall_name},#{ex_loc},#{zipcode},#{latitude},
+		#{longitude}, #{mgr_name},#{mgr_tel},#{ex_tel},#{address1},#{address2})
+</insert>
+
+<!-- 전시장 수정  -->
+<update id="updateExhall" parameterType="aehVO">
+	update EXHIBITION_HALL														
+	set	ex_hall_name=#{ex_hall_name}, address1=#{address1}, address2=#{address2}, 
+		zipcode=#{zipcode}, latitude=#{latitude}, longitude=#{longitude}, mgr_name=#{mgr_name}, 
+		mgr_tel=#{mgr_tel}, ex_tel=#{ex_tel}							
+	where ex_hall_num=#{ex_hall_num}	
+</update>
+
+<!-- 전시장 삭제 -->
+<update id="deleteExhall" parameterType="aehVO">
+	UPDATE EXHIBITION_HALL SET HALL_DELETED='y' WHERE EX_HALL_NUM=#{ex_hall_num}
+</update>
+
+<!-- 전시장 상세 -->
+<select id="exhallDetail" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain">
+	select EX_HALL_NUM, ex_hall_name, ex_loc, zipcode, latitude, longitude, mgr_name, mgr_tel, ex_tel, address1, address2	
+	from EXHIBITION_HALL 																			
+	where ex_hall_num=#{ex_hall_num}		
+</select>
 </mapper>

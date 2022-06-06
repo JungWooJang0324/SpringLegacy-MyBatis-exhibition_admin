@@ -16,7 +16,7 @@ public class AdminExHallDAO {
 	
 	//전체 전시장 수
 	public int getTotalRows(BHSearchVO sVO) {
-		int cntRows =3;
+		int cntRows =0;
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
 		cntRows = ss.selectOne("kr.co.exhbitionThreeAdmin.exHall.totalRows", sVO); 	
 		if(ss!=null) {ss.close();}
@@ -33,32 +33,67 @@ public class AdminExHallDAO {
 		return list;
 	}
 	
-	//전시장 수정
-	public int updateExHall(AdminExHallVO eVO) {
+	/**
+	 * 전시장 수정
+	 * @param aehVO
+	 * @return
+	 * @throws PersistenceException
+	 */
+	public int updateExHall(AdminExHallVO aehVO) throws PersistenceException {
 		int cnt =0;
 		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.update("kr.co.exhbitionThreeAdmin.exHall.updateExhall", aehVO);
+		if(cnt>0) {
+			ss.commit();
+		}
+		if(ss!=null) {ss.close();}
 		return cnt;
 	}
 	
-	//전시장 삭제
-	public int deleteExHall(int exHallNum) {
+	/**
+	 * 전시장 삭제
+	 * @param exHallNum
+	 * @return
+	 */
+	public int deleteExHall(int exHallNum) throws PersistenceException {
 		int cnt =0;
-		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.insert("kr.co.exhbitionThreeAdmin.exHall.deleteExhall", exHallNum);
+		if(cnt>0) {
+			ss.commit();
+		}
+		if(ss!=null) {ss.close();}
 		return cnt;
 	}
 	
-	//전시장 추가
-	public int insertExHall(AdminExHallVO eVO) {
+	/**
+	 * 전시장 추가
+	 * @param eVO
+	 * @return
+	 */
+	public int insertExHall(AdminExHallVO aehVO) throws PersistenceException {
 		int cnt =0;
-		
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		cnt = ss.delete("kr.co.exhbitionThreeAdmin.exHall.insertExhall", aehVO);
+		if(cnt>0) {
+			ss.commit();
+		}
+		if(ss!=null) {ss.close();}
 		return cnt;
 	}
 	
-	//전시장 상세
-	public AdminExHallVO selectExHallDetail(int exHallNum) {
-		AdminExHallVO eVO = null;
-		
-		return eVO;
+	/**
+	 * 전시장 상세
+	 * @param exHallNum
+	 * @return
+	 */
+	public AdminExHallDomain selectExHallDetail(int exHallNum) throws PersistenceException {
+		AdminExHallDomain aehDomain= null;
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		aehDomain = ss.selectOne("kr.co.exhbitionThreeAdmin.exHall.exhallDetail", exHallNum); 	
+		if(ss!=null) {ss.close();}
+		return aehDomain;
 	}
 	
 }

@@ -41,21 +41,19 @@ $(function(){
 	//전시장 상세보기 
 	$(".trDetail").click(function(){
 			
-		var hallNum = $(this).children().find("input:hidden[name=exHallName]").val();//클릭된 rnum 번호
-		
-		//넘버(ex_hall_num) 확인
-		//console.log(hallNum);
+		var hallNum = $(this).children().find("input:hidden[name=exHallNum]").val();//클릭된 rnum 번호
 		
 		$("#hallDetail").modal('show');
 		
 		$.ajax({
-			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallDetailAjax.jsp",
-			type:"post",
-			data:{ "hallNum":hallNum},
+			url:"../admin/exHallDetail.do",
+			type:"get",
+			data:{"exHallNum":hallNum},
 			dataType:"json",
+			traditional : true,
 			error:function(xhr){
 				console.log(xhr.status+" / "+xhr.statusText);
-				location.href="admin_error.html";
+				//location.href="admin_error.html";
 			},
 			success:function(jsonObj){
 				$("#exName_de").val(jsonObj.exName);
@@ -79,16 +77,16 @@ $(function(){
 		
 		checkAdd();//값 형
 			
-		$("#add").click(function(){
+		 $("#add").click(function(){
 			//null 체크
 			if($("#exName_add").val()==""|| $("#exLoc_add").val()=="" || $("#addr1_add").val()==""||
 					$("#addr2_add").val()==""||  $("#zipcode_add").val()==""|| $("#lat_add").val()==""||
 					$("#long_add").val()==""||	$("#mgrName_add").val()==""|| $("#mgrTel_add").val()==""||
 					$("#exTel_add").val()==""){
 						
-				$("#nullChk").modal('show');
-				return;
-			}
+			$("#nullChk").modal('show');
+			return;
+			}  
 			
 			$("#confirmAdd").modal('show');
 			
@@ -96,8 +94,10 @@ $(function(){
 				$("#confirmAdd").modal('hide'); 
 				
 				$.ajax({
-					url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallInsertAjax.jsp",
-					type:"post",
+					url:"../admin/hallAdd.do",
+					type:"get",
+					dataType: "text",
+					async: false,
 					data:{
 						exName : $("#exName_add").val(), 
 						exLoc : $("#exLoc_add").val(), 
@@ -110,13 +110,21 @@ $(function(){
 						mgrTel : $("#mgrTel_add").val(),
 						exTel : $("#exTel_add").val()
 					},
-					error:function(xhr){
+					error:function(xhr, request){
 						console.log(xhr.status+" / "+xhr.statusText);
-						location.href="admin_error.html";
+						alert("실패"+xhr.status+"\n"
+								+"code : "+request.status+"\n"
+								+"msg : "+request.responseText+"\n"
+								+"error : "+ error);
+						/* location.href="admin_error.html"; */
 					},
-					success:function(){
-							alert("전시추가 성공")
-							location.reload();
+					success:function(flag){
+						if(flag=="true"){
+							alert("전시추가 성공");
+							return;
+						}
+							alert("전시추가 실패");
+						location.reload();
 					}
 				});
 			});//$("#addOk").click
@@ -124,7 +132,7 @@ $(function(){
 		
 		$("#exName_add").val()=="";	$("#exLoc_add").val()=="" ;	$("#addr1_add").val()=="" ;
 		$("#addr2_add").val()=="";  $("#zipcode_add").val()==""; $("#lat_add").val()=="";
-		$("#long_add").val()=="";	$("#mgrName_add").val()==""; $("#mgrTel_add").val()==""; $("#exTel_add").val()==""
+		$("#long_add").val()=="";	$("#mgrName_add").val()==""; $("#mgrTel_add").val()==""; $("#exTel_add").val()=="" 
 	 
 	 }); // $("#btnAdd").click
 	
@@ -138,8 +146,9 @@ $(function(){
 			 $("#confirmModify").modal('hide');
 			 
 			$.ajax({
-				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallUpdateAjax.jsp",
-				type:"post",
+				url:"../admin/hallModify.do",
+				type:"get",
+				datatype:"json",
 				data:{
 					"exName" : $("#exName_de").val(),
 					"hallNum": $("#exNum_de").val(),
@@ -152,17 +161,16 @@ $(function(){
 					"mgrTel" : $("#mgrTel_de").val(),
 					"exTel" : $("#exTel_de").val()				
 				},
-				datatype:"json",
 				error:function(xhr){
 					console.log(xhr.status+" / "+xhr.statusText);
 				},
-				success:function(jsonObj){
-					if(jsonObj.cnt!=0){
-						alert("전시장 수정 성공");
+				success:function(flag){
+					if(flag=="true"){
+						alert("전시 수정 성공");
 						location.reload();
-					}else{
-						alert("전시장 수정 성공");
-					}	
+						return;
+					}
+					alert("전시 수정 실패");
 				}
 			}); 
 		});// $("#modifyOk") .click 
@@ -175,27 +183,31 @@ $(function(){
 		 $("#confirmDelete").modal('show');
 		 
 		 $("#deleteOk").click(function(){
-			$("#confirmDelete").modal('hide');
+			
+			 $("#confirmDelete").modal('hide');
 			 
 			$.ajax({
-				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/hallDeleteAjax.jsp",
-				type:"post",
-				data:{ "hallNum": $("#exNum_de").val()},
+				url:"../admin/hallRemove.do",
+				type:"get",
+				data:{ "exHallNum": $("#exNum_de").val()},
+				dataType: "text",
+				async: false,
+				traditional : true,
 				error:function(xhr){
 					console.log(xhr.status+" / "+xhr.statusText);
 				},
-				datatype : "json",
-				success:function(jsonObj){
-					if(jsonObj.cnt!=0){
-						alert("전시장 삭제 성공");
+				success:function(flag){
+					if(flag=="true"){
+						alert("전시 삭제 성공");
+						$("#hallDetail").modal('hide');
 						location.reload();
-					}else{
-						alert("삭제 실패")
-					}	
+						return;
+					}
+					alert("전시 삭제 실패");
 				}
 			}); 
-		});// $("#modifyOk") .click 
-	});// $("#modifyBtn").click
+		});// $("#removeOk") .click 
+	});// $("#removeBtn").click
 	
 	
 	
@@ -399,7 +411,7 @@ function chkByte(obj, maxByte){
                                             <td><c:out value="${exHallVO.ex_hall_name}"/></td>                                          	
                                             <td><c:out value="${exHallVO.ex_loc}"/></td>
                                             <td id="hiddenTd" style="padding: 0px;">
-                                        		<input id="exHallName" class="exHallName" name="exHallName" type="hidden" value="${exHallVO.ex_hall_name}"/>
+                                        		<input id="exHallNum" class="exHallNum" name="exHallNum" type="hidden" value="${exHallVO.ex_hall_num}"/>
                                         	</td>
                                         </tr>
                                      </c:forEach>
