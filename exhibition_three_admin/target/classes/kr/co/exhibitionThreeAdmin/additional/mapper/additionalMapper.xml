@@ -4,8 +4,8 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.exhibitionThreeAdmin.additional">
 	<!-- 로그인  -->
-	<select id="loginChk" resultType="String" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
-		SELECT to_char(created_date) FROM admin 
+	<select id="loginChk" resultType="int" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
+		SELECT count(*) FROM admin 
 		WHERE admin_id=#{admin_id} and password=#{password}
 	</select>
 	

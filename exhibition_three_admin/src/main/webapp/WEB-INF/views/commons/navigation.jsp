@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <style>
 #manager_div{width: 100px; height: 100px; background-color: white; border-radius: 100px; margin-left: 50px;}
@@ -9,7 +10,7 @@
                         <div class="nav">
 						<div id="manager_div"><img src="../assets/img/Profile-PNG-Clipart.png" style="width:100px; margin-left: 0px;"/></div>
 							<div id="manager_name">
-								<%=session.getAttribute("admin_id") %>
+								<c:out value="${sessionScope.id}"/>
 							</div>
 							<hr/>
                           <div class="sb-sidenav-menu-heading">MEMBERS</div>
@@ -62,5 +63,5 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        <%-- <%=session.getAttribute("admin_id") %> --%>
+                        	<c:out value="${sessionScope.id}"/>
                     </div>

@@ -4,6 +4,9 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
+
+import org.apache.http.impl.bootstrap.HttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.co.exhibitionThreeAdmin.additional.service.AdditionalService;
 import kr.co.exhibitionThreeAdmin.additional.service.LoginService;
@@ -23,10 +28,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 /**
  * 추가적인 페이지
  */
+@SessionAttributes("id")
 @Controller
-public class AdditionalController {
-	@Autowired(required = false)
-	private LoginService ls;
+public class AdditionalController{
+
 	@Autowired(required = false)
 	private AdditionalService as;
 	
@@ -47,18 +52,6 @@ public class AdditionalController {
 	@RequestMapping(value = "/admin/settings.do", method = GET)
 	public String settings(Model model) {
 		return "commons/settings";
-	}
-	
-	@RequestMapping(value="/admin/login.do", method= {GET,POST})
-	public String login(Model model,LoginVO lVO, String loginChk) {
-		String createdDate = ls.loginChk(lVO);
-		String reLog="index";
-		
-		if(createdDate==null) {
-			reLog = "redirect:/admin/index.do";
-			model.addAttribute("login", 1);
-		}
-		return reLog;
 	}
 	
 	@RequestMapping(value="/admin/password.do", method= {GET, POST})

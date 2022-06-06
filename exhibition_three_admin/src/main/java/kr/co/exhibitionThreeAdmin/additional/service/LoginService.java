@@ -13,13 +13,13 @@ public class LoginService {
 	@Autowired(required = false)
 	private LoginDAO lDao;
 	
-	public String loginChk(LoginVO lVO) {
-		String createdDate= "";
+	public int loginChk(LoginVO lVO) {
+		int cnt =0;
 		try {
-			createdDate = lDao.loginCheck(lVO);
+			cnt= lDao.loginCheck(lVO);
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}
-		return createdDate;
+		return cnt;
 	}
 }
