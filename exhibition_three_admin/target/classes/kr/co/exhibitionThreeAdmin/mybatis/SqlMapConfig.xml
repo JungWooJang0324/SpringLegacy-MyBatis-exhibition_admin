@@ -8,6 +8,7 @@
 	<typeAlias type="kr.co.exhibitionThreeAdmin.search.vo.SearchVO" alias="sVO"/>
 	<typeAlias type="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO" alias="lVO"/>
 	<typeAlias type="kr.co.exhibitionThreeAdmin.search.vo.BHSearchVO" alias="bhsVO"/>
+	<typeAlias type="kr.co.exhibitionThreeAdmin.exHall.vo.AdminExHallVO" alias="aehVO"/>
 </typeAliases>
   <environments default="development">
     <environment id="development">

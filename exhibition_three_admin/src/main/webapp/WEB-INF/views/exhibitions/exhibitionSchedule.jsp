@@ -30,6 +30,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/coin-slider/1.0.0/coin-slider.js"></script> 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/coin-slider/1.0.0/coin-slider-styles.css" type="text/css" />
 <style>
 	hr {width:200px; margin: 0px auto; margin-top:10px;}
@@ -38,6 +39,18 @@
 </style>
 	<script type="text/javascript">
 	$(function(){
+		 $(".plusIcon").on("click",function(){ 
+			  var obj = $(this);
+			  if( obj.hasClass("glyphicon-plus") ){
+			    obj.hide();
+			    obj.next().show();            
+			    obj.parent().parent().next().show();
+			  }else{
+			     obj.hide();
+			     obj.prev().show();
+			     obj.parent().parent().next().hide();
+			  }
+			});
 	     $("#searchBtn").click(function(){
 	        chkNull();
 	    })
@@ -254,8 +267,8 @@
 	
 	function setThumbnail(event,id,inputId){//미리보기
 	    let file = event.target.files[0];
-	    if (!file.type.match("image.*")) {
-	        alert("이미지 파일만 업로드 가능합니다.");
+	    if (!file.type.match("image.png")&&!file.type.match("image.jpg")&&!file.type.match("image.jpeg")) {
+	        alert("jpg/jpeg/png 이미지 파일만 업로드 가능합니다.");
 	        $(inputId).val("");
 	        return;
 	    }//end if
@@ -352,7 +365,7 @@
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/admin/index.do"">Exhibition Admin</a>
             <!-- <!-- Sidebar Toggle-->
             <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
  			 <!-- Navbar Search-->
@@ -379,11 +392,10 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
-                <main>
                     <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">전시 일정관리</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active"><a href="index.jsp" class="breadcrumb-item active" style="text-decoration:none">Dashboard</a></li>
+                            <li class="breadcrumb-item active"><a href="http://<%=application.getInitParameter("domain") %>/admin/index.do" class="breadcrumb-item active" style="text-decoration:none">Dashboard</a></li>
                             <li class="breadcrumb-item active">전시 일정관리</li>
                         </ol>
                         <!-- 검색창 -->
@@ -410,41 +422,84 @@
 							      </form> 
 						<div class="card-body">
                             <!-- 테이블 정의 -->
+                            <!--  <span class="glyphicon glyphicon-plus plusIcon"><i class='fas fa-angle-right' style='font-size:20px'></i></span>
+      						 <span class="glyphicon glyphicon-minus plusIcon" style="display:none"><i class='fas fa-angle-down' style='font-size:20px;'></i></span>
+                               -->
                                <table class="table table-hover" id="memberTab" >
                             	<thead> 
 								   <tr>
 	                                    <th>전시번호</th>
 	                                    <th>전시명</th>
 	                                    <th>입력일</th>
+	                                    <th>전시상태</th>
 	                                    <th>관리</th>
 	                               </tr>
 						  		</thead> 
 						  		<tbody> 
 						  			<c:if test="${not empty exhibitionList }">
 	    						 		<c:forEach var="exhibition" items="${exhibitionList }">
-                                    	<tr style="cursor:pointer" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${ exhibition.ex_num}">
- 											<td><c:out value="${exhibition.ex_num }"/></td>
- 											<td><c:out value="${exhibition.ex_name }"/>
- 											<c:set var="today" value="<%=new java.util.Date()%>"/>
- 											<fmt:formatDate var="now" type="date" value="${today}" pattern="yyyy-MM-dd"/>
- 											<c:if test="${exhibition.input_date eq now}">
- 											<img src="http://<%=application.getInitParameter("domain") %>/images/new_icno.png" style="width:25px;">
- 											</c:if>
- 											</td>
- 											<td><fmt:formatDate pattern="yyyy-MM-dd" value="${exhibition.input_date }"/></td>
+                                    	<tr style="cursor:pointer;" class="detailTab" data-bs-target="#modifyModal" data-bs-toggle="modal" data-num="${ exhibition.ex_num}">
  											<td>
- 											<button type="button" class="btn btn-secondary btn-sm" data-bs-target="#confirmDelete" data-bs-toggle="modal" 
- 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-add="${exhibition.add_img}"data-poster="${exhibition.exhibition_poster}"
- 											>삭제</button>
- 											<button type="button" class="btn btn-primary btn-sm" data-bs-target="#confirmRelease" data-bs-toggle="modal" 
- 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-status="${exhibition.ex_status }">노출</button>
+ 											   <c:out value="${exhibition.ex_num }"/>
+ 											</td>
+ 											<td>
+	 											<c:out value="${exhibition.ex_name }"/>
+	 											<c:set var="today" value="<%=new java.util.Date()%>"/>
+	 											<fmt:formatDate var="now" type="date" value="${today}" pattern="yyyy-MM-dd"/>
+	 											<c:if test="${exhibition.input_date eq now}">
+	 											<span id="newBadge" class="badge rounded-pill bg-danger" style="width:20px;font-size:10px;">N</span>
+ 												</c:if>
+ 											</td>
+ 											<td>
+ 												<fmt:formatDate pattern="yyyy-MM-dd" value="${exhibition.input_date }"/>
+ 											</td>
+ 											<td>
+ 											<c:choose>
+ 												<c:when test="${exhibition.ex_status eq 'y' }">
+ 												<span class="badge rounded-pill bg-secondary">pending</span>
+ 												</c:when>
+ 												<c:otherwise>
+ 												<span class="badge rounded-pill bg-success" >expose</span>
+ 												</c:otherwise>
+ 											</c:choose>
+ 											</td>
+ 											<td>
+	 											<button type="button" class="btn btn-secondary btn-sm" data-bs-target="#confirmDelete" data-bs-toggle="modal" 
+	 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-add="${exhibition.add_img}"data-poster="${exhibition.exhibition_poster}"
+	 											>삭제</button>
+	 											<button type="button" class="btn btn-primary btn-sm" data-bs-target="#confirmRelease" data-bs-toggle="modal" 
+	 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-status="${exhibition.ex_status }">노출</button>
  											</td>
                                     	</tr>
+                                    	<%-- <tr style="display:none">
+								          <td colspan="6">
+								          <div style="width:500px;height:500px;">
+								          <canvas id="line-chart"></canvas>
+								          </div>
+								          </td>
+								        </tr> --%>
 	    						 		</c:forEach>
+	    						 	<!-- 	<script>
+	    						 			var myChart = $("#line-chart");
+	    						 			var myLineChart = new Chart(myChart,{
+	    						 				 type:'line',
+	    						 				 data:{
+	    						 					 labels:[
+	    						 						'1월','2월','3월','4월','5월','6월' 
+	    						 					 ],
+	    						 					 datasets:[
+	    						 						 {
+	    						 							label:'2022',
+	    						 							data:[10,8,6,4,4,4]
+	    						 						 }
+	    						 					 ]
+	    						 				 }//data
+	    						 			});
+	    						 		</script> -->
 						  			</c:if>
 						  			<c:if test="${empty exhibitionList }">
 	                                 <tr>
-	                                 	<td colspan="3" style="text-align:center">조회된 데이터가 없습니다.</td>
+	                                 	<td colspan="6" style="text-align:center">조회된 데이터가 없습니다.</td>
 	                                 </tr>
 						  			</c:if>
 						  	</tbody> 
@@ -526,7 +581,7 @@
 								  <input type="email" class="form-control" id="addExName" name="addExName" placeholder="전시명"  style="width:200px">
 								</div>
 						      	<div class="mb-3">
-								  <label for="exampleFormControlInput1" class="exTitle">전시장 / 담당자</label>
+								  <label for="exampleFormControlInput1" class="exTitle">전시장</label>
 							  	<select class="form-select" id="addExHall" name="addExHall" style="width:400px">
 									  <option selected>전시장을 선택해주세요</option>
 										 <c:forEach var="exHall" items="${exHallList}">
@@ -549,12 +604,12 @@
 					      	<div class="mb-3" >
 						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addExPoster" name="addExPoster" accept="image/*" onchange="setThumbnail(event,'#posterThumbnail','#addExPoster')">
+								  <input type="file" class="form-control" id="addExPoster" name="addExPoster" accept="image/jpg,image/jpeg,image/png" onchange="setThumbnail(event,'#posterThumbnail','#addExPoster')">
 								</div>
 						    		<img id="posterThumbnail" src="" style="margin-top:10px;margin-bottom:10px;"/><br>
 								<label class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-								  <input type="file" class="form-control" id="addAddImg" name="addAddImg" accept="image/*"  onchange="setThumbnail(event,'#addImgThumbnail','#addAddImg')">
+								  <input type="file" class="form-control" id="addAddImg" name="addAddImg" accept="image/jpg,image/jpeg,image/png"  onchange="setThumbnail(event,'#addImgThumbnail','#addAddImg')">
 								</div>
 						    		<img id="addImgThumbnail" src=""/>
 					      	</div>
@@ -634,10 +689,6 @@
 							      <label class="exTitle">전시 번호 </label>
 								  <input type="text" id="exNum" name="exNum" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
 						      </div>
-						      <div class="col-6">
-							      <label class="exTitle">전시 노출 여부 </label>
-								  <input type="text" id="exStatus" name="exStatus" class="form-control" readonly="readonly" style="width:70px;height:30px;margin-bottom:20px;text-align:center;"/>	
-						      </div>
 					      </div>
 						      	<div class="mb-3">
 								  <label for="전시명" class="exTitle">전시명</label>
@@ -666,7 +717,7 @@
 					      	<div class="mb-3" >
 						      	<label class="exTitle">전시 포스터</label>
 						      	<div class="input-group mb-3" style="width:500px">
-						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster"  accept="image/*" onchange="setThumbnail(event,'#posterImg','#modifyExPoster');">
+						      	 <input type="file" class="form-control" id="modifyExPoster" name="modifyExPoster"  accept="image/jpg,image/jpeg,image/png" onchange="setThumbnail(event,'#posterImg','#modifyExPoster');">
 						      	 <input type="hidden" id="hidPoster"/>
 								</div>
 								  <img id="posterImg"/>
@@ -678,7 +729,7 @@
 						    <div class="mb-3">
 								<label for="exampleFormControlInput1" class="exTitle">추가 이미지</label>
 						      	<div class="input-group mb-3" style="width:500px">
-						      	<input type="file" class="form-control" id="modifyAddImg" accept="image/*" name="modifyAddImg"onchange="setThumbnail(event,'#addImage','#modifyAddImg')">
+						      	<input type="file" class="form-control" id="modifyAddImg" accept="image/jpg,image/jpeg,image/png" name="modifyAddImg"onchange="setThumbnail(event,'#addImage','#modifyAddImg')">
 						      	 <input type="hidden" id="hidAddImg"/>
 								</div>
 								  <img id="addImage"/>
