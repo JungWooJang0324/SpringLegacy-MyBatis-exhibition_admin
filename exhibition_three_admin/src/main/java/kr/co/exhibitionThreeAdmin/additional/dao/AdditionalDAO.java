@@ -12,6 +12,26 @@ import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
 @Component
 public class AdditionalDAO {
 		
+	//password 체크
+	public int passwordChk(LoginVO lvo) throws PersistenceException{
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		int cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.additional.passChk", lvo);
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}
+	
+	//pwUpdate
+	public int pwUpdate(LoginVO lvo) throws PersistenceException{
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		int cnt = ss.update("kr.co.exhibitionThreeAdmin.additional.updatePass", lvo);
+		if(cnt==1) ss.commit();
+		
+		if(ss != null) {ss.close();}//end if
+		return cnt;
+	}
+	
+	
+	//--------------------------------------------------------------------------
 	//	index화면 멤버 갯수
 	public int countAllMember() throws PersistenceException{
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();

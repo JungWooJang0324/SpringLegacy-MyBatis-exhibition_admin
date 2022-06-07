@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,26 +22,31 @@ public class LoginController {
 	@Autowired(required = false)
 	private LoginService ls;
 	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
 	@RequestMapping(value="/admin/login.do", method= {GET, POST})
 	public String login() {
 		return "commons/login";
 	}
 	
 	@RequestMapping(value="/admin/loginChk.do", method= POST)
-	public String loginChk(HttpSession session, @RequestParam(value="id") String id,
-											@RequestParam(value="password") String password,
+	public String loginChk(HttpSession session, String id,
+											String password,
 											Model model) {
+		String page="";
 		LoginVO lvo = new LoginVO();
 		lvo.setAdmin_id(id);
 		lvo.setPassword(password);
-		String page="";
+
 		if(ls.loginChk(lvo)==1) {
 			session.setAttribute("id", id);
 			page = "redirect: index.do";
 		}else {
 			model.addAttribute("loginFail", 1);
-			page="redirect: login.do";
+			page="forward: login.do";
 		}
+		
 		return page;
 	}
 	
@@ -48,6 +54,6 @@ public class LoginController {
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return "redirect: login.do";
+		return "forward: login.do";
 	}
 }

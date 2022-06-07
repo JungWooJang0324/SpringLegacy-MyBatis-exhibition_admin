@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.exhibitionThreeAdmin.additional.dao.AdditionalDAO;
+import kr.co.exhibitionThreeAdmin.additional.vo.LoginVO;
 
 @Service
 public class AdditionalService {
@@ -12,6 +13,29 @@ public class AdditionalService {
 	@Autowired(required = false)
 	private AdditionalDAO aDao;
 	
+	//로그인
+	public int checkPw(LoginVO lvo) {
+		int cnt=0;
+		try {
+			cnt = aDao.passwordChk(lvo);
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return cnt;
+	}
+
+	public int updatePw(LoginVO lvo) {
+		int cnt=0;
+		try {
+			cnt = aDao.pwUpdate(lvo);
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return cnt;
+	}
+	
+	
+	// index용
 	public int countAllMember() {
 		int cnt=0;
 		try {

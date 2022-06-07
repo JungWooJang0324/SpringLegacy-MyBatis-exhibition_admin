@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,14 +16,16 @@
         <script type="text/javascript">
         $(function() {
 			$("#resetPw").click(function() {
-				/* var emailCk="세션"; */
-/* 				if($("#inputEmail").val()== emailCk){*/
-					$("#resetPass").submit();
-				//}
+				$("#resetPass").submit();
 			}) 
 		})
         </script>
     </head>
+    <c:if test="${msg eq false}">
+    	<script type="text/javascript">
+    		alert("비밀번호가 틀렸습니다!");
+    	</script>
+    </c:if>
     <body class="bg-primary">
         <div id="layoutAuthentication">
             <div id="layoutAuthentication_content">
@@ -33,11 +36,11 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Password Recovery</h3></div>
                                     <div class="card-body">
-                                        <div class="small mb-3 text-muted">Enter your email address to reset your password.</div>
-                                        <form method="post" action="http://localhost/exhibitionThreeAdmin/admin/passwordReset.do" id="resetPass">
+                                        <div class="small mb-3 text-muted">확인을 위해 비밀번호를 입력해주세요</div>
+                                        <form method="post" action="http://localhost/exhibitionThreeAdmin/admin/passwordChk.do" id="resetPass">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="adminId" type="text" placeholder="name@example.com" />
-                                                <label for="inputEmail">Email address</label>
+                                                <input class="form-control" name="password" type="password" placeholder="name@example.com" />
+                                                <label for="inputPassword">password</label>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                                 <a class="small" href="http://localhost/exhibitionThreeAdmin/admin/login.do">Return to login</a>
@@ -67,6 +70,6 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-        <script src="js/scripts.js"></script>
+        <script src="http://localhost/exhibitionThreeAdmin/js/scripts.js"></script>
     </body>
 </html>

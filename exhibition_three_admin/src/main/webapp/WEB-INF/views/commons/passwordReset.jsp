@@ -64,9 +64,9 @@
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Password Recovery</h3></div>
                                     <div class="card-body">
                                         <div class="small mb-3 text-muted">새로운 비밀번호를 설정해 주세요 &nbsp;&nbsp;&nbsp;<span id="passLenCk"></span></div>
-                                        <form action="resetPassck.jsp" id="resetPass">
+                                        <form action="http://localhost/exhibitionThreeAdmin/admin/resetPass.do" id="resetPass" method="post">
                                             <div class="form-floating mb-3">
-                                                <input class="form-control" id="newPass" type="password" name="newPass"/>
+                                                <input class="form-control" id="newPass" type="password" name="newPassword"/>
                                                 <label for="inputEmail">새로운 비밀번호 입력</label>
                                             </div>
                                             <div class="form-floating mb-3">
@@ -74,7 +74,7 @@
                                                 <label for="inputEmail" id="ckLabel">비밀번호 확인</label>
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small" href="login.jsp">Return to login</a>
+                                                <a class="small" href="http://localhost/exhibitionThreeAdmin/admin/logout.do">Return to login</a>
                                                 <a class="btn btn-primary" href="#" id="resetPw">Reset Password</a>
                                             </div>
                                         </form>

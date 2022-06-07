@@ -4,12 +4,14 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,9 @@ public class AdditionalController{
 	@Autowired(required = false)
 	private AdditionalService as;
 	
+	@Autowired
+	BCryptPasswordEncoder encoder;
+	
 	@RequestMapping(value = "/admin/index.do", method = GET)
 	public String index(Model model) {
 		model.addAttribute("cntAllMembers", as.countAllMember());
@@ -54,16 +59,43 @@ public class AdditionalController{
 		return "commons/settings";
 	}
 	
-	@RequestMapping(value="/admin/password.do", method= {GET, POST})
+	@RequestMapping(value="/admin/password.do", method= {POST, GET})
 	public String password() {
-		return "commons/passwordReset";
+		return "commons/password";
 	}
-	@RequestMapping(value="/admin/passwordReset.do", method=RequestMethod.POST)
-	public String passwordReset(String adminId) {
-		System.out.println(adminId);
-		return "commons/passwordReset";
+	@RequestMapping(value="/admin/passwordChk.do", method=POST)
+	public String passwordChk(String password,HttpSession session, Model model) {
+		LoginVO lvo = new LoginVO();
+		lvo.setAdmin_id((String) session.getAttribute("id"));
+		lvo.setPassword(password);
+		String page = "commons/passwordReset";
+		
+		if(session.getAttribute("id")==null) {
+			page = "login.do";
+		}
+		
+		int cnt = as.checkPw(lvo);
+		if(cnt != 1) {
+			model.addAttribute("msg", false);
+			page = "forward: password.do";
+		}
+		return page;
 	}
 	
+	@RequestMapping(value = "/admin/resetPass.do", method= POST)
+	public String resetPass(String newPassword,HttpSession session) {
+		String pass=encoder.encode(newPassword);
+
+		LoginVO lvo = new LoginVO();
+		lvo.setAdmin_id((String) session.getAttribute("id"));
+		lvo.setPassword(pass);
+		
+		System.out.println("newPassword"+pass);
+		int cnt =as.updatePw(lvo);
+		
+		return "redirect:logout.do";
+		
+	}
 	
 	
 	

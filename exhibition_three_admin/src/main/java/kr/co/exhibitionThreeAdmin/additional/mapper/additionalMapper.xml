@@ -4,11 +4,20 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.exhibitionThreeAdmin.additional">
 	<!-- 로그인  -->
-	<select id="loginChk" resultType="int" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
+	<select id="loginChk" resultType="String" parameterType="String">
+		SELECT password FROM admin 
+		WHERE admin_id=#{id}
+	</select>
+
+	<select id="passChk" resultType="int" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
 		SELECT count(*) FROM admin 
 		WHERE admin_id=#{admin_id} and password=#{password}
 	</select>
 	
+	<update id="updatePass" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
+		UPDATE admin SET password=#{password} 
+		WHERE admin_id=#{admin_id}
+	</update>
 	
 	
 	

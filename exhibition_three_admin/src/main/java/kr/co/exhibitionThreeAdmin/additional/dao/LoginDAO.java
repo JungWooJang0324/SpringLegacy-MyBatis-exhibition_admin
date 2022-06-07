@@ -13,13 +13,13 @@ import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
 public class LoginDAO {
 		
 	
-	public int loginCheck(LoginVO lVO) throws PersistenceException{
+	public String loginCheck(String id) throws PersistenceException{
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
 
-		int cnt= ss.selectOne("kr.co.exhibitionThreeAdmin.additional.loginChk", lVO);
+		String pass= ss.selectOne("kr.co.exhibitionThreeAdmin.additional.loginChk", id);
 		if(ss != null) {ss.close();}//end if
 
-		return cnt;
+		return pass;
 	}
 	
 	

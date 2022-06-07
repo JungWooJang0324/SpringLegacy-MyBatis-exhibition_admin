@@ -2,6 +2,7 @@ package kr.co.exhibitionThreeAdmin.additional.service;
 
 import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import kr.co.exhibitionThreeAdmin.additional.dao.LoginDAO;
@@ -13,10 +14,15 @@ public class LoginService {
 	@Autowired(required = false)
 	private LoginDAO lDao;
 	
-	public int loginChk(LoginVO lVO) {
-		int cnt =0;
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
+	public int loginChk(LoginVO lvo) {
+		int cnt=0;
 		try {
-			cnt= lDao.loginCheck(lVO);
+			String check= lDao.loginCheck(lvo.getAdmin_id());
+
+			if(encoder.matches(lvo.getPassword(), check)) cnt=1;
 		}catch (PersistenceException pe) {
 			pe.printStackTrace();
 		}
