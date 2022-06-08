@@ -82,6 +82,7 @@ $(function(){
 		$("#exitOk").click(function(){
   		$("#confirmExit").modal('hide');
 			$("#memberDetail").modal('hide');
+		$("#emailSend").modal('hide');
 		}); 
 	$("#confirmDelete").on('show.bs.modal',function(e){
 		var userid = $(e.relatedTarget).data('id');
@@ -136,7 +137,6 @@ function chkNull(){
 	}//end if
 	$("#searchFrm").submit(); 
 }//chkNull
- 
 
 function deleteMember(){
 	var userid = $("#confirmDeleteHid").val();
@@ -191,6 +191,7 @@ function updateMember(){
 			}
 		});//end ajax
 }//deleteMember 
+
 </script>
     </head>
     	
@@ -280,8 +281,8 @@ function updateMember(){
 	    						 			<td><c:out value="${member.name}"/>
 	    						 			<c:set var="today" value="<%=new java.util.Date()%>"/>
  											<fmt:formatDate var="now" type="date" value="${today}" pattern="yyyy-MM-dd"/>
- 											<c:if test="${exhibition.subscribe_date eq now}">
- 											<img src="http://<%=application.getInitParameter("domain") %>/images/new_icno.png" style="width:25px;">
+ 											<c:if test="${member.subscribe_date eq now}">
+ 												<span id="newBadge" class="badge rounded-pill bg-danger" style="width:20px;font-size:10px;">N</span>
  											</c:if>
 	    						 			</td>
 	    						 			<td><c:out value="${member.address1}"/></td>
@@ -292,6 +293,9 @@ function updateMember(){
 	    						 </c:if>
 						  	</tbody> 
 						  </table> 
+						  <div>
+						 	 <a href="mail.do" class="btn btn-dark" style="float:right;">이메일 전송</a>
+						  </div>
 						  <div style="float:left;color:#333;">
  								전체 : <c:out value="${totalCnt }"/>건                    
                             </div>
@@ -401,6 +405,7 @@ function updateMember(){
 					  </div>
 					</div>
 				<!-- modal -->
+	               
             </div>
         </div>
 				<!-- 확인 modal -->

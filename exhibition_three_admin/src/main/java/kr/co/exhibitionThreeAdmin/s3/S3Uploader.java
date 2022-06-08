@@ -44,8 +44,8 @@ public class S3Uploader {
 	private AmazonS3 conn;
 
 	public void S3Uploaders() {
-		System.out.println("accessKey ==>"+accessKey);
-		System.out.println("secretKey ==>"+secretKey);
+//		System.out.println("accessKey ==>"+accessKey);
+//		System.out.println("secretKey ==>"+secretKey);
 		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
 		ClientConfiguration clientConfig = new ClientConfiguration();
 		clientConfig.setProtocol(Protocol.HTTP);

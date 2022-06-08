@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain;
 import kr.co.exhibitionThreeAdmin.member.domain.MemberDomain;
+import kr.co.exhibitionThreeAdmin.member.vo.EsVO;
 import kr.co.exhibitionThreeAdmin.member.vo.MemberVO;
 import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
 import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
@@ -15,6 +16,13 @@ import kr.co.exhibitionThreeAdmin.search.vo.SearchVO;
 @Component
 public class AdminMemberDAO {
 	
+	public List<MemberDomain> selectId(EsVO eVO)throws PersistenceException{
+		List<MemberDomain> list = null;
+		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
+		list = ss.selectList("kr.co.exhibitionThreeAdmin.member.selectId",eVO);
+		if(ss != null) {ss.close();}//end if
+		return list;
+	}//selectId
 	
 	public int selectTotalCnt(SearchVO sVO)throws PersistenceException{
 		int totalCnt = 0;
