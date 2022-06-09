@@ -97,14 +97,24 @@ $("#addAddress").click(function(){
 	$("#toAddress").val(addr);
 });
 
+	$("#selectAll").click(function(){
+		if($("#selectAll").is(":checked")){
+			$("input[name='userid']").prop("checked",true);
+		}else{
+			$("input[name='userid']").prop("checked",false);
+		}//end else
+		
+	});//click
+	$("input[name='userid']").click(function(){
+		var total = $("input[name='userid']").length;
+		var checked=$("input[name='userid']:checked").length;
+		if(total != checked){
+			$("#selectAll").prop("checked",false);
+		}else{
+			$("#selectAll").prop("checked",true);
+		}//end else
+	});//click
 });//ready
-function selectAll(selectAll){
-	const checkboxes
-		=document.getElementsByName('userid');
-	checkboxes.forEach((checkbox)=>{
-		checkbox.checked=selectAll.checked;
-	})
-}
 function sendMail(){
 	if($("#toAddress").val()==""){
 		alert("이메일을 선택해주세요");
@@ -197,7 +207,7 @@ function sendMail(){
 	                        <table id="tab" style="text-align:center;">
 	                        <thead>
 	                        	<tr>
-	                        		<th><input type="checkbox"name='userid'onclick='selectAll(this)' id="selectAll"/></th>
+	                        		<th><input type="checkbox"name='userid' id="selectAll"/></th>
 	                        		<th>전체선택</th>
 	                        		<th></th>
 	                        	</tr>
