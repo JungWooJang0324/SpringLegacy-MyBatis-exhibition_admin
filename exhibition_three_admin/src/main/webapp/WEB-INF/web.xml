@@ -54,5 +54,12 @@
 		/WEB-INF/spring/spring-security.xml			
 	</param-value>
 </context-param>
-    
+  <error-page>
+  	<error-code>404</error-code>
+  	<location>/error404.do</location>
+  </error-page>
+  <error-page>
+  	<error-code>500</error-code>
+  	<location>/error500</location>
+  </error-page>
 </web-app>
