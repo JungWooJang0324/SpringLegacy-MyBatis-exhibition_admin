@@ -199,7 +199,7 @@ function updateMember(){
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/admin/index.do">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -210,9 +210,9 @@ function updateMember(){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/admin/settings.do">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/admin/logout.do">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -228,7 +228,7 @@ function updateMember(){
                     <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">회원 관리</h1>
                         <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item"><a href="index.jsp" style="text-decoration:none; color:#333;">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="http://<%=application.getInitParameter("domain") %>/admin/index.do"style="text-decoration:none; color:#333;">Dashboard</a></li>
                             <li class="breadcrumb-item active">회원 관리</li>
                         </ol>
                         <!-- 검색창 -->
@@ -349,7 +349,9 @@ function updateMember(){
 							</div>
                         </div>
                 </main>
-                <%-- 	<jsp:include page="admin_footer.html"/> --%>
+                 	<jsp:include page="../commons/admin_footer.html"/> 
+             </div>
+        </div>
 	               <!-- 회원 수정 modal  -->
 	                <div class="modal fade" tabindex="-1" id="memberDetail" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -406,8 +408,7 @@ function updateMember(){
 					</div>
 				<!-- modal -->
 	               
-            </div>
-        </div>
+         
 				<!-- 확인 modal -->
 		 		<div class="modal fade" id="confirmUpdate" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"  aria-hidden="true">
 				  <div class="modal-dialog">

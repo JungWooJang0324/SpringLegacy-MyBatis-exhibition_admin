@@ -378,9 +378,9 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/admin/settings.do">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/admin/logout.do">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -392,6 +392,7 @@
                 </nav>
             </div>
             <div id="layoutSidenav_content">
+           	 <main>
                     <div class="container-fluid px-4" style="width:90%">
                         <h1 class="mt-4">전시 일정관리</h1>
                         <ol class="breadcrumb mb-4">
@@ -471,31 +472,7 @@
 	 											data-num='${exhibition.ex_num}'data-name="${exhibition.ex_name }"data-status="${exhibition.ex_status }">노출</button>
  											</td>
                                     	</tr>
-                                    	<%-- <tr style="display:none">
-								          <td colspan="6">
-								          <div style="width:500px;height:500px;">
-								          <canvas id="line-chart"></canvas>
-								          </div>
-								          </td>
-								        </tr> --%>
 	    						 		</c:forEach>
-	    						 	<!-- 	<script>
-	    						 			var myChart = $("#line-chart");
-	    						 			var myLineChart = new Chart(myChart,{
-	    						 				 type:'line',
-	    						 				 data:{
-	    						 					 labels:[
-	    						 						'1월','2월','3월','4월','5월','6월' 
-	    						 					 ],
-	    						 					 datasets:[
-	    						 						 {
-	    						 							label:'2022',
-	    						 							data:[10,8,6,4,4,4]
-	    						 						 }
-	    						 					 ]
-	    						 				 }//data
-	    						 			});
-	    						 		</script> -->
 						  			</c:if>
 						  			<c:if test="${empty exhibitionList }">
 	                                 <tr>
@@ -562,11 +539,8 @@
                         </div>
 						  <!-- 페이지 끝 -->
                             </div>
-                    </div>
-                </main>
-               	<div id="layoutAuthentication_footer">
-             		<%-- <jsp:include page="admin_footer.html"/> --%>
-          		</div>
+                		</main>	
+             		 <jsp:include page="../commons/admin_footer.html"/> 
                  <!-- 전시 추가 modal  -->
 	                <div class="modal fade" tabindex="-1" id="addModal" data-bs-backdrop="static" data-bs-keyboard="false">
 					  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
