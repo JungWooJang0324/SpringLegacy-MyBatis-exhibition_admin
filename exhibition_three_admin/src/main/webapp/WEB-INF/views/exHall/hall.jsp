@@ -1,7 +1,7 @@
 <%@page import="javax.imageio.plugins.tiff.ExifGPSTagSet"%>
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.util.List"%>
-<%-- <%@include file="admin_id_session.jsp" %> --%>
+<%@include file="../commons/admin_session.jsp" %> 
 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
@@ -347,7 +347,7 @@ function chkByte(obj, maxByte){
   <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -358,9 +358,9 @@ function chkByte(obj, maxByte){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibitionThreeAdmin/admin/settings.do">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibitionThreeAdmin/admin/logout.do">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -462,6 +462,8 @@ function chkByte(obj, maxByte){
 						</main>
                 <!-- footer -->
                	<jsp:include page="../commons/admin_footer.html"/> 
+               	</div>
+               	</div>
 				<!-- 전시장 추가 Modal -->
 				<div class="modal fade" id="addHall" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" >
 				 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" >
@@ -562,6 +564,7 @@ function chkByte(obj, maxByte){
 				    </div>
 				  </div>
 				</div>
+			
 				<!-- 전시장 상세 Modal -->
 				<div class="modal fade" id="hallDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 				  <div class="modal-dialog">
@@ -719,7 +722,6 @@ function chkByte(obj, maxByte){
 				  </div>
 				</div>
 				<!--  모달 끝 -->
-			</div>
-		</div>
+			
  	</body>
 </html>

@@ -40,10 +40,7 @@
 
 <!-- 게시글 수정 -->
 <update id="updateBoard" parameterType="kr.co.exhibitionThreeAdmin.board.vo.AdminBoardVO">
-	update(select b.bd_id, b.title, b.description, cat.cat_num, b.img_file
-			from board b
-			inner join category cat
-			on cat.cat_num = b.cat_num)
+	update board
 	set cat_num = #{cat_num}, title=#{title}, description=#{description}, img_file=#{img_file, jdbcType=VARCHAR}
 	where bd_id = #{bd_id}
 </update>

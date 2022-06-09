@@ -1,6 +1,6 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
-<%-- <%@include file="admin_id_session.jsp" %>  --%>
+<%@include file="../commons/admin_session.jsp" %> 
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
     info="게시판"%>
@@ -47,7 +47,7 @@ $(function(){
 	
 	//글쓰기버튼 클릭
 	$("#btnAdd").click(function(){
-		location.href="http://localhost/exhibitionThreeAdmin/admin/addBoard.do";
+		location.href="http://localhost/exhibitionThreeAdmin/admin/formBoardAdd.do";
 	});
 	
 	//게시글 상세보기 
@@ -55,14 +55,11 @@ $(function(){
 			
 		var bdId = $(this).children().find("input:hidden[name=bdId]").val();
 		
-		//게시글 넘버(bd_id) 확인
-		//console.log(bdId);
-		
 		$("#boardDetail").modal('show'); 
 		
 		$.ajax({
-			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/boardDetailAjax.jsp",
-			type:"post",
+			url:"../admin/boardDetail.do",
+			type:"get",
 			data:{ "bdId":bdId	},
 			dataType:"json",
 			error:function(xhr){
@@ -89,20 +86,20 @@ $(function(){
 		 $("#modifyOk").click(function(){
 			 $("#confirmModify").modal('hide');
 			$.ajax({
-				url:"http://<%=application.getInitParameter("domain") %>/main/ajax/boardUpdateAjax.jsp",
+				url:"../admin/boardModify.do",
 				type:"post",
+				dataType:"json",
 				data:{
 					"catNum" : $("#catName_de").val(),
 					"title": $("#title_de").val(),
 					"description": $("#description_de").val(),
 					"bdId" : $("#bdId_de").val()
 				},
-				datatype:"json",
 				error:function(xhr){
 					alert("※에러"+xhr.status);
 				},
 				success:function(jsonObj){
-					if(jsonObj.cnt!=0){
+					if(jsonObj.flag==true){
 						alert("업데이트 성공!");
 						location.reload();
 					}else{
@@ -118,7 +115,7 @@ $(function(){
 
 
 //게시글 삭제
-function deletePost( dbId ){
+function deletePost( bdId ){
 	//tr클릭 게시글 상세 팝업 막기
 	event.stopPropagation(); 
 	
@@ -127,15 +124,15 @@ function deletePost( dbId ){
 	 $("#deleteOk").click(function(){
 		$("#confirmDelete").modal('hide');
 		$.ajax({
-			url:"http://<%=application.getInitParameter("domain") %>/main/ajax/boardDeleteAjax.jsp",
+			url:"../admin/postRemove.do",
 			type:"post",
-			data:{ "bdId_de": dbId },
+			data:{ "bdId": bdId },
 			error:function(xhr){
 				alert("※에러"+xhr.status);
 			},
-			datatype : "json",
+			dataType : "json",
 			success:function(jsonObj){
-				if(jsonObj.cnt!=0){
+				if(jsonObj.flag==true){
 					alert("삭제 성공!");
 					location.reload();
 				}else{
@@ -182,7 +179,7 @@ function chkByte(obj, maxByte){
  <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -193,7 +190,7 @@ function chkByte(obj, maxByte){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                       <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
+                       <li><a class="dropdown-item" href="http://localhost/exhibitionThreeAdmin/admin/settings.do">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
                         <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
    		            </ul>
@@ -264,9 +261,9 @@ function chkByte(obj, maxByte){
                                            	</td>
                                             <td><fmt:formatDate pattern="yyyy-MM-dd" value="${bDomain.input_date}"/></td>
                                             <td><c:out value="${bDomain.cat_name}"/></td>
-                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost(${bVO.bdid})">삭제</button></td>
+                                   	 		<td><button id="deleteBtn" type="button" class="btn btn-secondary btn-sm" onclick="deletePost(${bDomain.bd_id})">삭제</button></td>
 	                                   	 	<td id="hiddenTd" style="padding: 0px;">
-                                        		<input id="bdId" class="bdId" name="bdId" type="hidden" value="${bVO.bdid}"/>
+                                        		<input id="bdId" class="bdId" name="bdId" type="hidden" value="${bDomain.bd_id}"/>
                                         	</td> 
 		                                   	 <c:set var="cnt" value="${cnt-1}"></c:set>
 	                                   	 </tr>
@@ -312,9 +309,10 @@ function chkByte(obj, maxByte){
 							 	</c:if>
 							</ul>
 						</div>
+                	</main>
+                	<jsp:include page="../commons/admin_footer.html"/> 
                		</div>
-                </main>
-                	<%-- <jsp:include page="admin_footer.html"/> --%>
+                	</div>
                 <!-- 게시글 상세 Modal -->
 				<div class="modal fade" id="boardDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 			 	<div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -350,8 +348,8 @@ function chkByte(obj, maxByte){
 				 				</td>
 					 			<td style="padding-bottom: 20px"> 
 									<select id="catName_de" name="catName_de" class="form-select">
-										<c:forEach var = "bVO" items="${list}">
-											<option value="${bVO.catNum}"><c:out value="${bVO.catName}"/></option>
+										<c:forEach var = "abDomain" items="${categoryList}">
+											<option value="${abDomain.cat_num}"><c:out value="${abDomain.cat_name}"/></option>
 										</c:forEach>
 									</select>
 								</td>
@@ -424,7 +422,5 @@ function chkByte(obj, maxByte){
 				    </div>
 				  </div>
 				</div>
-            </div>
-        </div>
     </body>
 </html>
