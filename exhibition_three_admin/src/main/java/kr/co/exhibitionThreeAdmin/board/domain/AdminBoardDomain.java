@@ -4,7 +4,13 @@ import java.sql.Date;
 
 public class AdminBoardDomain {
 	
-	private String bd_id,	title,	description, userid, adminid, cat_name;
+	private String bd_id,	title,	description, userid, adminid, cat_name, img_file;
+	public String getImg_file() {
+		return img_file;
+	}
+	public void setImg_file(String img_file) {
+		this.img_file = img_file;
+	}
 	private int cat_num;
 	private char isdeleted;
 	private Date input_date;
@@ -68,8 +74,8 @@ public class AdminBoardDomain {
 	@Override
 	public String toString() {
 		return "AdminBoardDomain [bd_id=" + bd_id + ", title=" + title + ", description=" + description + ", userid="
-				+ userid + ", adminid=" + adminid + ", cat_name=" + cat_name + ", cat_num=" + cat_num + ", isdeleted="
-				+ isdeleted + ", input_date=" + input_date + "]";
+				+ userid + ", adminid=" + adminid + ", cat_name=" + cat_name + ", img_file=" + img_file + ", cat_num="
+				+ cat_num + ", isdeleted=" + isdeleted + ", input_date=" + input_date + "]";
 	}
 	
 	

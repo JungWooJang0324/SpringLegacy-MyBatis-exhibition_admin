@@ -1,7 +1,6 @@
 package kr.co.exhibitionThreeAdmin.exHall.controller;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,8 +8,10 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain;
 import kr.co.exhibitionThreeAdmin.exHall.service.AdminExHallServie;
@@ -25,7 +26,7 @@ public class AdminExHallController {
 	
 	//전시장 조회
 	@RequestMapping(value = "/admin/hall.do", method = GET)
-	public String exHall(Model model, BHSearchVO sVO) {
+	public String exHall(Model model, BHSearchVO sVO) throws Exception{
 		//전체 레코드의 수
 		int totalCnt = as.countData(sVO);
 		//한 화면에 보여줄 게시물의 수
@@ -75,7 +76,7 @@ public class AdminExHallController {
 	//전시장 추가 
 	@RequestMapping(value = "/admin/hallAdd.do", method = GET, produces = "applicaion/text; charset=UTF-8")
 	@ResponseBody
-	public String addExHall(AdminExHallVO aehVO, HttpServletRequest request) {
+	public String addExHall(AdminExHallVO aehVO, HttpServletRequest request)throws Exception {
 		String flag="";
 		//전시장 추가
 		String ex_hall_name = request.getParameter("exName");
@@ -112,7 +113,7 @@ public class AdminExHallController {
 	//전시장 상세
 	@RequestMapping(value = "/admin/exHallDetail.do", method = GET, produces = "applicaion/json; charset=UTF-8")
 	@ResponseBody
-	public String addExHall(int exHallNum, HttpServletRequest request) {
+	public String exHallDetail(int exHallNum, HttpServletRequest request)throws Exception {
 		
 		//클릭된 전시장 번호
 		exHallNum = Integer.parseInt(request.getParameter("exHallNum")) ;
@@ -136,7 +137,7 @@ public class AdminExHallController {
 	
 	@RequestMapping(value = "/admin/hallRemove.do", method = GET, produces = "applicaion/text; charset=UTF-8")
 	@ResponseBody
-	public String removeExHall(int exHallNum, HttpServletRequest request) {
+	public String removeExHall(int exHallNum, HttpServletRequest request) throws Exception{
 		
 		String flag="";
 		//전시장 삭제
@@ -147,7 +148,7 @@ public class AdminExHallController {
 	
 	@RequestMapping(value = "/admin/hallModify.do", method = GET, produces = "applicaion/text; charset=UTF-8")
 	@ResponseBody
-	public String modifyExHall(AdminExHallVO aehVO, HttpServletRequest request) {
+	public String modifyExHall(AdminExHallVO aehVO, HttpServletRequest request)throws Exception {
 		
 		String flag="";
 		//전시장 수정
@@ -182,4 +183,14 @@ public class AdminExHallController {
 		} 
 		return flag;
 	}
+	
+	@ExceptionHandler(Exception.class)
+	public ModelAndView exceptionMethod(Exception e) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("redirect:hall.do"); 
+		mav.addObject("error", "정상적으로 처리되지 않았습니다."); 
+
+		return mav; 
+	}
+
 }

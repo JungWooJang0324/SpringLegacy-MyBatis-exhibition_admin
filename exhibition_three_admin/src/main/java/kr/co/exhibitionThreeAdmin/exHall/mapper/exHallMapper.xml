@@ -16,7 +16,7 @@
 	</where>	
 </select>
 
-<!-- 전시장 조회 !!exloc 연결필요-->
+<!-- 전시장 조회 !! exloc 연결필요-->
 <select id="selectExHall" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain" parameterType="bhsVO">
 		select *
 		from (select rownum as rnum, ex_hall_name, ex_loc, ex_hall_num
@@ -27,14 +27,14 @@
 						and ${option} like '%'||#{keyword}||'%'
 					</if>
 					</where>
-			  		order by ex_hall_num) 
-	<![CDATA[ where rownum <= ${endNum} ]]>)
-		where rnum >= ${startNum}
+			  		order by ex_hall_num desc) 
+	<![CDATA[ where rownum <= #{endNum} ]]>)
+		where rnum >= #{startNum}
 		order by rnum
 </select>
 
 <!-- 전시장 추가 -->
-<insert id="insertExhall" parameterType="aehVO">
+<insert id="insertExhall" parameterType="kr.co.exhibitionThreeAdmin.exHall.vo.AdminExHallVO">
 	insert into exhibition_hall(ex_hall_num, hall_deleted, ex_hall_name, ex_loc, zipcode, latitude,
 			longitude, mgr_name, mgr_tel, ex_tel, address1, address2)
 	values(ex_hall_num_seq.nextval, 'n', #{ex_hall_name},#{ex_loc},#{zipcode},#{latitude},
@@ -42,7 +42,7 @@
 </insert>
 
 <!-- 전시장 수정  -->
-<update id="updateExhall" parameterType="aehVO">
+<update id="updateExhall" parameterType="kr.co.exhibitionThreeAdmin.exHall.vo.AdminExHallVO">
 	update EXHIBITION_HALL														
 	set	ex_hall_name=#{ex_hall_name}, address1=#{address1}, address2=#{address2}, 
 		zipcode=#{zipcode}, latitude=#{latitude}, longitude=#{longitude}, mgr_name=#{mgr_name}, 
@@ -51,14 +51,15 @@
 </update>
 
 <!-- 전시장 삭제 -->
-<update id="deleteExhall" parameterType="aehVO">
+<update id="deleteExhall" parameterType="kr.co.exhibitionThreeAdmin.exHall.vo.AdminExHallVO">
 	UPDATE EXHIBITION_HALL SET HALL_DELETED='y' WHERE EX_HALL_NUM=#{ex_hall_num}
 </update>
 
 <!-- 전시장 상세 -->
-<select id="exhallDetail" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain">
+<select id="exhallDetail" resultType="kr.co.exhibitionThreeAdmin.exHall.domain.AdminExHallDomain" parameterType="int">
 	select EX_HALL_NUM, ex_hall_name, ex_loc, zipcode, latitude, longitude, mgr_name, mgr_tel, ex_tel, address1, address2	
 	from EXHIBITION_HALL 																			
 	where ex_hall_num=#{ex_hall_num}		
 </select>
+
 </mapper>

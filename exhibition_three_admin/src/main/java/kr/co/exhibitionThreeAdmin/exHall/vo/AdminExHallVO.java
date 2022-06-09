@@ -2,6 +2,8 @@ package kr.co.exhibitionThreeAdmin.exHall.vo;
 
 import java.sql.Date;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 public class AdminExHallVO {
 	
 	private String 	ex_loc, ex_hall_name,	mgr_name,	mgr_tel,	zipcode,	address1,	address2, ex_tel;	
@@ -60,19 +62,19 @@ public class AdminExHallVO {
 	public int getEx_hall_num() {
 		return ex_hall_num;
 	}
-	public void setEx_hall_num(int ex_hall_num) {
+	public void setEx_hall_num(@RequestParam(defaultValue = "0")int ex_hall_num) {
 		this.ex_hall_num = ex_hall_num;
 	}
 	public double getLatitude() {
 		return latitude;
 	}
-	public void setLatitude(double latitude) {
+	public void setLatitude(@RequestParam(defaultValue = "0.0")double latitude) {
 		this.latitude = latitude;
 	}
 	public double getLongitude() {
 		return longitude;
 	}
-	public void setLongitude(double longitude) {
+	public void setLongitude(@RequestParam(defaultValue = "0.0")double longitude) {
 		this.longitude = longitude;
 	}
 	public char getHall_deleted() {

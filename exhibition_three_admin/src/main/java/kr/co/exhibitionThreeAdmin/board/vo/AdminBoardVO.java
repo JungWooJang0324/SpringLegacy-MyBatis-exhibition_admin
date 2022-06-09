@@ -2,16 +2,24 @@ package kr.co.exhibitionThreeAdmin.board.vo;
 
 import java.sql.Date;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 public class AdminBoardVO {
 	
-	private String bd_id,	title,	description, userid, adminid;
-	private int cat_num;
+	private String 	title,	description, userid, adminid, img_file;
+	public String getImg_file() {
+		return img_file;
+	}
+	public void setImg_file(String img_file) {
+		this.img_file = img_file;
+	}
+	private int bd_id, cat_num;
 	private char isdeleted;
 	private Date input_date;
-	public String getBd_id() {
+	public int getBd_id() {
 		return bd_id;
 	}
-	public void setBd_id(String bd_id) {
+	public void setBd_id(@RequestParam(defaultValue = "0") int bd_id) {
 		this.bd_id = bd_id;
 	}
 	public String getTitle() {
@@ -41,7 +49,7 @@ public class AdminBoardVO {
 	public int getCat_num() {
 		return cat_num;
 	}
-	public void setCat_num(int cat_num) {
+	public void setCat_num(@RequestParam(defaultValue = "0")int cat_num) {
 		this.cat_num = cat_num;
 	}
 	public char getIsdeleted() {
@@ -58,9 +66,9 @@ public class AdminBoardVO {
 	}
 	@Override
 	public String toString() {
-		return "AdminBoardVO [bd_id=" + bd_id + ", title=" + title + ", description=" + description + ", userid="
-				+ userid + ", adminid=" + adminid + ", cat_num=" + cat_num + ", isdeleted=" + isdeleted
-				+ ", input_date=" + input_date + "]";
+		return "AdminBoardVO [title=" + title + ", description=" + description + ", userid=" + userid + ", adminid="
+				+ adminid + ", img_file=" + img_file + ", bd_id=" + bd_id + ", cat_num=" + cat_num + ", isdeleted="
+				+ isdeleted + ", input_date=" + input_date + "]";
 	}
 	
 	

@@ -180,35 +180,83 @@ public class AdminBoardServie {
 		return list;
 	}
 	
-	//게시판 수정
-	public int modifyBoard(AdminBoardVO abVO) {
+	/**
+	 * 게시판 수정
+	 * @param abVO
+	 * @return
+	 */
+	public boolean modifyBoard(AdminBoardVO abVO) {
 		int cnt = 0;
-		
-		return cnt;
+		boolean flag = false;
+		try {
+			cnt = abDAO.updateBoard(abVO);
+			if(cnt>0) {
+				flag = true;
+			}
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return flag;
 	}
 	
-	//게시판 삭제
-	public int removeBoard(int BdId) {
+	/**
+	 * 게시판 삭제
+	 * @param bdId
+	 * @return
+	 */
+	public boolean removeBoard(int bdId) {
 		int cnt = 0;
-		
-		return cnt;
+		boolean flag = false;
+		try {
+			cnt = abDAO.deleteBoard(bdId);
+			if(cnt>0) {
+				flag = true;
+			}
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return flag;
 	}
 	
-	//게시판 추가
-	public int addBoard(AdminBoardVO abVO) {
+	/**
+	 * 게시판 추가
+	 * @param abVO
+	 * @return
+	 */
+	public boolean addBoard(AdminBoardVO abVO) {
 		int cnt = 0;
+		boolean flag = false;
+		try {
+			cnt = abDAO.insertBoard(abVO);
+			if(cnt>0) {
+				flag = true;
+			}
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
 		
-		return cnt;
+		return flag;
 	}
 	
-	//게시판 상세
-	public AdminBoardVO boardDetail(int bdId) {
-		AdminBoardVO abVO = null;
-		
-		return abVO;
+	/**
+	 * 게시판 상세
+	 * @param bdId
+	 * @return
+	 */
+	public AdminBoardDomain boardDetail(int bdId) {
+		AdminBoardDomain abDomain = null;
+		try {
+			abDomain = abDAO.selectBoardDetail(bdId);
+		}catch (PersistenceException pe) {
+			pe.printStackTrace();
+		}
+		return abDomain;
 	}
 	
-	//카테고리 
+	/**
+	 * 카테고리 
+	 * @return
+	 */
 	public List<AdminBoardDomain> categoryList() {
 		List<AdminBoardDomain> list = null;
 		

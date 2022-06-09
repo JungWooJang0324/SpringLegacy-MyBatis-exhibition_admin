@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.exhbitionThreeAdmin.board">
 
-<!-- 전체 전시장 수 -->
+<!-- 전체 게시글 수 -->
 <select id="totalRows" resultType="int" parameterType="bhsVO">
 	select count(*) 
 	from (select b.bd_id, cat.cat_name
@@ -23,7 +23,7 @@
 <select id="selectBoard" resultType="kr.co.exhibitionThreeAdmin.board.domain.AdminBoardDomain" parameterType="bhsVO">
 	select *
 	from(select rownum as rnum, bd_id, title, userid, input_date, cat_name, adminid
-			from(SELECT b.bd_id, b.title, b.userid, b.input_date, b.adminid, cat.cat_name
+			from(select b.bd_id, b.title, b.userid, b.input_date, b.adminid, cat.cat_name
 						from Board	b
 						right outer join	category cat
 						on cat.cat_num = b.cat_num
@@ -34,7 +34,42 @@
 							</if>
 						</where>
 						order by input_date desc)
-				<![CDATA[ where rownum <= ${endNum}]]> )
-	where rnum >= ${startNum}  order by rnum
+				<![CDATA[ where rownum <= #{endNum}]]> )
+	where rnum >= #{startNum}  order by rnum
+</select>
+
+<!-- 게시글 수정 -->
+<update id="updateBoard" parameterType="kr.co.exhibitionThreeAdmin.board.vo.AdminBoardVO">
+	update(select b.bd_id, b.title, b.description, cat.cat_num, b.img_file
+			from board b
+			inner join category cat
+			on cat.cat_num = b.cat_num)
+	set cat_num = #{cat_num}, title=#{title}, description=#{description}, img_file=#{img_file, jdbcType=VARCHAR}
+	where bd_id = #{bd_id}
+</update>
+
+<!-- 게시글 추가 -->
+<insert id="insertBoard" parameterType="kr.co.exhibitionThreeAdmin.board.vo.AdminBoardVO">
+	insert into Board(bd_id, cat_num , title, description, adminid,  userid, isdeleted, img_file) 
+		values(bdid_seq.nextval, #{cat_num}, #{title},#{description},#{adminid},#{userid}, 'n', #{img_file, jdbcType=VARCHAR})
+</insert>
+
+<!-- 게시글 삭제 -->
+<update id="deleteBoard" parameterType="int">
+	UPDATE BOARD SET  ISDELETED='y' WHERE bd_id= #{bd_id}
+</update>
+
+<!-- 게시글 상세 -->
+<select id="boardDetail" resultType="kr.co.exhibitionThreeAdmin.board.domain.AdminBoardDomain" parameterType="int">
+	 select b.bd_id, b.input_date, b.title, b.userid, b.cat_num, cat.cat_name, b.description, b.adminid, b.img_file
+			from Board b
+			inner join	category cat
+			on cat.cat_num = b.cat_num
+			where bd_id=#{bd_id}
+</select>
+
+<!-- 카테고리 리스트 -->
+<select id="selectCategory" resultType="kr.co.exhibitionThreeAdmin.board.domain.AdminBoardDomain">
+	select cat_name, cat_num from category order by cat_num
 </select>
 </mapper>

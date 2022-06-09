@@ -172,7 +172,6 @@ public class AdminExHallServie {
 		return list;
 	}
 	
-	
 	/**
 	 * 전시장 수정
 	 * @param aaehVO
@@ -245,5 +244,4 @@ public class AdminExHallServie {
 		}
 		return aehDomain;
 	}
-	
 }
