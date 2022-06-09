@@ -1,4 +1,4 @@
-package kr.co.exhibitionThreeAdmin.member.vo;
+package kr.co.exhibitionThreeAdmin.email.vo;
 
 public class EmailVO {
 	private String toAddress,fromAddress,subject,message;

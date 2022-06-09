@@ -40,6 +40,11 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                                 게시판 관리
                             </a>
+                            <div class="sb-sidenav-menu-heading">email</div>
+                            <a class="nav-link" href="http://localhost/exhibitionThreeAdmin/admin/mail.do" id="nav_email">
+                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                                이메일 보내기
+                            </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
                                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">

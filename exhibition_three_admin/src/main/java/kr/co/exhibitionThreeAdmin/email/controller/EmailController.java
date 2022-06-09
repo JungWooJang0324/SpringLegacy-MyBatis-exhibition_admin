@@ -1,4 +1,4 @@
-package kr.co.exhibitionThreeAdmin.member.controller;
+package kr.co.exhibitionThreeAdmin.email.controller;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.exhibitionThreeAdmin.email.service.MailService;
+import kr.co.exhibitionThreeAdmin.email.vo.EmailVO;
 import kr.co.exhibitionThreeAdmin.member.domain.MemberDomain;
-import kr.co.exhibitionThreeAdmin.member.service.MailService;
-import kr.co.exhibitionThreeAdmin.member.vo.EmailVO;
 import kr.co.exhibitionThreeAdmin.member.vo.EsVO;
 
 @Controller
@@ -26,7 +26,7 @@ public class EmailController {
 	public String email(Model model) {
 		EsVO eVO = new EsVO("", "", "");
 		model.addAttribute("idList",ms.selectId(eVO));
-		return "member/mail_form";
+		return "email/mail_form";
 	}//email
 	
 	@ResponseBody

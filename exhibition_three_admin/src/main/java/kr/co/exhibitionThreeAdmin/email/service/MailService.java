@@ -1,4 +1,4 @@
-package kr.co.exhibitionThreeAdmin.member.service;
+package kr.co.exhibitionThreeAdmin.email.service;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import kr.co.exhibitionThreeAdmin.email.vo.EmailVO;
 import kr.co.exhibitionThreeAdmin.member.dao.AdminMemberDAO;
 import kr.co.exhibitionThreeAdmin.member.domain.MemberDomain;
-import kr.co.exhibitionThreeAdmin.member.vo.EmailVO;
 import kr.co.exhibitionThreeAdmin.member.vo.EsVO;
 
 @Service

@@ -15,7 +15,7 @@
         <meta name="author" content="" />
         <title>Member</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-        <link href="http://<%=application.getInitParameter("domain") %>/css/styles.css" rel="stylesheet" /> 
+        <link href="http://localhost/exhibitionThreeAdmin/css/styles.css" rel="stylesheet" /> 
         <!-- jQeury CDN -->
 		 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         
@@ -23,7 +23,6 @@
   		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
 		<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 		<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
-		
 <script type="text/javascript">
 function sendMail(){
 	var toAddress = $("#toAddress").val();
@@ -151,7 +150,7 @@ function sendMail(){
    
         <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="http://<%=application.getInitParameter("domain") %>/main/index.jsp">Exhibition Admin</a>
+            <a class="navbar-brand ps-3" href="http://localhost/exhibitionThreeAdmin/admin/index.do">Exhibition Admin</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <div class="input-group">
@@ -162,9 +161,9 @@ function sendMail(){
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/settings.jsp">Settings</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibitionThreeAdmin/admin/settings.do">Settings</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="http://<%=application.getInitParameter("domain") %>/main/logout.jsp">Logout</a></li>
+                        <li><a class="dropdown-item" href="http://localhost/exhibitionThreeAdmin/admin/logout.do">Logout</a></li>
                     </ul>
                 </li>
             </ul>
@@ -177,14 +176,14 @@ function sendMail(){
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4" style="width:90%">
+                    <div class="container-fluid px-4" style="width:90%" >
                         <h1 class="mt-4">메일전송</h1>
                         <ol class="breadcrumb mb-4">
                             <li class="breadcrumb-item"><a href="index.do" style="text-decoration:none; color:#333;">Dashboard</a></li>
                             <li class="breadcrumb-item active">메일전송</li>
                         </ol>
                         <div class="card-body">
-                        	<div style="background-color:#E7E7DF; width:300px; height:600px; float:left; margin-left:200px;border-radius:10px;">
+                        	<div style="background-color:#E7E7DF; width:300px; height:600px; float:left; margin-left:0%;border-radius:10px;">
 	                        <div class="input-group mb-3" style="width:300px;margin-left:5px;margin-top:10px; ">
 							<select class="form-select" name="field" id="field"style="height:35px;">
 								<option value="userid">아이디</option>
@@ -248,7 +247,7 @@ function sendMail(){
 								</div>
 								<div>
 									Message
-									<textarea id="message" name="message" class="form-control" style="height:600px"></textarea>
+									<textarea id="message" name="message" class="form-control" style="height:400px"></textarea>
 								</div>
 								<div id="btnDiv" style="margin-top: 30px">
 									<button type="button" id="backBtn" class="btn btn-outline-dark" onclick="javascript:history.back()"style="float: left;margin-left: 10px">뒤로가기</button> 
@@ -260,6 +259,7 @@ function sendMail(){
                         </div>
                         </div>
                 </main>
+                 <jsp:include page="../commons/admin_footer.html"/> 
               </div>
            </div>
     </body>

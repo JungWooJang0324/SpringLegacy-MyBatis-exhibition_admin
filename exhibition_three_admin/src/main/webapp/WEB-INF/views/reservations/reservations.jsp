@@ -310,12 +310,16 @@ function rezConfirm() {
 								</c:if>
 								</ul> 
 							</div>
+						  <div>
+						 	 <a href="mail.do" class="btn btn-dark" style="float:right;">이메일 전송</a>
+						  </div>
+							
                         </div>
 						  <!-- 페이지 끝 -->
+			                </main>
+			                <jsp:include page="../commons/admin_footer.html"/> 
 							</div>
                         </div>
-                </main>
-                <jsp:include page="../commons/admin_footer.html"/> 
                <!-- 예약 관리 상세 모달  -->
               
 				<div class="modal fade" id="rezDetail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
