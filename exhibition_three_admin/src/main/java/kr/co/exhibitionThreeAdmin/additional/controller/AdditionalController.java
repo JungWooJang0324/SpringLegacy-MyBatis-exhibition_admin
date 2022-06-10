@@ -66,12 +66,12 @@ public class AdditionalController{
 	@RequestMapping(value="/admin/passwordChk.do", method=POST)
 	public String passwordChk(String password,HttpSession session, Model model) {
 		LoginVO lvo = new LoginVO();
-		lvo.setAdmin_id((String) session.getAttribute("id"));
+		lvo.setAdmin_id((String)session.getAttribute("id"));
 		lvo.setPassword(password);
 		String page = "commons/passwordReset";
 		
 		if(session.getAttribute("id")==null) {
-			page = "login.do";
+			page = "redirect:login.do";
 		}
 		
 		int cnt = as.checkPw(lvo);
@@ -87,12 +87,9 @@ public class AdditionalController{
 		String pass=encoder.encode(newPassword);
 
 		LoginVO lvo = new LoginVO();
-		lvo.setAdmin_id((String) session.getAttribute("id"));
+		lvo.setAdmin_id((String)(session.getAttribute("id")));
 		lvo.setPassword(pass);
-		
-		System.out.println("newPassword"+pass);
-		int cnt =as.updatePw(lvo);
-		
+		as.updatePw(lvo);
 		return "redirect:logout.do";
 		
 	}

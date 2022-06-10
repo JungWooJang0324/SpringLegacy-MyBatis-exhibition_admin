@@ -13,11 +13,11 @@ import kr.co.exhibitionThreeAdmin.mybatis.MyBatisFramework;
 public class AdditionalDAO {
 		
 	//password 체크
-	public int passwordChk(LoginVO lvo) throws PersistenceException{
+	public String passwordChk(String userId) throws PersistenceException{
 		SqlSession ss = MyBatisFramework.getInstance().getMyBatisHandler();
-		int cnt = ss.selectOne("kr.co.exhibitionThreeAdmin.additional.passChk", lvo);
+		String pass= ss.selectOne("kr.co.exhibitionThreeAdmin.additional.passChk", userId);
 		if(ss != null) {ss.close();}//end if
-		return cnt;
+		return pass;
 	}
 	
 	//pwUpdate

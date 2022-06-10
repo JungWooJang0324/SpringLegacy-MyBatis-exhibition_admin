@@ -9,9 +9,9 @@
 		WHERE admin_id=#{id}
 	</select>
 
-	<select id="passChk" resultType="int" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
-		SELECT count(*) FROM admin 
-		WHERE admin_id=#{admin_id} and password=#{password}
+	<select id="passChk" resultType="String" parameterType="String">
+		SELECT password FROM admin 
+		WHERE admin_id=#{admin_id}
 	</select>
 	
 	<update id="updatePass" parameterType="kr.co.exhibitionThreeAdmin.additional.vo.LoginVO">
