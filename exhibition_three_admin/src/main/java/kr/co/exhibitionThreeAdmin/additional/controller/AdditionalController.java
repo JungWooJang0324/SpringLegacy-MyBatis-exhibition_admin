@@ -71,13 +71,14 @@ public class AdditionalController{
 		String page = "commons/passwordReset";
 		
 		if(session.getAttribute("id")==null) {
-			page = "login.do";
+			page = "redirect: login.do";
 		}
 		
 		int cnt = as.checkPw(lvo);
+		
 		if(cnt != 1) {
 			model.addAttribute("msg", false);
-			page = "forward: password.do";
+			page = "commons/password";
 		}
 		return page;
 	}
@@ -90,8 +91,7 @@ public class AdditionalController{
 		lvo.setAdmin_id((String) session.getAttribute("id"));
 		lvo.setPassword(pass);
 		
-		System.out.println("newPassword"+pass);
-		int cnt =as.updatePw(lvo);
+		as.updatePw(lvo);
 		
 		return "redirect:logout.do";
 		

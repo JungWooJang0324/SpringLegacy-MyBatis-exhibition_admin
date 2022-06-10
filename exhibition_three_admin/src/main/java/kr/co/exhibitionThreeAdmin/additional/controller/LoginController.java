@@ -44,7 +44,7 @@ public class LoginController {
 			page = "redirect: index.do";
 		}else {
 			model.addAttribute("loginFail", 1);
-			page="forward: login.do";
+			page="commons/login";
 		}
 		
 		return page;
@@ -54,6 +54,7 @@ public class LoginController {
 	public String logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return "forward: login.do";
+		request.getSession(true);
+		return "redirect: login.do";
 	}
 }
