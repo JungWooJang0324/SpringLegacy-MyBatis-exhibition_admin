@@ -24,20 +24,20 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 public class S3Uploader {
 	
 	//보안상 키 생략
-    public static String accessKey;
-    public static String secretKey;
+	   public static String accessKey;
+	    public static String secretKey;
 	
 	
 	
-	  @Value("${aws.secretKey}") 
-	  public void setSecret(String value) { 
-		  secretKey = value; 
-	  }
-	  
-	 @Value("${aws.accessKey}") 
-	 public void setClient(String value) { 
-		 accessKey =value; 
-     }
+//	  @Value("${aws.secretKey}") 
+//	  public void setSecret(String value) { 
+//		  secretKey = value; 
+//	  }
+//	  
+//	 @Value("${aws.accessKey}") 
+//	 public void setClient(String value) { 
+//		 accessKey =value; 
+//     }
 	 
     
     
@@ -125,6 +125,6 @@ public class S3Uploader {
 	public String getFileURL(String bucketName, String fileName) {
 		//System.out.println("넘어오는 파일명 : "+fileName);
 		String imgName = (fileName).replace(File.separatorChar, '/');
-		return conn.generatePresignedUrl(new GeneratePresignedUrlRequest(bucketName, imgName)).toString();
+		return conn.getUrl(bucketName, imgName).toString();
 	}
 }//class

@@ -130,8 +130,8 @@ public class AdminExhibitionService implements SearchService{
 		jsonObj.put("exInfo",ed.getEx_info());
 		jsonObj.put("exIntro",ed.getEx_intro() );
 		jsonObj.put("exHallNum",ed.getEx_hall_num() );
-		jsonObj.put("addImgUrl",fileManagement.getFileUrl(ed.getAdd_img()));
-		jsonObj.put("exPosterUrl",fileManagement.getFileUrl(ed.getExhibition_poster()) );
+		jsonObj.put("addImgUrl",ed.getAdd_img());
+		jsonObj.put("exPosterUrl",ed.getExhibition_poster() );
 		jsonObj.put("exPoster",ed.getExhibition_poster());
 		jsonObj.put("addImg",ed.getAdd_img());
 		jsonObj.put("exStatus",ed.getEx_status());
@@ -155,15 +155,18 @@ public class AdminExhibitionService implements SearchService{
 	public String modifyExStatus(ExhibitionVO eVO) {
 		int cnt=0;
 		JSONObject jsonObj = new JSONObject();
-		System.out.println("-------------------------------------------evo"+eVO);
+//		System.out.println("-------------------------------------------evo"+eVO);
 		try {
-			if("n".equals(eVO.getEx_status())) {//전시 삭제 시 스토리지 파일 삭제
-				deleteFile(eVO);
-			}else if(eVO.getMulAdd()!=null || eVO.getMulPoster()!=null){ // 전시 수정 시 파일 삭제 후 다시 등록
-				deleteFile(eVO);
+//			if("n".equals(eVO.getEx_status())) {//전시 삭제 시 스토리지 파일 삭제
+//				deleteFile(eVO);
+//			}else if(eVO.getMulAdd()!=null || eVO.getMulPoster()!=null){ // 전시 수정 시 파일 삭제 후 다시 등록
+//				deleteFile(eVO);
+//				uploadFile(eVO);
+//			}//end if
+			if(eVO.getMulAdd()!=null || eVO.getMulPoster()!=null){
 				uploadFile(eVO);
-			}//end if
-			cnt = aDAO.updateExhibition(eVO);
+			}
+//			cnt = aDAO.updateExhibition(eVO);
 			System.out.println(cnt);
 		}catch(PersistenceException pe) {
 			pe.printStackTrace();
@@ -175,6 +178,7 @@ public class AdminExhibitionService implements SearchService{
 	public int addExhibition(ExhibitionVO eVO) {
 		int cnt = 0;
 		try {
+			System.out.println(eVO.getExhibition_poster());
 			uploadFile(eVO);
 			cnt = aDAO.insertExhibition(eVO);
 		}catch(PersistenceException pe) {
@@ -185,16 +189,16 @@ public class AdminExhibitionService implements SearchService{
 	
 	public void uploadFile(ExhibitionVO eVO) {
 		try {
-			eVO.setAdd_img(fileManagement.FileUploader(eVO.getMulAdd()));
-			eVO.setExhibition_poster(fileManagement.FileUploader(eVO.getMulPoster()));
+			eVO.setAdd_img(fileManagement.getFileUrl(fileManagement.FileUploader(eVO.getMulAdd())));
+			eVO.setExhibition_poster(fileManagement.getFileUrl(fileManagement.FileUploader(eVO.getMulPoster())));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}//end catch
 	}//uploadFile
 	
-	public void deleteFile(ExhibitionVO eVO) {
-		fileManagement.deleteFile(eVO.getAdd_img());
-		fileManagement.deleteFile(eVO.getExhibition_poster());
-	}//deleteFile
+//	public void deleteFile(ExhibitionVO eVO) {
+//		fileManagement.deleteFile(eVO.getAdd_img());
+//		fileManagement.deleteFile(eVO.getExhibition_poster());
+//	}//deleteFile
 	
 }//class
